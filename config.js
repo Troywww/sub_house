@@ -16,9 +16,9 @@ export const CONFIG = {
 
     // 订阅相关配置
     SUBSCRIPTION: {
-        BASE_PATH: '/base',
-        SINGBOX_PATH: '/singbox',
-        CLASH_PATH: '/clash'
+        BASE_PATH: '/a',
+        SINGBOX_PATH: '/b',
+        CLASH_PATH: '/c'
     },
 
     // API路径配置

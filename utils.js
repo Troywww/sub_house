@@ -7,7 +7,7 @@ export function formatUrl(url) {
 }
 
 export function isSubscriptionPath(path) {
-    const subscriptionTypes = ['/base', '/singbox', '/clash'];
+    const subscriptionTypes = ['/a', '/b', '/c'];
     return subscriptionTypes.some(type => path.endsWith(type));
 }
 

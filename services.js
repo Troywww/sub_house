@@ -475,15 +475,15 @@ export class ShareService extends BaseService {
         });
 
         try {
-            if (path.endsWith('/base')) {
+            if (path.endsWith('/a')) {
                 const { handleConvertRequest } = await import('./subscription/base.js');
                 return handleConvertRequest(newRequest, this.env);
             } 
-            else if (path.endsWith('/singbox')) {
+            else if (path.endsWith('/b')) {
                 const { handleSingboxRequest } = await import('./subscription/singbox.js');
                 return handleSingboxRequest(newRequest, this.env);
             } 
-            else if (path.endsWith('/clash')) {
+            else if (path.endsWith('/c')) {
                 const { handleClashRequest } = await import('./subscription/clash.js');
                 return handleClashRequest(newRequest, this.env);
             }
@@ -504,12 +504,12 @@ export class ShareService extends BaseService {
             `&template=${encodeURIComponent(url.searchParams.get('template'))}` : '';
         
         let converterUrl;
-        if (url.pathname.endsWith('/base')) {
-            converterUrl = `${this.config.SUB_WORKER_URL}/base?url=${encodeURIComponent(shareUrl)}`;
-        } else if (url.pathname.endsWith('/singbox')) {
-            converterUrl = `${this.config.SUB_WORKER_URL}/singbox?url=${encodeURIComponent(shareUrl)}${templateParam}`;
-        } else if (url.pathname.endsWith('/clash')) {
-            converterUrl = `${this.config.SUB_WORKER_URL}/clash?url=${encodeURIComponent(shareUrl)}${templateParam}`;
+        if (url.pathname.endsWith('/a')) {
+            converterUrl = `${this.config.SUB_WORKER_URL}/a?url=${encodeURIComponent(shareUrl)}`;
+        } else if (url.pathname.endsWith('/b')) {
+            converterUrl = `${this.config.SUB_WORKER_URL}/b?url=${encodeURIComponent(shareUrl)}${templateParam}`;
+        } else if (url.pathname.endsWith('/c')) {
+            converterUrl = `${this.config.SUB_WORKER_URL}/c?url=${encodeURIComponent(shareUrl)}${templateParam}`;
         }
 
         return fetch(converterUrl);
@@ -536,7 +536,7 @@ export class ShareService extends BaseService {
     }
 
     isSubscriptionPath(path) {
-        return ['/base', '/singbox', '/clash'].some(type => path.endsWith(type));
+        return ['/a', '/b', '/c'].some(type => path.endsWith(type));
     }
 }
 

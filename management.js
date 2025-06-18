@@ -856,8 +856,8 @@ function generateCollectionScripts() {
         function universalSubscription(id) {
             const shareUrl = \`\${window.location.origin}/api/share/\${id}\`;
             const subUrl = CONFIG.SUB_WORKER_URL ? 
-                \`\${CONFIG.SUB_WORKER_URL}/base?url=\${encodeURIComponent(shareUrl)}\` :
-                \`\${shareUrl}/base?internal=1\`;
+                \`\${CONFIG.SUB_WORKER_URL}/a?url=\${encodeURIComponent(shareUrl)}\` :
+                \`\${shareUrl}/a?internal=1\`;
             copyToClipboard(subUrl, '通用订阅链接已复制到剪贴板');
         }
 

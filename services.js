@@ -29,6 +29,7 @@ class BaseService {
 // 节点服务
 export class NodesService extends BaseService {
     async getNodes() {
+        console.log(this)
         if (!this.env?.NODE_STORE) {
             return [];
         }

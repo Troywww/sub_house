@@ -459,7 +459,7 @@ function convertNodeToSingbox(node) {
             };
 
         case 'hysteria2':
-            return {
+            const hysteria2Config = {
                 tag: node.name,
                 type: 'hysteria2',
                 server: node.server,
@@ -469,12 +469,22 @@ function convertNodeToSingbox(node) {
                     enabled: true,
                     server_name: node.settings.sni,
                     insecure: true
-                },
-                obfs: {
-                    type: node.settings.obfs,
-                    password: node.settings.obfsParam
                 }
             };
+            // 只有当 type 和 password 都有效且 password 至少 8 字符时才加 obfs 字段
+            if (
+                node.settings.obfs &&
+                node.settings.obfs.trim() !== '' &&
+                node.settings.obfsParam &&
+                node.settings.obfsParam.trim() !== '' &&
+                node.settings.obfsParam.length >= 8
+            ) {
+                hysteria2Config.obfs = {
+                    type: node.settings.obfs,
+                    password: node.settings.obfsParam
+                };
+            }
+            return hysteria2Config;
 
         case 'tuic':
             return {

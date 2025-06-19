@@ -362,20 +362,30 @@ export default class Parser {
         try {
             const url = new URL(line);
             const params = new URLSearchParams(url.search);
+
+            // 先收集所有参数
+            const settings = {};
+
+            // 常见参数全部保留
+            [
+                'type', 'security', 'path', 'host', 'sni', 'alpn', 'allowInsecure', 'insecure'
+            ].forEach(key => {
+                if (params.get(key) !== null) {
+                    settings[key] = params.get(key);
+                }
+            });
+
+            // 兼容布尔值
+            settings.allowInsecure = params.get('allowInsecure') === '1' || params.get('insecure') === '1';
+
+            settings.password = url.username;
+
             return {
                 type: 'trojan',
                 name: decodeNodeName(url.hash.slice(1)) || decodeNodeName(params.get('remarks') || ''),
                 server: url.hostname,
                 port: parseInt(url.port),
-                settings: {
-                    password: url.username,
-                    type: params.get('type') || 'tcp',
-                    security: params.get('security') || 'tls',
-                    path: params.get('path') || '',
-                    host: params.get('host') || '',
-                    sni: params.get('sni') || '',
-                    alpn: params.get('alpn') || ''
-                }
+                settings
             };
         } catch (error) {
             console.error('Parse Trojan error:', error);
@@ -498,20 +508,36 @@ export default class Parser {
         try {
             const url = new URL(line);
             const params = new URLSearchParams(url.search);
+
+            // 先收集所有参数
+            const settings = {};
+
+            // up/down/upmbps/downmbps 兼容
+            if (params.get('up')) settings.up = params.get('up');
+            if (params.get('down')) settings.down = params.get('down');
+            if (params.get('upmbps')) settings.upmbps = params.get('upmbps');
+            if (params.get('downmbps')) settings.downmbps = params.get('downmbps');
+
+            // 其它所有参数都保留
+            [
+                'alpn', 'auth', 'auth_str', 'protocol', 'obfs', 'obfsParam', 'sni', 'peer', 'delay', 'insecure', 'password', 'username'
+            ].forEach(key => {
+                if (params.get(key) !== null) {
+                    settings[key] = params.get(key);
+                }
+            });
+
+            // 兼容部分 hysteria 链接用 username 传递 auth
+            if (!settings.auth && url.username) {
+                settings.auth = url.username;
+            }
+
             return {
                 type: 'hysteria',
                 name: decodeNodeName(url.hash.slice(1)) || decodeNodeName(params.get('remarks') || ''),
                 server: url.hostname,
                 port: parseInt(url.port),
-                settings: {
-                    auth: url.username,
-                    protocol: params.get('protocol') || '',
-                    up: params.get('up') || params.get('upmbps') || '',
-                    down: params.get('down') || params.get('downmbps') || '',
-                    alpn: params.get('alpn') || '',
-                    obfs: params.get('obfs') || '',
-                    sni: params.get('sni') || ''
-                }
+                settings
             };
         } catch (error) {
             console.error('Parse Hysteria error:', error);
@@ -528,18 +554,35 @@ export default class Parser {
         try {
             const url = new URL(line);
             const params = new URLSearchParams(url.search);
+
+            // 先收集所有参数
+            const settings = {};
+
+            // 常见参数全部保留
+            [
+                'sni', 'obfs', 'obfs-password', 'insecure', 'alpn', 'peer', 'delay', 'password', 'username'
+            ].forEach(key => {
+                if (params.get(key) !== null) {
+                    // obfs-password 统一映射为 obfsParam
+                    if (key === 'obfs-password') {
+                        settings.obfsParam = params.get(key);
+                    } else {
+                        settings[key] = params.get(key);
+                    }
+                }
+            });
+
+            // 兼容部分 hysteria2 链接用 username 传递 auth
+            if (!settings.auth && url.username) {
+                settings.auth = url.username;
+            }
+
             return {
                 type: 'hysteria2',
                 name: decodeNodeName(url.hash.slice(1)) || decodeNodeName(params.get('remarks') || ''),
                 server: url.hostname,
                 port: parseInt(url.port),
-                settings: {
-                    auth: url.username,
-                    sni: params.get('sni') || '',
-                    obfs: params.get('obfs') || '',
-                    obfsParam: params.get('obfs-password') || '',
-                    insecure: params.get('insecure') === '1' // 添加 insecure 参数支持
-                }
+                settings
             };
         } catch (error) {
             console.error('Parse Hysteria2 error:', error);

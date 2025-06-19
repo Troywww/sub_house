@@ -506,8 +506,8 @@ export default class Parser {
                 settings: {
                     auth: url.username,
                     protocol: params.get('protocol') || '',
-                    up: params.get('up') || '',
-                    down: params.get('down') || '',
+                    up: params.get('up') || params.get('upmbps') || '',
+                    down: params.get('down') || params.get('downmbps') || '',
                     alpn: params.get('alpn') || '',
                     obfs: params.get('obfs') || '',
                     sni: params.get('sni') || ''

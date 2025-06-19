@@ -392,23 +392,27 @@ function convertNodeToSingbox(node) {
             return config;
 
         case 'trojan':
-            return {
+            const trojanConfig = {
                 tag: node.name,
                 type: 'trojan',
                 server: node.server,
                 server_port: node.port,
                 password: node.settings.password,
-                transport: {
-                    type: node.settings.type || 'tcp',
-                    path: node.settings.path,
-                    headers: node.settings.host ? { Host: node.settings.host } : undefined
-                },
                 tls: {
                     enabled: true,
                     server_name: node.settings.sni,
                     insecure: true
                 }
             };
+            // 只有非 tcp 时才加 transport 字段
+            if (node.settings.type && node.settings.type !== 'tcp') {
+                trojanConfig.transport = {
+                    type: node.settings.type,
+                    path: node.settings.path,
+                    headers: node.settings.host ? { Host: node.settings.host } : undefined
+                };
+            }
+            return trojanConfig;
 
         case 'ss':
             return {

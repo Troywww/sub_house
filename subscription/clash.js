@@ -79,14 +79,18 @@ async function generateClashConfig(templateContent, nodes) {
                 if (value === undefined || value === null) {
                     return;
                 }
-                
                 const spaces = ' '.repeat(indent);
-                if (typeof value === 'object') {
+                if (Array.isArray(value)) {
+                    config += `\n${spaces}${key}:`;
+                    value.forEach(item => {
+                        config += `\n${spaces}  - ${typeof item === 'string' ? `"${item}"` : item}`;
+                    });
+                } else if (typeof value === 'object') {
                     config += `\n${spaces}${key}:`;
                     writeValue(value, indent + 2);
                 } else {
-                    const formattedValue = typeof value === 'boolean' || typeof value === 'number' 
-                        ? value 
+                    const formattedValue = typeof value === 'boolean' || typeof value === 'number'
+                        ? value
                         : `"${value}"`;
                     config += `\n${spaces}${key}: ${formattedValue}`;
                 }
@@ -327,7 +331,6 @@ function convertVmess(node) {
 }
 
 function convertVless(node) {
-    console.log('Converting VLESS to Clash:', node);
     const config = {
         name: node.name,
         type: 'vless',
@@ -357,8 +360,12 @@ function convertVless(node) {
         config['client-fingerprint'] = node.settings.fp || 'chrome';
     }
 
-    // WebSocket 配置
-    if (node.settings.type === 'ws' || node.settings.net === 'ws') {
+    // gRPC 配置
+    if (node.settings.type === 'grpc') {
+        config['grpc-opts'] = {
+            'grpc-service-name': node.settings.service_name || node.settings.path || ''
+        };
+    } else if (node.settings.type === 'ws' || node.settings.net === 'ws') {
         config['ws-opts'] = {
             path: node.settings.path || '/',
             headers: {
@@ -367,7 +374,6 @@ function convertVless(node) {
         };
     }
 
-    console.log('Converted Clash config:', config);
     return config;
 }
 
@@ -379,7 +385,7 @@ function convertTrojan(node) {
         port: node.port,
         password: node.settings.password,
         udp: true,
-        'skip-cert-verify': true,
+        'skip-cert-verify': node.settings.allowInsecure === true || node.settings.allowInsecure === '1' || node.settings.allowInsecure === 'true' || node.settings.insecure === '1' || node.settings.insecure === true,
         network: node.settings.type || 'tcp',
         'ws-opts': node.settings.type === 'ws' ? {
             path: node.settings.path,
@@ -419,17 +425,29 @@ function convertShadowsocksR(node) {
 }
 
 function convertHysteria(node) {
+    // up/down 优先，没有则 upmbps/downmbps
+    let up = node.settings.up || node.settings.upmbps;
+    let down = node.settings.down || node.settings.downmbps;
+
+    // 自动加单位
+    if (up && !/mbps/i.test(up)) up = `${up} Mbps`;
+    if (down && !/mbps/i.test(down)) down = `${down} Mbps`;
+
+    // alpn 处理为数组
+    let alpn = node.settings.alpn;
+    if (alpn && !Array.isArray(alpn)) alpn = [alpn];
+
     return {
         name: node.name,
         type: 'hysteria',
         server: node.server,
         port: node.port,
         auth_str: node.settings.auth,
-        up: node.settings.up,
-        down: node.settings.down,
+        up: up,
+        down: down,
         'skip-cert-verify': true,
         sni: node.settings.sni,
-        alpn: node.settings.alpn ? [node.settings.alpn] : undefined,
+        alpn: alpn,
         obfs: node.settings.obfs
     };
 }
@@ -440,13 +458,12 @@ function convertHysteria2(node) {
         type: 'hysteria2',
         server: node.server,
         port: node.port,
-        password: node.settings.auth,
-        'skip-cert-verify': true,
+        password: node.settings.auth || node.settings.password || node.settings.username,
+        'skip-cert-verify': node.settings.insecure === '1' || node.settings.insecure === true,
         sni: node.settings.sni,
         obfs: node.settings.obfs,
         'obfs-password': node.settings.obfsParam
     };
-
 }
 
 // 添加新的转换函数

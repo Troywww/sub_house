@@ -145,6 +145,7 @@ function generateTrojanLink(node) {
         if (settings.host) params.set('host', settings.host);
         if (settings.sni) params.set('sni', settings.sni);
         if (settings.alpn) params.set('alpn', settings.alpn);
+        if (settings.allowInsecure) params.set('allowInsecure', '1');
 
         const url = `trojan://${settings.password}@${node.server}:${node.port}`;
         const query = params.toString();
@@ -200,13 +201,24 @@ function generateHysteriaLink(node) {
         const params = new URLSearchParams();
         const { settings } = node;
 
-        if (settings.protocol) params.set('protocol', settings.protocol);
+        // up/down 兼容 upmbps/downmbps
         if (settings.up) params.set('up', settings.up);
-        if (settings.down) params.set('down', settings.down);
-        if (settings.alpn) params.set('alpn', settings.alpn);
-        if (settings.obfs) params.set('obfs', settings.obfs);
-        if (settings.sni) params.set('sni', settings.sni);
+        else if (settings.upmbps) params.set('upmbps', settings.upmbps);
 
+        if (settings.down) params.set('down', settings.down);
+        else if (settings.downmbps) params.set('downmbps', settings.downmbps);
+
+        // 其它常见参数全部导出
+        [
+            'alpn', 'auth', 'auth_str', 'protocol', 'obfs', 'obfsParam', 'sni', 'peer', 'delay', 'insecure', 'password', 'username'
+        ].forEach(key => {
+            if (settings[key] !== undefined && settings[key] !== '') {
+                params.set(key, settings[key]);
+            }
+        });
+
+        // 修正：auth 放在主链接部分
+        const authPart = settings.auth ? `${encodeURIComponent(settings.auth)}@` : '';
         const url = `hysteria://${node.server}:${node.port}`;
         const query = params.toString();
         const hash = node.name ? `#${encodeURIComponent(node.name)}` : '';
@@ -223,11 +235,21 @@ function generateHysteria2Link(node) {
         const params = new URLSearchParams();
         const { settings } = node;
 
-        if (settings.sni) params.set('sni', settings.sni);
-        if (settings.obfs) params.set('obfs', settings.obfs);
-        if (settings.obfsParam) params.set('obfs-password', settings.obfsParam);
+        // 导出所有常见参数
+        [
+            'sni', 'obfs', 'obfsParam', 'insecure', 'alpn', 'peer', 'delay', 'password', 'username'
+        ].forEach(key => {
+            if (settings[key] !== undefined && settings[key] !== '') {
+                // obfsParam 导出为 obfs-password，其它原样
+                if (key === 'obfsParam') {
+                    params.set('obfs-password', settings[key]);
+                } else {
+                    params.set(key, settings[key]);
+                }
+            }
+        });
 
-        const url = `hysteria2://${settings.auth}@${node.server}:${node.port}`;
+        const url = `hysteria2://${settings.auth ? encodeURIComponent(settings.auth) + '@' : ''}${node.server}:${node.port}`;
         const query = params.toString();
         const hash = node.name ? `#${encodeURIComponent(node.name)}` : '';
 

@@ -364,7 +364,7 @@ export default class Parser {
             const params = new URLSearchParams(url.search);
             return {
                 type: 'trojan',
-                name: decodeNodeName(params.get('remarks') || '') || decodeNodeName(url.hash.slice(1)),
+                name: decodeNodeName(url.hash.slice(1)) || decodeNodeName(params.get('remarks') || ''),
                 server: url.hostname,
                 port: parseInt(url.port),
                 settings: {
@@ -500,7 +500,7 @@ export default class Parser {
             const params = new URLSearchParams(url.search);
             return {
                 type: 'hysteria',
-                name: decodeNodeName(params.get('remarks') || '') || decodeNodeName(url.hash.slice(1)),
+                name: decodeNodeName(url.hash.slice(1)) || decodeNodeName(params.get('remarks') || ''),
                 server: url.hostname,
                 port: parseInt(url.port),
                 settings: {

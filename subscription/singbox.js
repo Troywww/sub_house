@@ -355,7 +355,24 @@ function convertNodeToSingbox(node) {
 
         case 'vless':
             const tlsEnabled = node.settings.security === 'tls' || node.settings.tls === 'tls';
-            const config = {
+            let vlessTransport;
+            if (node.settings.type === 'grpc') {
+                // gRPC 传输，使用 service_name 字段
+                vlessTransport = {
+                    type: 'grpc',
+                    service_name: node.settings.service_name || node.settings.path || ''
+                };
+            } else if (node.settings.type && node.settings.type !== 'tcp') {
+                // 其它传输类型
+                vlessTransport = {
+                    type: node.settings.type || node.settings.net,
+                    path: node.settings.path || '/',
+                    headers: node.settings.host ? { Host: node.settings.host } : undefined
+                };
+            } else {
+                vlessTransport = undefined;
+            }
+            const vlessConfig = {
                 type: 'vless',
                 tag,
                 server: node.server,
@@ -383,38 +400,30 @@ function convertNodeToSingbox(node) {
                         fingerprint: node.settings.fp || 'random'
                     }
                 } : undefined,
-                transport: node.settings.type !== 'tcp' ? {
-                    type: node.settings.type || node.settings.net,
-                    ...(node.settings.type === 'grpc'
-                        ? { service_name: node.settings.path || '' }
-                        : { path: node.settings.path || '/' }),
-                    headers: node.settings.host ? { Host: node.settings.host } : undefined
-                } : undefined
+                ...(vlessTransport ? { transport: vlessTransport } : {})
             };
-            return config;
+            return vlessConfig;
 
         case 'trojan':
-            const trojanConfig = {
-                tag: node.name,
+            // 仅当 type 不为 tcp 时输出 transport
+            const trojanTransport = node.settings.type && node.settings.type !== 'tcp' ? {
+                type: node.settings.type,
+                path: node.settings.path,
+                headers: node.settings.host ? { Host: node.settings.host } : undefined
+            } : undefined;
+            return {
+                tag,
                 type: 'trojan',
                 server: node.server,
                 server_port: node.port,
                 password: node.settings.password,
+                ...(trojanTransport ? { transport: trojanTransport } : {}),
                 tls: {
                     enabled: true,
                     server_name: node.settings.sni,
-                    insecure: true
+                    insecure: node.settings.allowInsecure === true || node.settings.allowInsecure === '1' || node.settings.insecure === '1'
                 }
             };
-            // 只有非 tcp 时才加 transport 字段
-            if (node.settings.type && node.settings.type !== 'tcp') {
-                trojanConfig.transport = {
-                    type: node.settings.type,
-                    path: node.settings.path,
-                    headers: node.settings.host ? { Host: node.settings.host } : undefined
-                };
-            }
-            return trojanConfig;
 
         case 'ss':
             return {
@@ -441,14 +450,16 @@ function convertNodeToSingbox(node) {
             };
 
         case 'hysteria':
+            let up = node.settings.up || node.settings.upmbps;
+            let down = node.settings.down || node.settings.downmbps;
             return {
-                tag: node.name,
+                tag,
                 type: 'hysteria',
                 server: node.server,
                 server_port: node.port,
                 auth_str: node.settings.auth,
-                up_mbps: parseInt(node.settings.up),
-                down_mbps: parseInt(node.settings.down),
+                up_mbps: up ? parseInt(up) : undefined,
+                down_mbps: down ? parseInt(down) : undefined,
                 tls: {
                     enabled: true,
                     server_name: node.settings.sni,
@@ -459,32 +470,22 @@ function convertNodeToSingbox(node) {
             };
 
         case 'hysteria2':
-            const hysteria2Config = {
-                tag: node.name,
+            return {
+                tag,
                 type: 'hysteria2',
                 server: node.server,
                 server_port: node.port,
-                password: node.settings.auth,
+                password: node.settings.auth || node.settings.password || node.settings.username,
                 tls: {
                     enabled: true,
                     server_name: node.settings.sni,
-                    insecure: true
-                }
-            };
-            // 只有当 type 和 password 都有效且 password 至少 8 字符时才加 obfs 字段
-            if (
-                node.settings.obfs &&
-                node.settings.obfs.trim() !== '' &&
-                node.settings.obfsParam &&
-                node.settings.obfsParam.trim() !== '' &&
-                node.settings.obfsParam.length >= 8
-            ) {
-                hysteria2Config.obfs = {
+                    insecure: node.settings.insecure === '1' || node.settings.insecure === true
+                },
+                obfs: node.settings.obfs || node.settings.obfsParam ? {
                     type: node.settings.obfs,
                     password: node.settings.obfsParam
-                };
-            }
-            return hysteria2Config;
+                } : undefined
+            };
 
         case 'tuic':
             return {

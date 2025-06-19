@@ -385,7 +385,9 @@ function convertNodeToSingbox(node) {
                 } : undefined,
                 transport: node.settings.type !== 'tcp' ? {
                     type: node.settings.type || node.settings.net,
-                    path: node.settings.path || '/',
+                    ...(node.settings.type === 'grpc'
+                        ? { service_name: node.settings.path || '' }
+                        : { path: node.settings.path || '/' }),
                     headers: node.settings.host ? { Host: node.settings.host } : undefined
                 } : undefined
             };

@@ -397,7 +397,7 @@ function convertTrojan(node) {
 }
 
 function convertShadowsocks(node) {
-    return {
+    const config = {
         name: node.name,
         type: 'ss',
         server: node.server,
@@ -406,6 +406,17 @@ function convertShadowsocks(node) {
         password: node.settings.password,
         udp: true
     };
+
+    // 添加插件支持
+    if (node.settings.plugin) {
+        config.plugin = node.settings.plugin;
+        
+        if (node.settings.pluginOpts && Object.keys(node.settings.pluginOpts).length > 0) {
+            config['plugin-opts'] = node.settings.pluginOpts;
+        }
+    }
+
+    return config;
 }
 
 function convertShadowsocksR(node) {

@@ -50,6 +50,42 @@ function decodeNodeName(encodedName, fallback = 'Unnamed') {
     }
 }
 
+function base64DecodeUTF8(str) {
+    try {
+        return decodeURIComponent(escape(atob(str)));
+    } catch (e) {
+        return atob(str);
+    }
+}
+
+// 智能多次解码 SSR remarks
+function base64DecodeSmart(str) {
+    let result = str;
+    try {
+        // 先 URL decode
+        result = decodeURIComponent(result);
+    } catch (e) {}
+    // 尝试 base64 解码一次（UTF-8）
+    try {
+        result = decodeURIComponent(escape(atob(result)));
+    } catch (e) {
+        try {
+            result = atob(result);
+        } catch (e2) {}
+    }
+    // 如果还是 base64，再解一次
+    if (/^[A-Za-z0-9+/=]+$/.test(result) && result.length > 16) {
+        try {
+            result = decodeURIComponent(escape(atob(result)));
+        } catch (e) {
+            try {
+                result = atob(result);
+            } catch (e2) {}
+        }
+    }
+    return result;
+}
+
 const config = {
   proxy: {
     http: "http://127.0.0.1:8080",
@@ -129,8 +165,8 @@ export default class Parser {
             // 尝试 Base64 解码
             let decodedContent = this.tryBase64Decode(content);
             
-            // 分割行
-            const lines = decodedContent.split(/[\n\s]+/).filter(line => line.trim());
+            // 分割行（只按换行符，不按空格）
+            const lines = decodedContent.split(/\r?\n/).filter(line => line.trim());
 
             let nodes = [];
             for (const line of lines) {
@@ -400,69 +436,64 @@ export default class Parser {
      */
     static parseSS(line) {
         try {
-            console.log('Parsing node:', {
-                protocol: 'ss',
-                length: line.length,
-                sample: line.slice(0, 50) + '...'
-            });
-
-            // 移除 "ss://" 前缀
-            let content = line.slice(5);
+            // 修复：正确提取userInfo部分（base64编码的method:password）
+            const url = new URL(line);
+            const userInfo = url.username; // 获取@前面的base64部分
+            console.log('Processing userInfo:', userInfo);
             
-            // 分离名称部分（如果存在）
-            let name = '';
-            const hashIndex = content.lastIndexOf('#');
-            if (hashIndex !== -1) {
-                name = content.slice(hashIndex + 1);
-                content = content.slice(0, hashIndex);
+            // 解码userInfo
+            const decodedUserInfo = base64DecodeSmart(userInfo);
+            console.log('Decoded userInfo:', decodedUserInfo);
+            
+            // 分割method和password
+            const parts = decodedUserInfo.split(':');
+            if (parts.length < 2) {
+                console.error('Invalid SS userInfo format:', decodedUserInfo);
+                return null;
+            }
+            
+            const method = parts[0];
+            const password = parts.slice(1).join(':'); // 处理密码中可能包含冒号的情况
+            
+            console.log('  method:', method);
+            console.log('  password:', password);
+            
+            // 从URL hash获取节点名称
+            const name = url.hash ? decodeURIComponent(url.hash.slice(1)) : 'Unnamed';
+            console.log('  name:', name);
+            
+            // 解析插件信息（如果有的话）
+            let plugin = null;
+            let pluginOpts = null;
+            
+            if (url.searchParams.has('plugin')) {
+                plugin = url.searchParams.get('plugin');
+                pluginOpts = {};
+                
+                // 解析插件参数
+                for (const [key, value] of url.searchParams.entries()) {
+                    if (key.startsWith('plugin_')) {
+                        pluginOpts[key.slice(7)] = value;
+                    }
+                }
+                console.log('  plugin:', plugin);
+                console.log('  pluginOpts:', pluginOpts);
             }
 
-            // 检查是否是新版格式（已经 base64 编码的用户信息）
-            const atIndex = content.indexOf('@');
-            if (atIndex === -1) {
-                // 旧版格式，整个内容都是 base64 编码
-                const decoded = atob(content);
-                const [methodAndPass, serverInfo] = decoded.split('@');
-                const [method, password] = methodAndPass.split(':');
-                const [server, port] = serverInfo.split(':');
-                
-                return {
-                    type: 'ss',
-                    name: decodeNodeName(name),
-                    server,
-                    port: parseInt(port),
-                    settings: {
-                        method,
-                        password
-                    }
-                };
-            } else {
-                // 新版格式，只有用户信息是 base64 编码
-                const [userInfo, serverInfo] = content.split('@');
-                console.log('Processing userInfo:', userInfo);
-                
-                // 解码用户信息
-                const decodedUserInfo = atob(userInfo);
-                console.log('Decoded userInfo:', decodedUserInfo);
-                
-                const [method, ...passwordParts] = decodedUserInfo.split(':');
-                const encodedPassword = passwordParts.join(':');
-                
-                const [server, port] = serverInfo.split(':');
-                
-                return {
-                    type: 'ss',
-                    name: decodeNodeName(name),
-                    server,
-                    port: parseInt(port),
-                    settings: {
-                        method,
-                        password: encodedPassword  // 保持原始编码格式
-                    }
-                };
-            }
+            return {
+                type: 'ss',
+                name: name || 'Unnamed',
+                server: url.hostname,
+                port: parseInt(url.port),
+                settings: {
+                    method,
+                    password,
+                    plugin,
+                    pluginOpts
+                }
+            };
         } catch (error) {
-            console.error('Parse Shadowsocks error:', error);
+            console.error('Error parsing SS:', error);
             return null;
         }
     }
@@ -475,13 +506,43 @@ export default class Parser {
     static parseSSR(line) {
         try {
             const content = line.slice(6); // 移除 "ssr://"
-            const decoded = this.tryBase64Decode(content);
+            // 1. 兼容 URL-safe base64
+            let base64 = content.replace(/-/g, '+').replace(/_/g, '/');
+            // 2. 补齐到4的倍数
+            while (base64.length % 4 !== 0) base64 += '=';
+            // 3. 解码
+            const decoded = atob(base64);
             const [baseConfig, query] = decoded.split('/?');
             const [server, port, protocol, method, obfs, password] = baseConfig.split(':');
             const params = new URLSearchParams(query);
+
+            // 智能多次解码 remarks
+            let remarks = '';
+            if (params.get('remarks')) {
+                remarks = base64DecodeSmart(params.get('remarks'));
+            }
+
+            // 增加详细日志
+            console.log('parseSSR:');
+            console.log('  baseConfig:', baseConfig);
+            console.log('  server:', server);
+            console.log('  port:', port);
+            console.log('  protocol:', protocol);
+            console.log('  method:', method);
+            console.log('  obfs:', obfs);
+            console.log('  password (base64):', password);
+            console.log('  password (decoded):', atob(password));
+            console.log('  query:', query);
+            console.log('  remarks (raw):', params.get('remarks'));
+            console.log('  remarks (decoded):', remarks);
+            console.log('  protoparam:', params.get('protoparam'));
+            console.log('  protoparam (decoded):', params.get('protoparam') ? atob(params.get('protoparam')) : '');
+            console.log('  obfsparam:', params.get('obfsparam'));
+            console.log('  obfsparam (decoded):', params.get('obfsparam') ? atob(params.get('obfsparam')) : '');
+
             return {
                 type: 'ssr',
-                name: decodeNodeName(params.get('remarks') || ''),
+                name: remarks, // 直接用原文
                 server,
                 port: parseInt(port),
                 settings: {
@@ -489,12 +550,12 @@ export default class Parser {
                     method,
                     obfs,
                     password: atob(password),
-                    protocolParam: atob(params.get('protoparam') || ''),
-                    obfsParam: atob(params.get('obfsparam') || '')
+                    protocolParam: params.get('protoparam') ? atob(params.get('protoparam')) : '',
+                    obfsParam: params.get('obfsparam') ? atob(params.get('obfsparam')) : ''
                 }
             };
         } catch (error) {
-            console.error('Parse ShadowsocksR error:', error);
+            console.error('Parse ShadowsocksR error:', error, line);
             return null;
         }
     }
@@ -531,6 +592,10 @@ export default class Parser {
             if (!settings.auth && url.username) {
                 settings.auth = url.username;
             }
+
+            // 日志：hash 及解码结果
+            console.log('parseHysteria hash:', url.hash.slice(1));
+            console.log('parseHysteria decoded name:', decodeNodeName(url.hash.slice(1)));
 
             return {
                 type: 'hysteria',

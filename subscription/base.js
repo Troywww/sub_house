@@ -160,39 +160,79 @@ function generateTrojanLink(node) {
 
 function generateSSLink(node) {
     try {
-        const userinfo = btoa(`${node.settings.method}:${node.settings.password}`);
-        const url = `ss://${userinfo}@${node.server}:${node.port}`;
-        const hash = node.name ? `#${encodeURIComponent(node.name)}` : '';
-        return url + hash;
+        // 构建userInfo: method:password
+        const userInfo = `${node.settings.method}:${node.settings.password}`;
+        console.log('SS userInfo before base64:', userInfo);
+        
+        // 使用UTF-8安全的base64编码
+        const encodedUserInfo = btoa(unescape(encodeURIComponent(userInfo)));
+        
+        // 构建URL
+        let url = `ss://${encodedUserInfo}@${node.server}:${node.port}`;
+        
+        // 添加插件参数（如果有）
+        if (node.settings.plugin) {
+            url += `?plugin=${node.settings.plugin}`;
+            if (node.settings.pluginOpts) {
+                for (const [key, value] of Object.entries(node.settings.pluginOpts)) {
+                    url += `&plugin_${key}=${value}`;
+                }
+            }
+        }
+        
+        // 添加节点名称
+        if (node.name && node.name !== 'Unnamed') {
+            url += `#${encodeURIComponent(node.name)}`;
+        }
+        
+        return url;
     } catch (error) {
         console.error('Generate SS link error:', error);
-        return node.url;
+        return null;
     }
 }
 
 function generateSSRLink(node) {
     try {
-        const { settings } = node;
-        const baseConfig = [
-            node.server,
-            node.port,
-            settings.protocol,
-            settings.method,
-            settings.obfs,
-            safeBase64Encode(settings.password)
-        ].join(':');
-
-        const params = new URLSearchParams();
-        if (settings.protocolParam) params.set('protoparam', safeBase64Encode(settings.protocolParam));
-        if (settings.obfsParam) params.set('obfsparam', safeBase64Encode(settings.obfsParam));
-        if (node.name) params.set('remarks', safeBase64Encode(node.name));
-
-        const query = params.toString();
-        const config = baseConfig + '/?' + query;
-        return 'ssr://' + safeBase64Encode(config);
+        console.log('generateSSRLink:');
+        console.log('  node.server:', node.server);
+        console.log('  node.port:', node.port);
+        console.log('  settings.protocol:', node.settings.protocol);
+        console.log('  settings.method:', node.settings.method);
+        console.log('  settings.obfs:', node.settings.obfs);
+        console.log('  settings.password:', node.settings.password);
+        console.log('  settings.protocolParam:', node.settings.protocolParam);
+        console.log('  settings.obfsParam:', node.settings.obfsParam);
+        console.log('  node.name:', node.name);
+        
+        // 修复：使用UTF-8安全的base64编码
+        const remarks = btoa(unescape(encodeURIComponent(node.name)));
+        console.log('  remarks (encoded):', remarks);
+        
+        // 构建查询参数
+        const queryParams = [];
+        if (node.settings.protocolParam) {
+            queryParams.push(`protoparam=${btoa(node.settings.protocolParam)}`);
+        }
+        if (node.settings.obfsParam) {
+            queryParams.push(`obfsparam=${btoa(node.settings.obfsParam)}`);
+        }
+        queryParams.push(`remarks=${remarks}`);
+        
+        const query = queryParams.join('&');
+        console.log('  query:', query);
+        
+        // 构建配置字符串
+        const config = `${node.server}:${node.port}:${node.settings.protocol}:${node.settings.method}:${node.settings.obfs}:${btoa(node.settings.password)}/?${query}`;
+        console.log('  config (before base64):', config);
+        
+        const finalSSR = `ssr://${btoa(config)}`;
+        console.log('  finalSSR:', finalSSR);
+        
+        return finalSSR;
     } catch (error) {
-        console.error('Generate SSR link error:', error);
-        return node.url;
+        console.error('Error converting node:', error);
+        return null;
     }
 }
 
@@ -285,9 +325,9 @@ function generateTuicLink(node) {
 
 function safeBase64Encode(str) {
     try {
-        const encoder = new TextEncoder();
-        const utf8Bytes = encoder.encode(str);
-        return btoa(String.fromCharCode.apply(null, utf8Bytes));
+        if (!str) return '';
+        // SSR 兼容 Latin1 base64
+        return btoa(unescape(encodeURIComponent(str)));
     } catch (error) {
         console.error('Base64 encode error:', error);
         return '';

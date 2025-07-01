@@ -81,11 +81,24 @@ export async function handleSingboxRequest(request, env) {
 
 // 修改 generateSingboxConfig 函数以支持苹果平台参数
 async function generateSingboxConfig(templateContent, proxies, isApplePlatform) {
-    // 首先将节点转换为 Singbox 格式
-    const singboxNodes = proxies.map(node => ({
-        ...convertNodeToSingbox(node),
-        tag: node.name // 确保保留原始名称作为tag
-    }));
+    // 首先将节点转换为 Singbox 格式，并过滤掉不支持的节点
+    const singboxNodes = proxies
+        .map(node => {
+            const converted = convertNodeToSingbox(node);
+            if (converted) {
+                return {
+                    ...converted,
+                    tag: node.name // 确保保留原始名称作为tag
+                };
+            }
+            return null;
+        })
+        .filter(node => node !== null); // 过滤掉 null 值
+    
+    // 如果没有有效节点，返回错误
+    if (singboxNodes.length === 0) {
+        throw new Error('No supported nodes found. SSR nodes are no longer supported in SingBox.');
+    }
     
     // 解析分组规则
     const groups = parseGroups(templateContent);
@@ -426,7 +439,7 @@ function convertNodeToSingbox(node) {
             };
 
         case 'ss':
-            return {
+            const ssConfig = {
                 tag: node.name,
                 type: 'shadowsocks',
                 server: node.server,
@@ -435,19 +448,31 @@ function convertNodeToSingbox(node) {
                 password: node.settings.password
             };
 
+            // 添加插件支持
+            if (node.settings.plugin) {
+                // SingBox 不支持 SS 插件，需要转换为其他协议或跳过
+                if (node.settings.plugin === 'v2ray-plugin') {
+                    // v2ray-plugin 需要转换为 VLESS 或 VMess 协议
+                    // 由于无法直接转换，我们跳过这些节点并记录警告
+                    console.warn(`SS with v2ray-plugin is not supported in SingBox: ${node.name || node.server}. Skipping this node.`);
+                    return null;
+                } else if (node.settings.plugin === 'obfs-local') {
+                    // obfs-local 插件也不支持，跳过
+                    console.warn(`SS with obfs-local plugin is not supported in SingBox: ${node.name || node.server}. Skipping this node.`);
+                    return null;
+                } else {
+                    // 其他插件也不支持，跳过
+                    console.warn(`SS with plugin "${node.settings.plugin}" is not supported in SingBox: ${node.name || node.server}. Skipping this node.`);
+                    return null;
+                }
+            }
+
+            return ssConfig;
+
         case 'ssr':
-            return {
-                tag: node.name,
-                type: 'shadowsocksr',
-                server: node.server,
-                server_port: node.port,
-                method: node.settings.method,
-                password: node.settings.password,
-                protocol: node.settings.protocol,
-                protocol_param: node.settings.protocolParam,
-                obfs: node.settings.obfs,
-                obfs_param: node.settings.obfsParam
-            };
+            // SingBox 已移除 SSR 支持，跳过这些节点
+            console.warn(`SSR nodes are no longer supported in SingBox: ${node.name || node.server}`);
+            return null; // 返回 null 表示跳过此节点
 
         case 'hysteria':
             let up = node.settings.up || node.settings.upmbps;
@@ -507,6 +532,7 @@ function convertNodeToSingbox(node) {
             };
 
         default:
+            console.warn(`Unsupported node type: ${node.type}`);
             return null;
     }
 }

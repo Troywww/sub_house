@@ -355,7 +355,7 @@ function convertVless(node) {
     if (node.settings.security === 'reality') {
         config.flow = 'xtls-rprx-vision';
         config['reality-opts'] = {
-            'public-key': node.settings.pbk
+            'public-key': node.settings.pbk,
             'short-id': node.settings.sid
         };
         config['client-fingerprint'] = node.settings.fp || 'chrome';

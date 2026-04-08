@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "your-worker-name",
+  "main": "_worker.js",
+  "compatibility_date": "2026-04-07",
+  "kv_namespaces": [
+    {
+      "binding": "NODE_STORE",
+      "id": "your-node-store-id",
+      "preview_id": "your-node-store-preview-id"
+    },
+    {
+      "binding": "TEMPLATE_CONFIG",
+      "id": "your-template-config-id",
+      "preview_id": "your-template-config-preview-id"
+    },
+    {
+      "binding": "RULE_CONFIG",
+      "id": "your-rule-config-id",
+      "preview_id": "your-rule-config-preview-id"
+    }
+  ],
+  "vars": {
+    "DEFAULT_USERNAME": "change-me",
+    "DEFAULT_PASSWORD": "change-me",
+    "SUB_WORKER_URL": "",
+    "SUBSCRIBER_URL": "",
+    "QUICK_SUB_URL": "",
+    "DEFAULT_TEMPLATE_URL": "https://example.com/your-default-template.txt"
+  }
+}

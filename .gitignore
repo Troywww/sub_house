@@ -1,0 +1,10 @@
+.wrangler/
+node_modules/
+
+# Keep your real deployment config local.
+wrangler.jsonc
+HANDOFF_CC_CONNECT.md
+
+# Optional local notes
+*.local
+*.tmp

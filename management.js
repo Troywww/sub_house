@@ -134,8 +134,16 @@ function generateMainContent(CONFIG) {
                 <div class="bg-white rounded-xl shadow-lg p-3">
                     <div class="flex flex-wrap gap-2">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
-                            class="px-4 py-2 rounded-lg bg-blue-500 text-white">
+                            class="hidden px-4 py-2 rounded-lg bg-blue-500 text-white">
                             节点与集合
+                        </button>
+                        <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')"
+                            class="px-4 py-2 rounded-lg bg-blue-500 text-white">
+                            节点管理
+                        </button>
+                        <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')"
+                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            集合管理
                         </button>
                         <button type="button" data-page-tab="templates" onclick="showManagementPage('templates')"
                             class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
@@ -156,6 +164,12 @@ function generateMainContent(CONFIG) {
                         ${generateNodeManager()}
                         ${generateCollectionManager(CONFIG)}
                     </div>
+                </section>
+                <section id="managementPage-nodes" data-page-panel="nodes" class="hidden">
+                    ${generateNodeManagerV2()}
+                </section>
+                <section id="managementPage-collections" data-page-panel="collections" class="hidden">
+                    ${generateCollectionManagerV2(CONFIG)}
                 </section>
                 <section id="managementPage-templates" data-page-panel="templates" class="hidden">
                     ${generateTemplateManager()}
@@ -483,6 +497,87 @@ function generateSettingsManager() {
     `;
 }
 
+function generateNodeManagerV2() {
+    return `
+        <div class="bg-white rounded-xl shadow-lg p-8 space-y-6">
+            <div class="flex flex-col lg:flex-row lg:items-end gap-4">
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <input type="text" id="nodeName" placeholder="节点名称"
+                        class="lg:col-span-3 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="text" id="nodeUrl" placeholder="节点 URL"
+                        class="lg:col-span-6 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <input type="text" id="nodeTags" placeholder="标签，逗号分隔"
+                        class="lg:col-span-3 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <button onclick="addNode()"
+                    class="whitespace-nowrap px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    添加节点
+                </button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_220px] gap-4 items-start">
+                <div class="flex flex-wrap items-center gap-3">
+                    <input type="text" id="nodeTagFilter" placeholder="按标签或节点名筛选"
+                        oninput="handleNodeFilterChange(this.value)"
+                        class="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <button type="button" onclick="clearNodeFilter()"
+                        class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
+                        清空筛选
+                    </button>
+                    <div class="inline-flex rounded-lg border border-gray-200 overflow-hidden">
+                        <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')"
+                            class="px-3 py-2 bg-blue-500 text-white text-sm">
+                            平铺显示
+                        </button>
+                        <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')"
+                            class="px-3 py-2 bg-white text-gray-700 text-sm hover:bg-gray-50">
+                            标签分组
+                        </button>
+                    </div>
+                </div>
+                <div id="nodeTagSummary" class="flex flex-wrap lg:justify-end gap-2"></div>
+            </div>
+            <div id="nodeList" class="space-y-6"></div>
+        </div>
+    `;
+}
+
+function generateCollectionManagerV2(CONFIG) {
+    return `
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">集合管理</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" id="collectionName" placeholder="集合名称"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <button onclick="addCollection()"
+                        class="whitespace-nowrap px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">
+                        创建集合
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_220px] gap-4 items-start">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <input type="text" id="collectionNodeFilter" placeholder="按标签或节点名筛选可选节点"
+                            oninput="handleCollectionNodeFilterChange(this.value)"
+                            class="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="button" onclick="clearCollectionNodeFilter()"
+                            class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
+                            清空筛选
+                        </button>
+                    </div>
+                    <div id="collectionTagSummary" class="flex flex-wrap lg:justify-end gap-2"></div>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-lg font-semibold text-gray-700">选择节点</h3>
+                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg"></div>
+                </div>
+                <div id="collectionList" class="space-y-4"></div>
+            </div>
+        </div>
+    `;
+}
+
 function renderSettingsManager() {
     return `
         <div class="bg-white rounded-xl shadow-lg p-8">
@@ -543,7 +638,7 @@ function generateScripts(env, CONFIG) {
             let activeTemplateUrl = new URLSearchParams(window.location.search).get('template')
                 || localStorage.getItem('sub_house_active_template_url')
                 || '';
-            let currentManagementPage = 'overview';
+            let currentManagementPage = 'nodes';
 
             function setAdminAuthenticated(authenticated) {
                 const shell = document.getElementById('managementShell');
@@ -621,7 +716,7 @@ function generateScripts(env, CONFIG) {
 
             init();
 
-            ${generateNodeScripts()}
+            ${generateNodeScriptsV2()}
             ${generateCollectionScripts()}
             ${generateTemplateScripts()}
             ${generateRuleScripts()}
@@ -2293,6 +2388,352 @@ function generateUtilityScriptsV2(env, CONFIG) {
             toast.textContent = message;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
+        }
+    `;
+}
+
+function generateNodeScriptsV2() {
+    return `
+        let nodeTagFilter = '';
+        let nodeViewMode = 'all';
+        let collectionNodeFilter = '';
+        let cachedNodes = [];
+
+        function normalizeNodeRecord(node) {
+            return {
+                ...node,
+                tags: Array.isArray(node.tags) ? node.tags : []
+            };
+        }
+
+        function parseNodeTags(rawValue) {
+            return String(rawValue || '')
+                .split(',')
+                .map(tag => tag.trim())
+                .filter(Boolean);
+        }
+
+        function getFilteredNodesForDisplay(nodes, keyword) {
+            const value = String(keyword || '').trim().toLowerCase();
+            if (!value) return nodes;
+            return nodes.filter((node) => {
+                const nameMatch = String(node.name || '').toLowerCase().includes(value);
+                const tagMatch = (node.tags || []).some((tag) => String(tag).toLowerCase().includes(value));
+                const ungroupedMatch = value === '未分组' && (!node.tags || node.tags.length === 0);
+                return nameMatch || tagMatch || ungroupedMatch;
+            });
+        }
+
+        function renderTagSummary(targetId, nodes, clickHandler) {
+            const container = document.getElementById(targetId);
+            if (!container) return;
+
+            const counts = new Map();
+            nodes.forEach((node) => {
+                const tags = node.tags && node.tags.length ? node.tags : ['未分组'];
+                tags.forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1));
+            });
+
+            const entries = Array.from(counts.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+            container.innerHTML = entries.length
+                ? entries.map(([tag, count]) => '<button type="button" onclick="' + clickHandler + '(\\'' + tag.replace(/'/g, "\\\\'") + '\\')" class="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"><span>' + tag + '</span><span class="ml-1 text-xs text-gray-500">' + count + '</span></button>').join('')
+                : '<span class="text-sm text-gray-400">暂无标签</span>';
+        }
+
+        async function loadNodes() {
+            try {
+                const response = await fetchWithAuth('/api/nodes');
+                if (response.ok) {
+                    cachedNodes = (await response.json()).map(normalizeNodeRecord);
+                    renderNodes(cachedNodes);
+                    updateNodeSelection(cachedNodes);
+                }
+            } catch (e) {
+                console.error('Error loading nodes:', e);
+                alert('加载节点失败');
+            }
+        }
+
+        function setNodeViewMode(mode) {
+            nodeViewMode = mode === 'grouped' ? 'grouped' : 'all';
+            const allBtn = document.getElementById('nodeViewMode-all');
+            const groupedBtn = document.getElementById('nodeViewMode-grouped');
+            if (allBtn) {
+                allBtn.className = nodeViewMode === 'all'
+                    ? 'px-3 py-2 bg-blue-500 text-white text-sm'
+                    : 'px-3 py-2 bg-white text-gray-700 text-sm hover:bg-gray-50';
+            }
+            if (groupedBtn) {
+                groupedBtn.className = nodeViewMode === 'grouped'
+                    ? 'px-3 py-2 bg-blue-500 text-white text-sm'
+                    : 'px-3 py-2 bg-white text-gray-700 text-sm hover:bg-gray-50';
+            }
+            renderNodes(cachedNodes);
+        }
+
+        function handleNodeFilterChange(value) {
+            nodeTagFilter = value || '';
+            renderNodes(cachedNodes);
+        }
+
+        function clearNodeFilter() {
+            nodeTagFilter = '';
+            const input = document.getElementById('nodeTagFilter');
+            if (input) input.value = '';
+            renderNodes(cachedNodes);
+        }
+
+        function applyNodeTagFilter(tag) {
+            nodeTagFilter = tag;
+            const input = document.getElementById('nodeTagFilter');
+            if (input) input.value = tag;
+            renderNodes(cachedNodes);
+        }
+
+        function renderNodes(nodes) {
+            const nodeList = document.getElementById('nodeList');
+            if (!nodeList) return;
+
+            const filteredNodes = getFilteredNodesForDisplay(nodes, nodeTagFilter);
+            renderTagSummary('nodeTagSummary', nodes, 'applyNodeTagFilter');
+
+            const grouped = new Map();
+            if (nodeViewMode === 'grouped') {
+                filteredNodes.forEach((node) => {
+                    const tags = node.tags && node.tags.length ? node.tags : ['未分组'];
+                    tags.forEach((tag) => {
+                        if (!grouped.has(tag)) grouped.set(tag, []);
+                        grouped.get(tag).push(node);
+                    });
+                });
+            } else {
+                grouped.set('全部节点', filteredNodes);
+            }
+
+            nodeList.innerHTML = filteredNodes.length
+                ? Array.from(grouped.entries()).map(([groupName, items]) => {
+                    const uniqueItems = Array.from(new Map(items.map(item => [item.id, item])).values());
+                    return '<div class="space-y-3">'
+                        + (nodeViewMode === 'grouped'
+                            ? '<div class="flex items-center justify-between"><h3 class="text-sm font-semibold text-gray-700">' + groupName + '</h3><span class="text-xs text-gray-400">' + uniqueItems.length + ' 个节点</span></div>'
+                            : '')
+                        + uniqueItems.map((node) => {
+                            const tags = node.tags && node.tags.length
+                                ? node.tags.map((tag) => '<span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">' + tag + '</span>').join('')
+                                : '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">未分组</span>';
+                            return '<div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200">'
+                                + '<div class="flex justify-between items-start gap-4">'
+                                + '<div class="flex-1 min-w-0">'
+                                + '<h3 class="font-medium text-gray-800 flex items-center mb-1"><i class="fas fa-network-wired text-blue-500 mr-2"></i>' + node.name + '</h3>'
+                                + '<div class="text-sm text-gray-500 font-mono truncate">' + node.url + '</div>'
+                                + '<div class="flex flex-wrap gap-2 mt-3">' + tags + '</div>'
+                                + '</div>'
+                                + '<div class="flex items-center space-x-2 ml-4">'
+                                + '<button onclick="editNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors" title="编辑节点"><i class="fas fa-edit"></i></button>'
+                                + '<button onclick="copyNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors" title="复制链接"><i class="fas fa-copy"></i></button>'
+                                + '<button onclick="deleteNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="删除节点"><i class="fas fa-trash-alt"></i></button>'
+                                + '</div>'
+                                + '</div>'
+                                + '</div>';
+                        }).join('')
+                        + '</div>';
+                }).join('')
+                : '<div class="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400">没有匹配的节点</div>';
+
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+                document.head.appendChild(link);
+            }
+        }
+
+        async function addNode() {
+            const name = document.getElementById('nodeName').value;
+            const url = document.getElementById('nodeUrl').value;
+            const tags = parseNodeTags(document.getElementById('nodeTags')?.value || '');
+
+            if (!name || !url) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            try {
+                const response = await fetchWithAuth('/api/nodes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, url, tags })
+                });
+
+                if (response.ok) {
+                    document.getElementById('nodeName').value = '';
+                    document.getElementById('nodeUrl').value = '';
+                    const tagInput = document.getElementById('nodeTags');
+                    if (tagInput) tagInput.value = '';
+                    await loadNodes();
+                }
+            } catch (e) {
+                alert('添加节点失败');
+            }
+        }
+
+        async function editNode(id) {
+            const node = cachedNodes.find((item) => item.id === id);
+            if (node) {
+                showEditDialog(node);
+            }
+        }
+
+        function showEditDialog(node) {
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            dialog.innerHTML = \`
+                <div class="bg-white rounded-lg shadow-xl p-6 max-w-lg w-full mx-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">编辑节点</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">节点名称</label>
+                            <input type="text" id="editNodeName" value="\${node.name}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">节点URL</label>
+                            <input type="text" id="editNodeUrl" value="\${node.url}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">节点标签</label>
+                            <input type="text" id="editNodeTags" value="\${(node.tags || []).join(', ')}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例如：HK, Premium, Test">
+                            <p class="mt-1 text-sm text-gray-500">多个标签请用英文逗号分隔。</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">取消</button>
+                        <button onclick="updateNode('\${node.id}')" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">保存</button>
+                    </div>
+                </div>
+            \`;
+            document.body.appendChild(dialog);
+        }
+
+        async function updateNode(id) {
+            const name = document.getElementById('editNodeName').value;
+            const url = document.getElementById('editNodeUrl').value;
+            const tags = parseNodeTags(document.getElementById('editNodeTags')?.value || '');
+
+            if (!name || !url) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            try {
+                const response = await fetchWithAuth('/api/nodes', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, name, url, tags })
+                });
+
+                if (response.ok) {
+                    document.querySelector('.fixed').remove();
+                    await loadNodes();
+                }
+            } catch (e) {
+                alert('更新节点失败');
+            }
+        }
+
+        async function copyNode(id) {
+            const node = cachedNodes.find((item) => item.id === id);
+            if (node) {
+                await navigator.clipboard.writeText(node.url);
+                showToast('已复制到剪贴板');
+            }
+        }
+
+        async function deleteNode(id) {
+            if (!confirm('确定要删除这个节点吗？')) return;
+
+            try {
+                const response = await fetchWithAuth('/api/nodes', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (response.ok) {
+                    await loadNodes();
+                }
+            } catch (e) {
+                alert('删除节点失败');
+            }
+        }
+
+        function handleCollectionNodeFilterChange(value) {
+            collectionNodeFilter = value || '';
+            updateNodeSelection(cachedNodes);
+        }
+
+        function clearCollectionNodeFilter() {
+            collectionNodeFilter = '';
+            const input = document.getElementById('collectionNodeFilter');
+            if (input) input.value = '';
+            updateNodeSelection(cachedNodes);
+        }
+
+        function applyCollectionTagFilter(tag) {
+            collectionNodeFilter = tag;
+            const input = document.getElementById('collectionNodeFilter');
+            if (input) input.value = tag;
+            updateNodeSelection(cachedNodes);
+        }
+
+        function updateNodeSelection(nodes) {
+            const nodeSelection = document.getElementById('nodeSelection');
+            if (!nodeSelection) return;
+
+            const filteredNodes = getFilteredNodesForDisplay(nodes.map(normalizeNodeRecord), collectionNodeFilter);
+            renderTagSummary('collectionTagSummary', nodes.map(normalizeNodeRecord), 'applyCollectionTagFilter');
+
+            nodeSelection.innerHTML = filteredNodes.map(node => \`
+                <div class="flex items-center space-x-3 p-3 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200">
+                    <input type="checkbox" id="select_\${node.id}" value="\${node.id}" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                    <label for="select_\${node.id}" class="flex-1 min-w-0 text-sm text-gray-700 cursor-pointer">
+                        <div class="font-medium truncate">\${node.name}</div>
+                        <div class="flex flex-wrap gap-1 mt-1">\${(node.tags && node.tags.length ? node.tags : ['未分组']).map(tag => '<span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs">' + tag + '</span>').join('')}</div>
+                    </label>
+                </div>
+            \`).join('');
+
+            const selectionControls = document.createElement('div');
+            selectionControls.className = 'md:col-span-2 xl:col-span-3 flex justify-end gap-2';
+            selectionControls.innerHTML = \`
+                <button onclick="selectAllNodes()" class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors duration-200">全选</button>
+                <button onclick="deselectAllNodes()" class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors duration-200">取消全选</button>
+            \`;
+            nodeSelection.insertBefore(selectionControls, nodeSelection.firstChild);
+        }
+
+        function selectAllNodes() {
+            document.querySelectorAll('#nodeSelection input[type="checkbox"]').forEach(checkbox => checkbox.checked = true);
+        }
+
+        function deselectAllNodes() {
+            document.querySelectorAll('#nodeSelection input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+        }
+
+        function getSelectedNodeIds() {
+            return Array.from(document.querySelectorAll('#nodeSelection input:checked')).map(checkbox => checkbox.value);
+        }
+
+        function setNodeSelection(nodeIds) {
+            document.querySelectorAll('#nodeSelection input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = nodeIds.includes(checkbox.value);
+            });
         }
     `;
 }

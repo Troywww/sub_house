@@ -90,7 +90,10 @@ export class NodesService extends BaseService {
 
     // 节点服务的处理方法
     async handleGet() {
-        const nodes = await this.getNodes();
+        const nodes = (await this.getNodes()).map((node) => ({
+            ...node,
+            tags: Array.isArray(node.tags) ? node.tags : []
+        }));
         return new Response(JSON.stringify(nodes), {
             headers: { 
                 'Content-Type': 'application/json',
@@ -111,6 +114,7 @@ export class NodesService extends BaseService {
                 id: this.generateUUID(),
                 name: data.name,
                 url: data.url,
+                tags: Array.isArray(data.tags) ? data.tags.map(tag => String(tag).trim()).filter(Boolean) : [],
                 createdAt: new Date().toISOString()
             };
             
@@ -146,6 +150,7 @@ export class NodesService extends BaseService {
                 ...nodes[nodeIndex],
                 name: data.name,
                 url: data.url,
+                tags: Array.isArray(data.tags) ? data.tags.map(tag => String(tag).trim()).filter(Boolean) : [],
                 updatedAt: new Date().toISOString()
             };
             

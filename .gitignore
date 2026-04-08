@@ -1,8 +1,8 @@
 .wrangler/
 node_modules/
 
-# Keep your real deployment config local.
-wrangler.jsonc
+# Keep optional local overrides outside the public Worker config.
+wrangler.local.jsonc
 HANDOFF_CC_CONNECT.md
 
 # Optional local notes

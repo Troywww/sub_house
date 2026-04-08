@@ -169,19 +169,29 @@ wrangler login
 
 ### Configure Wrangler
 
-This repository includes a safe example file:
+This repository now includes two Wrangler config patterns:
+
+- `wrangler.jsonc`
+  - minimal public config
+  - intended for Cloudflare Git-based automatic deployments
+  - keeps only the Worker name, entry file, and compatibility date
+- `wrangler.example.jsonc`
+  - full example file
+  - intended for local setup reference
 
 ```text
+wrangler.jsonc
 wrangler.example.jsonc
 ```
 
 Recommended setup:
 
-1. Copy `wrangler.example.jsonc` to `wrangler.jsonc`
-2. Replace all placeholder values with your real Worker and KV settings
-3. Keep your real `wrangler.jsonc` local only
+1. If you use Cloudflare Git sync, keep the committed `wrangler.jsonc` in the repo.
+2. Configure KV bindings and runtime variables in the Cloudflare Dashboard for that Worker.
+3. If you want a richer local config, copy `wrangler.example.jsonc` to `wrangler.local.jsonc` or your own private file.
+4. Do not commit private deployment secrets or private local overrides.
 
-Set your own KV namespace IDs:
+Example KV binding structure:
 
 ```jsonc
 {

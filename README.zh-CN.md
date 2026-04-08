@@ -171,17 +171,39 @@ wrangler login
 
 ### 配置 Wrangler
 
-仓库中已经包含一个安全的示例文件：
+仓库中已经包含两个配置方案：
+
+- `wrangler.jsonc`
+  - 公开仓库可提交的最小配置
+  - 适合 Cloudflare Worker 直接同步 Git 自动部署
+  - 仅保留 Worker 名称、入口文件和兼容日期
+- `wrangler.example.jsonc`
+  - 更完整的示例配置
+  - 适合本地参考和私有扩展
 
 ```text
+wrangler.jsonc
 wrangler.example.jsonc
 ```
 
 建议做法：
 
-1. 复制 `wrangler.example.jsonc` 为 `wrangler.jsonc`
-2. 将占位符替换成你自己的 Worker 名称和 KV 配置
-3. 真实 `wrangler.jsonc` 只保留在本地，不要提交到 Git 仓库
+1. 如果你使用 Cloudflare Git 同步部署，保留仓库中的 `wrangler.jsonc`。
+2. 在 Cloudflare Dashboard 中手动配置 KV 绑定和环境变量。
+3. 如果你需要更完整的本地私有配置，可以复制 `wrangler.example.jsonc` 为 `wrangler.local.jsonc` 或其它私有文件。
+4. 不要把私有密钥、私有变量和本地覆盖配置提交到公开仓库。
+
+示例 KV 绑定结构：
+
+```jsonc
+{
+  "kv_namespaces": [
+    { "binding": "NODE_STORE", "id": "..." },
+    { "binding": "TEMPLATE_CONFIG", "id": "..." },
+    { "binding": "RULE_CONFIG", "id": "..." }
+  ]
+}
+```
 
 ### 重要环境变量
 
@@ -211,6 +233,27 @@ wrangler dev
 ```bash
 wrangler deploy
 ```
+
+### Cloudflare Dashboard Git 同步部署
+
+如果你不想在本地手动执行 `wrangler deploy`，也可以直接使用 Cloudflare Dashboard 的 Git 同步部署。
+
+推荐流程：
+
+1. 在 Cloudflare Dashboard 中把这个 GitHub 仓库连接到目标 Worker。
+2. 保留仓库中的 `wrangler.jsonc`，让 Cloudflare 能读取以下最小信息：
+   - `name`
+   - `main`
+   - `compatibility_date`
+3. 确保 Dashboard 中的 Worker 名称与 `wrangler.jsonc` 里的 `name` 一致。
+4. 在 Cloudflare Dashboard 中手动配置 KV 绑定和环境变量。
+5. 推送到配置好的分支后，由 Cloudflare 自动构建和部署。
+
+补充说明：
+
+- 如果你偏好 Git 驱动部署，这种方式更方便。
+- 仓库中的 `wrangler.jsonc` 故意保持为最小公开配置。
+- 私有密钥、私有变量和本地覆盖配置不要提交到公开仓库。
 
 ## 使用流程
 

@@ -1,5 +1,7 @@
 # Sub House
 
+[English](./README.MD) | [Simplified Chinese](./README.zh-CN.md)
+
 Sub House is a Cloudflare Workers based subscription management and config generation system.
 It lets you manage nodes, collections, templates, rules, admin settings, and user access in one place, then export subscriptions for different clients.
 
@@ -231,6 +233,27 @@ wrangler dev
 ```bash
 wrangler deploy
 ```
+
+### Cloudflare Dashboard Git Sync Deployment
+
+You can also deploy this project without running local `wrangler deploy`.
+
+Recommended flow:
+
+1. Connect the GitHub repository to your Cloudflare Worker in the Dashboard.
+2. Keep `wrangler.jsonc` in the repository so Cloudflare can read:
+   - `name`
+   - `main`
+   - `compatibility_date`
+3. Make sure the Worker name in the Dashboard matches the `name` field in `wrangler.jsonc`.
+4. Configure KV bindings and environment variables manually in the Cloudflare Dashboard.
+5. Push to the configured branch and let Cloudflare build and deploy automatically.
+
+Notes:
+
+- This is the recommended option if you prefer Git-based deployment.
+- The repository keeps `wrangler.jsonc` minimal on purpose.
+- Secrets and private local overrides should stay outside the public repository.
 
 ## Basic Usage Flow
 

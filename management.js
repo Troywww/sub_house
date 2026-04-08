@@ -537,7 +537,8 @@ function generateScripts(env, CONFIG) {
             let currentSettings = {
                 adminUsername: '',
                 hasAdminPassword: false,
-                otherLinkUrl: ''
+                otherLinkUrl: '',
+                activeTemplateUrl: ''
             };
             let activeTemplateUrl = new URLSearchParams(window.location.search).get('template')
                 || localStorage.getItem('sub_house_active_template_url')
@@ -1493,6 +1494,23 @@ function generateTemplateScripts() {
             updateActiveTemplateBadge();
         }
 
+        async function saveActiveTemplateUrl(url) {
+            const response = await fetchWithAuth(CONFIG.API.SETTINGS, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    activeTemplateUrl: url || ''
+                })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'Failed to save active template');
+            }
+            currentSettings.activeTemplateUrl = data.activeTemplateUrl || '';
+            setActiveTemplateUrl(currentSettings.activeTemplateUrl);
+            return currentSettings.activeTemplateUrl;
+        }
+
         let editingTemplateRuleIndex = -1;
         let editingTemplateGroupIndex = -1;
 
@@ -1703,7 +1721,7 @@ function generateTemplateScripts() {
                 }
                 const removed = templates.find(template => template.id === id);
                 if (removed?.internalUrl === activeTemplateUrl) {
-                    setActiveTemplateUrl('');
+                    await saveActiveTemplateUrl('');
                 }
                 fillTemplateForm({});
                 await loadTemplates();
@@ -1714,20 +1732,24 @@ function generateTemplateScripts() {
             }
         }
 
-        function activateTemplateById(id) {
+        async function activateTemplateById(id) {
             const template = templates.find(item => item.id === id);
             if (!template) return;
-            setActiveTemplateUrl(template.internalUrl);
-            showToast('已切换当前模板');
+            try {
+                await saveActiveTemplateUrl(template.internalUrl);
+                showToast('已切换当前模板');
+            } catch (error) {
+                alert('切换当前模板失败：' + error.message);
+            }
         }
 
-        function useCurrentTemplate() {
+        async function useCurrentTemplate() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
                 alert('请先保存当前模板');
                 return;
             }
-            activateTemplateById(id);
+            await activateTemplateById(id);
         }
 
         function copyTemplateUrl(id) {
@@ -2124,8 +2146,10 @@ function generateUtilityScriptsV2(env, CONFIG) {
                 currentSettings = {
                     adminUsername: data.adminUsername || '',
                     hasAdminPassword: Boolean(data.hasAdminPassword),
-                    otherLinkUrl: data.otherLinkUrl || ''
+                    otherLinkUrl: data.otherLinkUrl || '',
+                    activeTemplateUrl: data.activeTemplateUrl || ''
                 };
+                setActiveTemplateUrl(currentSettings.activeTemplateUrl || '');
                 applySettingsToForm();
                 return currentSettings;
             } catch (error) {
@@ -2157,7 +2181,8 @@ function generateUtilityScriptsV2(env, CONFIG) {
                 currentSettings = {
                     adminUsername: data.adminUsername || '',
                     hasAdminPassword: Boolean(data.hasAdminPassword),
-                    otherLinkUrl: data.otherLinkUrl || ''
+                    otherLinkUrl: data.otherLinkUrl || '',
+                    activeTemplateUrl: data.activeTemplateUrl || currentSettings.activeTemplateUrl || ''
                 };
                 applySettingsToForm();
                 showToast('配置已保存');

@@ -1,6 +1,6 @@
 # Sub House
 
-[English](./README.MD) | [Simplified Chinese](./README.zh-CN.md)
+[English](./README.MD) | [简体中文](./README.zh-CN.md)
 
 Sub House is a Cloudflare Workers based subscription management and config generation system.
 It lets you manage nodes, collections, templates, rules, admin settings, and user access in one place, then export subscriptions for different clients.
@@ -171,29 +171,19 @@ wrangler login
 
 ### Configure Wrangler
 
-This repository now includes two Wrangler config patterns:
-
-- `wrangler.jsonc`
-  - minimal public config
-  - intended for Cloudflare Git-based automatic deployments
-  - keeps only the Worker name, entry file, and compatibility date
-- `wrangler.example.jsonc`
-  - full example file
-  - intended for local setup reference
+This repository includes a safe example file:
 
 ```text
-wrangler.jsonc
 wrangler.example.jsonc
 ```
 
 Recommended setup:
 
-1. If you use Cloudflare Git sync, keep the committed `wrangler.jsonc` in the repo.
-2. Configure KV bindings and runtime variables in the Cloudflare Dashboard for that Worker.
-3. If you want a richer local config, copy `wrangler.example.jsonc` to `wrangler.local.jsonc` or your own private file.
-4. Do not commit private deployment secrets or private local overrides.
+1. Copy `wrangler.example.jsonc` to `wrangler.jsonc`
+2. Replace all placeholder values with your real Worker and KV settings
+3. Keep your real `wrangler.jsonc` local only
 
-Example KV binding structure:
+Set your own KV namespace IDs:
 
 ```jsonc
 {
@@ -234,27 +224,6 @@ wrangler dev
 wrangler deploy
 ```
 
-### Cloudflare Dashboard Git Sync Deployment
-
-You can also deploy this project without running local `wrangler deploy`.
-
-Recommended flow:
-
-1. Connect the GitHub repository to your Cloudflare Worker in the Dashboard.
-2. Keep `wrangler.jsonc` in the repository so Cloudflare can read:
-   - `name`
-   - `main`
-   - `compatibility_date`
-3. Make sure the Worker name in the Dashboard matches the `name` field in `wrangler.jsonc`.
-4. Configure KV bindings and environment variables manually in the Cloudflare Dashboard.
-5. Push to the configured branch and let Cloudflare build and deploy automatically.
-
-Notes:
-
-- This is the recommended option if you prefer Git-based deployment.
-- The repository keeps `wrangler.jsonc` minimal on purpose.
-- Secrets and private local overrides should stay outside the public repository.
-
 ## Basic Usage Flow
 
 ### Admin
@@ -293,6 +262,34 @@ Current template manager supports:
 - insert rule references
 - insert group rules
 - load built-in template presets
+
+### Current Template Behavior
+
+The project supports a global "current template" for Clash and Sing-box exports.
+
+Behavior:
+
+- the active template is stored in KV under app settings
+- admin-side "activate current template" updates that global value
+- user page subscription buttons follow the current active template automatically
+- if no active template is set, the system falls back to `DEFAULT_TEMPLATE_URL`
+- `base` subscriptions do not use template parameters
+
+### Using a Non-default Template
+
+There are two supported ways to use a non-default template:
+
+1. Activate a template in the admin template manager
+2. Pass a `template=` query parameter manually
+
+Manual examples:
+
+```text
+/api/share/:collectionId/clash?internal=1&template=<encoded-template-url>
+/api/share/:collectionId/singbox?internal=1&template=<encoded-template-url>
+```
+
+Template records have an internal template URL, and the admin UI can copy or open that template URL directly.
 
 ### Rules
 

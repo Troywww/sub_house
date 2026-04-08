@@ -831,7 +831,8 @@ export class SettingsService extends BaseService {
             return new Response(JSON.stringify({
                 adminUsername: effectiveUsername,
                 hasAdminPassword: Boolean(effectivePassword),
-                otherLinkUrl: settings.otherLinkUrl || ''
+                otherLinkUrl: settings.otherLinkUrl || '',
+                activeTemplateUrl: settings.activeTemplateUrl || ''
             }), {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -842,16 +843,28 @@ export class SettingsService extends BaseService {
             const current = await this.getSettings();
             const nextSettings = {
                 ...current,
-                adminUsername: String(payload.adminUsername || '').trim(),
-                otherLinkUrl: String(payload.otherLinkUrl || '').trim(),
                 updatedAt: new Date().toISOString()
             };
 
-            const password = String(payload.adminPassword || '').trim();
-            if (password) {
-                nextSettings.adminPassword = password;
-            } else if (!current.adminPassword) {
-                nextSettings.adminPassword = '';
+            if (Object.prototype.hasOwnProperty.call(payload, 'adminUsername')) {
+                nextSettings.adminUsername = String(payload.adminUsername || '').trim();
+            }
+
+            if (Object.prototype.hasOwnProperty.call(payload, 'otherLinkUrl')) {
+                nextSettings.otherLinkUrl = String(payload.otherLinkUrl || '').trim();
+            }
+
+            if (Object.prototype.hasOwnProperty.call(payload, 'activeTemplateUrl')) {
+                nextSettings.activeTemplateUrl = String(payload.activeTemplateUrl || '').trim();
+            }
+
+            if (Object.prototype.hasOwnProperty.call(payload, 'adminPassword')) {
+                const password = String(payload.adminPassword || '').trim();
+                if (password) {
+                    nextSettings.adminPassword = password;
+                } else if (!current.adminPassword) {
+                    nextSettings.adminPassword = '';
+                }
             }
 
             await this.saveSettings(nextSettings);
@@ -859,7 +872,8 @@ export class SettingsService extends BaseService {
                 success: true,
                 adminUsername: nextSettings.adminUsername || '',
                 hasAdminPassword: Boolean(nextSettings.adminPassword),
-                otherLinkUrl: nextSettings.otherLinkUrl || ''
+                otherLinkUrl: nextSettings.otherLinkUrl || '',
+                activeTemplateUrl: nextSettings.activeTemplateUrl || ''
             }), {
                 headers: { 'Content-Type': 'application/json' }
             });

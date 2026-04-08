@@ -62,7 +62,7 @@ async function handleRequest(request, env, services) {
                 const sessionToken = auth.split(' ')[1];
                 const session = await services.user.verifySession(sessionToken, request);
                 if (session) {
-                    return generateUserPage(env, 'secret', {
+                    return await generateUserPage(env, 'secret', {
                         username: session.username,
                         collectionId: session.collectionId,
                         expiry: session.expiry,
@@ -71,7 +71,7 @@ async function handleRequest(request, env, services) {
                 }
             }
 
-            return generateUserPage(env);
+            return await generateUserPage(env);
         } catch (error) {
             return ErrorHandler.handle(error, request);
         }

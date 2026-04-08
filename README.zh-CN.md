@@ -171,39 +171,17 @@ wrangler login
 
 ### 配置 Wrangler
 
-仓库中已经包含两个配置方案：
-
-- `wrangler.jsonc`
-  - 公开仓库可提交的最小配置
-  - 适合 Cloudflare Worker 直接同步 Git 自动部署
-  - 仅保留 Worker 名称、入口文件和兼容日期
-- `wrangler.example.jsonc`
-  - 更完整的示例配置
-  - 适合本地参考和私有扩展
+仓库中已经包含一个安全的示例文件：
 
 ```text
-wrangler.jsonc
 wrangler.example.jsonc
 ```
 
 建议做法：
 
-1. 如果你使用 Cloudflare Git 同步部署，保留仓库中的 `wrangler.jsonc`。
-2. 在 Cloudflare Dashboard 中手动配置 KV 绑定和环境变量。
-3. 如果你需要更完整的本地私有配置，可以复制 `wrangler.example.jsonc` 为 `wrangler.local.jsonc` 或其它私有文件。
-4. 不要把私有密钥、私有变量和本地覆盖配置提交到公开仓库。
-
-示例 KV 绑定结构：
-
-```jsonc
-{
-  "kv_namespaces": [
-    { "binding": "NODE_STORE", "id": "..." },
-    { "binding": "TEMPLATE_CONFIG", "id": "..." },
-    { "binding": "RULE_CONFIG", "id": "..." }
-  ]
-}
-```
+1. 复制 `wrangler.example.jsonc` 为 `wrangler.jsonc`
+2. 将占位符替换成你自己的 Worker 名称和 KV 配置
+3. 真实 `wrangler.jsonc` 只保留在本地，不要提交到 Git 仓库
 
 ### 重要环境变量
 
@@ -233,27 +211,6 @@ wrangler dev
 ```bash
 wrangler deploy
 ```
-
-### Cloudflare Dashboard Git 同步部署
-
-如果你不想在本地手动执行 `wrangler deploy`，也可以直接使用 Cloudflare Dashboard 的 Git 同步部署。
-
-推荐流程：
-
-1. 在 Cloudflare Dashboard 中把这个 GitHub 仓库连接到目标 Worker。
-2. 保留仓库中的 `wrangler.jsonc`，让 Cloudflare 能读取以下最小信息：
-   - `name`
-   - `main`
-   - `compatibility_date`
-3. 确保 Dashboard 中的 Worker 名称与 `wrangler.jsonc` 里的 `name` 一致。
-4. 在 Cloudflare Dashboard 中手动配置 KV 绑定和环境变量。
-5. 推送到配置好的分支后，由 Cloudflare 自动构建和部署。
-
-补充说明：
-
-- 如果你偏好 Git 驱动部署，这种方式更方便。
-- 仓库中的 `wrangler.jsonc` 故意保持为最小公开配置。
-- 私有密钥、私有变量和本地覆盖配置不要提交到公开仓库。
 
 ## 使用流程
 
@@ -293,6 +250,34 @@ wrangler deploy
 - 插入规则引用
 - 插入分组规则
 - 加载内置模板预置
+
+### 当前模板行为
+
+项目支持为 Clash 和 Sing-box 导出设置一个全局“当前模板”。
+
+行为规则如下：
+
+- 当前模板会持久化保存到 KV 的应用设置中
+- 管理后台点击“设为当前模板”会更新这个全局值
+- 用户页里的 Clash / Sing-box 订阅按钮会自动跟随当前模板
+- 如果没有设置当前模板，系统会回退到 `DEFAULT_TEMPLATE_URL`
+- `base` 通用订阅不使用模板参数
+
+### 使用非默认模板
+
+目前有两种方式使用非默认模板：
+
+1. 在管理后台模板管理里启用某个模板为当前模板
+2. 手动在订阅链接中传入 `template=` 参数
+
+手动示例：
+
+```text
+/api/share/:collectionId/clash?internal=1&template=<编码后的模板地址>
+/api/share/:collectionId/singbox?internal=1&template=<编码后的模板地址>
+```
+
+模板记录本身带有内部模板地址，管理后台可以直接复制或打开该模板地址。
 
 ### 规则
 
@@ -342,4 +327,3 @@ wrangler deploy
 
 - [Troywww/Subhub](https://github.com/Troywww/Subhub)
 - [DustinWin/ruleset_geodata](https://github.com/DustinWin/ruleset_geodata)
-

@@ -1,11 +1,29 @@
 import { CONFIG, getConfig } from './config.js';
 
-export function generateUserPage(env, pageType = 'login', userData = null) {
+async function resolveActiveTemplateUrl(env) {
+    if (env?.NODE_STORE) {
+        const raw = await env.NODE_STORE.get(CONFIG.APP_SETTINGS_KEY);
+        if (raw) {
+            try {
+                const settings = JSON.parse(raw) || {};
+                if (settings.activeTemplateUrl) {
+                    return settings.activeTemplateUrl;
+                }
+            } catch {
+                // Ignore invalid settings payload and fall back to environment defaults.
+            }
+        }
+    }
+
+    return getConfig('DEFAULT_TEMPLATE_URL', env);
+}
+
+export async function generateUserPage(env, pageType = 'login', userData = null) {
     switch (pageType) {
         case 'login':
             return generateLoginPage();
         case 'secret':
-            return generateSecretPage(env, userData);
+            return generateSecretPage(env, userData, await resolveActiveTemplateUrl(env));
         default:
             return new Response('Not Found', { status: 404 });
     }
@@ -165,7 +183,7 @@ function generateLoginPage() {
     });
 }
 
-function generateSecretPage(env, userData) {
+function generateSecretPage(env, userData, activeTemplateUrl = '') {
     try {
         const html = `
             <!DOCTYPE html>
@@ -307,7 +325,7 @@ function generateSecretPage(env, userData) {
                     // 配置常量，直接使用 getConfig 处理的值
                     const CONFIG = {
                         SUB_WORKER_URL: '${getConfig('SUB_WORKER_URL', env)}',
-                        TEMPLATE_URL: '${getConfig('DEFAULT_TEMPLATE_URL', env)}',
+                        TEMPLATE_URL: '${activeTemplateUrl}',
                         API: ${JSON.stringify(CONFIG.API)},
                         SUBSCRIPTION: ${JSON.stringify(CONFIG.SUBSCRIPTION)}
                     };

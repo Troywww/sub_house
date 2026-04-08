@@ -24,8 +24,6 @@
     "DEFAULT_USERNAME": "change-me",
     "DEFAULT_PASSWORD": "change-me",
     "SUB_WORKER_URL": "",
-    "SUBSCRIBER_URL": "",
-    "QUICK_SUB_URL": "",
     "DEFAULT_TEMPLATE_URL": "https://example.com/your-default-template.txt"
   }
 }

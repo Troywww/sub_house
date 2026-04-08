@@ -202,15 +202,14 @@ Set your own KV namespace IDs:
 | `DEFAULT_USERNAME` | Yes | Initial admin username |
 | `DEFAULT_PASSWORD` | Yes | Initial admin password |
 | `DEFAULT_TEMPLATE_URL` | Recommended | Default template URL |
-| `SUB_WORKER_URL` | No | External subscription converter URL |
-| `SUBSCRIBER_URL` | No | Legacy field, no longer primary in current UI |
-| `QUICK_SUB_URL` | No | Legacy field, no longer primary in current UI |
+| `SUB_WORKER_URL` | No | External subscription converter URL for `base`, `clash`, and `singbox` exports |
 
 Notes:
 
 - After first deployment, log in and change admin credentials in the settings panel.
 - If `SUB_WORKER_URL` is empty, internal conversion is used.
 - If `SUB_WORKER_URL` is set, external conversion is preferred unless the request contains `?internal=1`.
+- The "other link" button in the admin UI is not controlled by `SUB_WORKER_URL`. It uses the value saved in the settings panel (`otherLinkUrl`).
 
 ### Local Development
 

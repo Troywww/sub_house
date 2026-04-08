@@ -190,15 +190,14 @@ wrangler.example.jsonc
 | `DEFAULT_USERNAME` | 是 | 初始管理员用户名 |
 | `DEFAULT_PASSWORD` | 是 | 初始管理员密码 |
 | `DEFAULT_TEMPLATE_URL` | 建议 | 默认模板 URL |
-| `SUB_WORKER_URL` | 否 | 外部订阅转换服务地址 |
-| `SUBSCRIBER_URL` | 否 | 旧字段，当前 UI 不再主用 |
-| `QUICK_SUB_URL` | 否 | 旧字段，当前 UI 不再主用 |
+| `SUB_WORKER_URL` | 否 | `base`、`clash`、`singbox` 订阅的外部转换服务地址 |
 
 补充说明：
 
 - 首次部署后，建议登录后台，在配置面板中修改管理员账号和密码。
 - `SUB_WORKER_URL` 为空时，系统使用内部转换逻辑。
 - `SUB_WORKER_URL` 不为空时，默认优先使用外部转换器，除非请求带 `?internal=1`。
+- 管理后台里的“其他链接”按钮不使用 `SUB_WORKER_URL`，它使用配置面板里保存的 `otherLinkUrl`。
 
 ### 本地开发
 

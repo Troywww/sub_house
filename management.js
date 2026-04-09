@@ -367,7 +367,7 @@ function generateConsoleMainContent(CONFIG) {
 
             <div id="subscriptionQrPopup" class="hidden fixed z-50 pointer-events-none">
                 <div class="bg-white border border-black/10 shadow-2xl p-3">
-                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">?????</p>
+                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">??</p>
                     <div id="subscriptionQrCanvas" class="w-40 h-40 flex items-center justify-center"></div>
                 </div>
             </div>
@@ -431,7 +431,7 @@ function generateMainContent(CONFIG) {
                     <div class="flex flex-wrap gap-1.5">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
                             class="hidden px-4 py-2 rounded-lg bg-blue-500 text-white">
-                            ????
+                            ???
                         </button>
                         <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')"
                             class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
@@ -795,12 +795,12 @@ function generateNodeManagerV2() {
                 <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
                     <div class="space-y-2">
                         <div class="editorial-label">[MODULE_02] NODE MANAGEMENT</div>
-                        <h2 class="editorial-title">????</h2>
-                        <p class="editorial-subtle">??????????????????????????</p>
+                        <h2 class="editorial-title">节点管理</h2>
+                        <p class="editorial-subtle">维护节点链接与标签，并以更高的信息密度浏览、筛选和整理节点资源。</p>
                     </div>
                     <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">
                         <i class="fas fa-plus"></i>
-                        ????
+                        添加节点
                     </button>
                 </div>
             </section>
@@ -808,10 +808,10 @@ function generateNodeManagerV2() {
             <section class="editorial-panel p-6 space-y-5">
                 <div class="editorial-label">[QUICK_CREATE] NEW NODE</div>
                 <div class="grid grid-cols-1 xl:grid-cols-[220px_minmax(0,1fr)_220px_auto] gap-5 items-end">
-                    <div><input type="text" id="nodeName" placeholder="???? / node name" class="editorial-input"></div>
-                    <div><input type="text" id="nodeUrl" placeholder="???? / node url" class="editorial-input"></div>
-                    <div><input type="text" id="nodeTags" placeholder="??,tag1,tag2" class="editorial-input"></div>
-                    <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">????</button>
+                    <div><input type="text" id="nodeName" placeholder="节点名称 / node name" class="editorial-input"></div>
+                    <div><input type="text" id="nodeUrl" placeholder="节点链接 / node url" class="editorial-input"></div>
+                    <div><input type="text" id="nodeTags" placeholder="标签,tag1,tag2" class="editorial-input"></div>
+                    <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">添加节点</button>
                 </div>
             </section>
 
@@ -821,14 +821,14 @@ function generateNodeManagerV2() {
                         <div class="editorial-label">[FILTERS] SEARCH + VIEW</div>
                         <div class="flex flex-col md:flex-row md:items-end gap-4">
                             <div class="w-full md:w-[340px]">
-                                <input type="text" id="nodeTagFilter" placeholder="????????? / filter by tag or name"
+                                <input type="text" id="nodeTagFilter" placeholder="按标签或节点名筛选 / filter by tag or name"
                                     oninput="handleNodeFilterChange(this.value)"
                                     class="editorial-input">
                             </div>
                             <div class="flex items-center gap-0">
-                                <button type="button" onclick="clearNodeFilter()" class="editorial-button">??</button>
-                                <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="editorial-button primary" style="border-left:none;">??</button>
-                                <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="editorial-button" style="border-left:none;">??</button>
+                                <button type="button" onclick="clearNodeFilter()" class="editorial-button">清空</button>
+                                <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="editorial-button primary" style="border-left:none;">平铺</button>
+                                <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="editorial-button" style="border-left:none;">分组</button>
                             </div>
                         </div>
                     </div>
@@ -847,24 +847,24 @@ function generateCollectionManagerV2(CONFIG) {
                 <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
                     <div class="space-y-2">
                         <div class="editorial-label">[MODULE_01] COLLECTION MANAGEMENT</div>
-                        <h2 class="editorial-title">????</h2>
-                        <p class="editorial-subtle">???????????????????? / Sing-box / Clash ???</p>
+                        <h2 class="editorial-title">???</h2>
+                        <p class="editorial-subtle">???? / Sing-box / Clash ??</p>
                     </div>
                     <div class="flex gap-0 flex-wrap" id="collectionStats">
                         <div class="editorial-stat">
-                            <div class="editorial-label mb-2">????</div>
+                            <div class="editorial-label mb-2">???</div>
                             <div id="statCollectionCount" class="text-3xl font-bold leading-none">0</div>
                         </div>
                         <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2">????</div>
+                            <div class="editorial-label mb-2">???</div>
                             <div id="statNodeCount" class="text-3xl font-bold leading-none">0</div>
                         </div>
                         <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2 editorial-kpi-warn">????</div>
+                            <div class="editorial-label mb-2 editorial-kpi-warn">???</div>
                             <div id="statExpiringCount" class="text-3xl font-bold leading-none editorial-kpi-warn">0</div>
                         </div>
                         <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2 editorial-kpi-danger">???</div>
+                            <div class="editorial-label mb-2 editorial-kpi-danger">??</div>
                             <div id="statExpiredCount" class="text-3xl font-bold leading-none editorial-kpi-danger">0</div>
                         </div>
                     </div>
@@ -874,14 +874,14 @@ function generateCollectionManagerV2(CONFIG) {
             <section class="editorial-panel p-6 space-y-5">
                 <div class="editorial-label">[QUICK_CREATE] NEW COLLECTION</div>
                 <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-5 items-end">
-                    <div><input type="text" id="collectionName" placeholder="???? / collection name" class="editorial-input"></div>
-                    <button onclick="addCollection()" class="editorial-button primary whitespace-nowrap">????</button>
+                    <div><input type="text" id="collectionName" placeholder="??? / collection name" class="editorial-input"></div>
+                    <button onclick="addCollection()" class="editorial-button primary whitespace-nowrap">???</button>
                 </div>
                 <div class="editorial-divider"></div>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between gap-3">
                         <div class="editorial-label">[SELECT_NODES]</div>
-                        <div class="editorial-subtle">??????????????????????</div>
+                        <div class="editorial-subtle">?????</div>
                     </div>
                     <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0"></div>
                 </div>
@@ -890,8 +890,8 @@ function generateCollectionManagerV2(CONFIG) {
             <section class="space-y-3">
                 <div class="space-y-1">
                     <div class="editorial-label">[ACTIVE ARCHIVE]</div>
-                    <h3 class="text-2xl font-semibold tracking-tight text-black">??????</h3>
-                    <p class="editorial-subtle">??????????????????????????</p>
+                    <h3 class="text-2xl font-semibold tracking-tight text-black">???</h3>
+                    <p class="editorial-subtle">?????</p>
                 </div>
                 <div class="editorial-divider"></div>
                 <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-0"></div>

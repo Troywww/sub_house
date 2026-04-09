@@ -2176,12 +2176,17 @@ function generateRuleScripts() {
 function generateUtilityScriptsV2(env, CONFIG) {
     return `
         function showManagementPage(page) {
-            currentManagementPage = page || 'collections';
+            currentManagementPage = !page || page === 'overview' ? 'collections' : page;
             document.querySelectorAll('[data-page-panel]').forEach((panel) => {
                 panel.classList.toggle('hidden', panel.getAttribute('data-page-panel') !== currentManagementPage);
             });
             document.querySelectorAll('[data-page-tab]').forEach((button) => {
-                const active = button.getAttribute('data-page-tab') === currentManagementPage;
+                const tab = button.getAttribute('data-page-tab');
+                if (tab === 'overview') {
+                    button.className = 'hidden px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                    return;
+                }
+                const active = tab === currentManagementPage;
                 button.className = active
                     ? 'px-4 py-2 rounded-lg bg-blue-500 text-white'
                     : 'px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
@@ -2704,12 +2709,17 @@ function generateNodeScriptsV2() {
 function generateUtilityScripts(env, CONFIG) {
     return `
         function showManagementPage(page) {
-            currentManagementPage = page || 'collections';
+            currentManagementPage = !page || page === 'overview' ? 'collections' : page;
             document.querySelectorAll('[data-page-panel]').forEach((panel) => {
                 panel.classList.toggle('hidden', panel.getAttribute('data-page-panel') !== currentManagementPage);
             });
             document.querySelectorAll('[data-page-tab]').forEach((button) => {
-                const active = button.getAttribute('data-page-tab') === currentManagementPage;
+                const tab = button.getAttribute('data-page-tab');
+                if (tab === 'overview') {
+                    button.className = 'hidden px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                    return;
+                }
+                const active = tab === currentManagementPage;
                 button.className = active
                     ? 'px-4 py-2 rounded-lg bg-blue-500 text-white'
                     : 'px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';

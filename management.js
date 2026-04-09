@@ -566,25 +566,67 @@ function generateNodeManagerV2() {
 
 function generateCollectionManagerV2(CONFIG) {
     return `
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">集合管理</h2>
-            </div>
-            <div class="space-y-4">
-                <div class="flex flex-col md:flex-row gap-4">
+        <div class="space-y-5">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">集合管理</h2>
+                        <p class="text-sm text-gray-500 mt-1">创建订阅集合、维护有效期并快速分发通用 / Sing-box / Clash 订阅。</p>
+                    </div>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full lg:w-auto" id="collectionStats">
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 min-w-[120px]">
+                            <div class="text-xs text-gray-500">集合总数</div>
+                            <div id="statCollectionCount" class="mt-1 text-2xl font-semibold text-gray-900">0</div>
+                        </div>
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 min-w-[120px]">
+                            <div class="text-xs text-gray-500">节点总数</div>
+                            <div id="statNodeCount" class="mt-1 text-2xl font-semibold text-gray-900">0</div>
+                        </div>
+                        <div class="rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 min-w-[120px]">
+                            <div class="text-xs text-amber-700">即将到期</div>
+                            <div id="statExpiringCount" class="mt-1 text-2xl font-semibold text-amber-700">0</div>
+                        </div>
+                        <div class="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 min-w-[120px]">
+                            <div class="text-xs text-red-700">已过期</div>
+                            <div id="statExpiredCount" class="mt-1 text-2xl font-semibold text-red-700">0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">快速创建集合</h3>
+                        <p class="text-sm text-gray-500">先命名集合，再选择需要包含的节点。</p>
+                    </div>
+                </div>
+                <div class="flex flex-col xl:flex-row gap-4">
                     <input type="text" id="collectionName" placeholder="集合名称"
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <button onclick="addCollection()"
-                        class="whitespace-nowrap px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">
+                        class="whitespace-nowrap px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-200 shadow-sm">
                         创建集合
                     </button>
                 </div>
                 <div class="space-y-2">
-                    <h3 class="text-lg font-semibold text-gray-700">选择节点</h3>
-                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg"></div>
+                    <div class="flex items-center justify-between gap-3">
+                        <h3 class="text-base font-semibold text-gray-800">选择节点</h3>
+                        <p class="text-xs text-gray-400">可先到节点管理页维护标签后再回来选取。</p>
+                    </div>
+                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100"></div>
+                </div>
+            </section>
+
+            <section class="space-y-3">
+                <div class="flex items-end justify-between gap-3">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">当前所有集合</h3>
+                        <p class="text-sm text-gray-500">优先查看状态、有效期和分发入口，不必先进入编辑弹窗。</p>
+                    </div>
                 </div>
                 <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-4"></div>
-            </div>
+            </section>
         </div>
     `;
 }
@@ -1022,76 +1064,121 @@ function generateNodeScripts() {
 // 生成集合相关脚本
 function generateCollectionScripts() {
     return `
+        function updateCollectionStats(collections, nodes) {
+            const now = new Date();
+            const expiringSoonThreshold = 7 * 24 * 60 * 60 * 1000;
+            let expiringSoon = 0;
+            let expired = 0;
+
+            collections.forEach((collection) => {
+                const expiry = collection.tokenExpiry ? new Date(collection.tokenExpiry) : null;
+                if (!expiry || Number.isNaN(expiry.getTime())) return;
+                if (expiry < now) {
+                    expired += 1;
+                } else if (expiry - now <= expiringSoonThreshold) {
+                    expiringSoon += 1;
+                }
+            });
+
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = String(value);
+            };
+
+            setText('statCollectionCount', collections.length);
+            setText('statNodeCount', nodes.length);
+            setText('statExpiringCount', expiringSoon);
+            setText('statExpiredCount', expired);
+        }
+
         async function loadCollections() {
             try {
-                const response = await fetchWithAuth('/api/collections');
-                const collections = await response.json();
+                const [collectionsResponse, nodesResponse] = await Promise.all([
+                    fetchWithAuth('/api/collections'),
+                    fetchWithAuth('/api/nodes')
+                ]);
+                const collections = await collectionsResponse.json();
+                const allNodes = await nodesResponse.json();
                 console.log('Loaded collections:', collections);
+                updateCollectionStats(collections, allNodes);
                 
                 const collectionList = document.getElementById('collectionList');
                 collectionList.innerHTML = collections.map(collection => \`
-                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-all duration-200">
-                        <div class="flex flex-col space-y-4">
-                            <!-- 集合标题、有效期和操作按钮 -->
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2">
-                                        <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <article class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-all duration-200">
+                        <div class="flex flex-col gap-4 h-full">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="text-lg font-semibold text-gray-900 flex items-center min-w-0">
                                             <i class="fas fa-layer-group text-blue-500 mr-2"></i>
-                                            \${collection.name}
+                                            <span class="truncate">\${collection.name}</span>
                                         </h3>
                                         <span id="expiry_\${collection.id}" class="text-sm text-gray-500"></span>
                                     </div>
+                                    <div class="grid grid-cols-2 gap-3 mt-4">
+                                        <div class="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
+                                            <div class="text-xs text-gray-500">访问用户名</div>
+                                            <div id="username_\${collection.id}" class="mt-1 text-sm font-medium text-gray-800 truncate">--</div>
+                                        </div>
+                                        <div class="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
+                                            <div class="text-xs text-gray-500">节点数量</div>
+                                            <div id="nodeCount_\${collection.id}" class="mt-1 text-sm font-medium text-gray-800">0</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex space-x-2">
+                                <div class="flex items-center space-x-2 shrink-0">
                                     <button onclick="editCollection('\${collection.id}')"
-                                        class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors"
+                                        class="p-2 text-gray-400 hover:text-blue-500 transition-colors rounded-lg hover:bg-blue-50"
                                         title="编辑集合">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button onclick="deleteCollection('\${collection.id}')"
-                                        class="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+                                        class="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
                                         title="删除集合">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- 节点列表 -->
-                            <div id="nodeList_\${collection.id}" class="flex flex-wrap gap-2">
-                                <!-- 节点列表将通过 updateCollectionNodes 函数更新 -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-sm font-medium text-gray-700">节点摘要</h4>
+                                    <span class="text-xs text-gray-400">最多展示前 5 个</span>
+                                </div>
+                                <div id="nodeList_\${collection.id}" class="flex flex-wrap gap-2 min-h-[2.25rem]">
+                                    <span class="px-2 py-1 rounded-full bg-gray-100 text-gray-400 text-xs">加载中</span>
+                                </div>
                             </div>
 
-                            <!-- 操作按钮组 -->
-                            <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-100">
+                            <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-100 mt-auto">
                                 <button onclick="shareCollection('\${collection.id}')"
-                                    class="inline-flex items-center px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors">
+                                    class="inline-flex items-center px-3 py-1.5 bg-white text-gray-700 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                                     <i class="fas fa-share-alt mr-1.5"></i>分享
                                 </button>
                                 <button onclick="universalSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'base', '\${collection.id}', '通用订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center px-3 py-1.5 bg-indigo-500 text-white text-sm rounded-lg hover:bg-indigo-600 transition-colors">
+                                    class="inline-flex items-center px-3 py-1.5 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors">
                                     <i class="fas fa-link mr-1.5"></i>通用订阅
                                 </button>
                                 <button onclick="singboxSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'singbox', '\${collection.id}', 'SingBox 订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center px-3 py-1.5 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition-colors">
+                                    class="inline-flex items-center px-3 py-1.5 bg-white text-emerald-700 text-sm rounded-lg border border-emerald-200 hover:bg-emerald-50 transition-colors">
                                     <i class="fas fa-box mr-1.5"></i>SingBox订阅
                                 </button>
                                 <button onclick="clashSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'clash', '\${collection.id}', 'Clash 订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center px-3 py-1.5 bg-purple-500 text-white text-sm rounded-lg hover:bg-purple-600 transition-colors">
+                                    class="inline-flex items-center px-3 py-1.5 bg-white text-violet-700 text-sm rounded-lg border border-violet-200 hover:bg-violet-50 transition-colors">
                                     <i class="fas fa-bolt mr-1.5"></i>Clash订阅
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 \`).join('');
 
                 // 更新每个集合的节点列表和有效期
@@ -1113,6 +1200,14 @@ function generateCollectionScripts() {
                 const nodes = await nodesResponse.json();
                 const token = await tokenResponse.json();
                 const collectionNodes = nodes.filter(node => collection.nodeIds.includes(node.id));
+                const usernameElement = document.getElementById(\`username_\${collection.id}\`);
+                const nodeCountElement = document.getElementById(\`nodeCount_\${collection.id}\`);
+                if (usernameElement) {
+                    usernameElement.textContent = token.username || '--';
+                }
+                if (nodeCountElement) {
+                    nodeCountElement.textContent = String(collectionNodes.length);
+                }
                 
                 // 更新有效期显示
                 const expiryElement = document.getElementById(\`expiry_\${collection.id}\`);
@@ -1144,12 +1239,14 @@ function generateCollectionScripts() {
                 // 更新节点列表，使用更简洁的样式
                 const nodeList = document.getElementById(\`nodeList_\${collection.id}\`);
                 if (nodeList) {
-                    nodeList.innerHTML = collectionNodes.map(node => \`
-                        <span class="inline-flex items-center px-3 py-1 bg-gray-50 text-gray-700 text-sm rounded-lg">
-                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span>
+                    const previewNodes = collectionNodes.slice(0, 5);
+                    const overflow = collectionNodes.length - previewNodes.length;
+                    nodeList.innerHTML = previewNodes.map(node => \`
+                        <span class="inline-flex items-center px-2.5 py-1 bg-gray-50 text-gray-700 text-xs rounded-full border border-gray-200">
+                            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span>
                             \${node.name}
                         </span>
-                    \`).join('');
+                    \`).join('') + (overflow > 0 ? \`<span class="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">+\${overflow}</span>\` : '') || '<span class="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-400 text-xs rounded-full">暂无节点</span>';
                 }
             } catch (e) {
                 console.error('Error updating collection nodes:', e);

@@ -81,13 +81,13 @@ function generateHead() {
 // 生成页面头部
 function generateHeader(CONFIG, env) {
     return `
-        <header class="bg-white shadow-lg rounded-xl mb-8 backdrop-blur-lg bg-opacity-90">
-            <div class="max-w-7xl mx-auto py-6 px-6 sm:px-8">
+        <header class="bg-white shadow-lg rounded-xl mb-5 backdrop-blur-lg bg-opacity-90">
+            <div class="max-w-7xl mx-auto py-4 px-5 sm:px-6">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
                         <i class="fas fa-server text-blue-500 text-3xl mr-3"></i>
                         <div>
-                            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+                            <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
                                 节点管理系统
                             </h1>
                             <p class="text-sm text-gray-500 mt-1">Cloudflare Worker 节点与订阅管理</p>
@@ -120,7 +120,7 @@ function generateHeader(CONFIG, env) {
 // 生成主要内容
 function generateMainContent(CONFIG) {
     return `
-        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <main class="max-w-7xl mx-auto py-4 sm:px-5 lg:px-6">
             <div id="adminGateHint" class="px-4 sm:px-0">
                 <div class="bg-white rounded-xl shadow-lg p-10 text-center">
                     <h2 class="text-2xl font-bold text-gray-800">管理员后台</h2>
@@ -131,19 +131,19 @@ function generateMainContent(CONFIG) {
                 </div>
             </div>
             <div id="managementShell" class="hidden px-4 sm:px-0 space-y-8">
-                <div class="bg-white rounded-xl shadow-lg p-2">
-                    <div class="flex flex-wrap gap-2">
+                <div class="bg-white rounded-xl shadow-lg p-1.5">
+                    <div class="flex flex-wrap gap-1.5">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
                             class="hidden px-4 py-2 rounded-lg bg-blue-500 text-white">
                             ????????
                         </button>
                         <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')"
                             class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
-                            ??????
+                            集合管理
                         </button>
                         <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')"
                             class="px-3 py-1.5 rounded-lg bg-blue-500 text-white">
-                            ??????
+                            节点管理
                         </button>
                         <button type="button" data-page-tab="templates" onclick="showManagementPage('templates')"
                             class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">

@@ -31,6 +31,7 @@ function generateHead() {
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <script>
             let adminDialogVisible = false;
+            let adminNeedsSetup = false;
 
             function closeLoginDialog() {
                 const dialog = document.getElementById('adminLoginDialog');
@@ -38,18 +39,29 @@ function generateHead() {
                 adminDialogVisible = false;
             }
 
-            function showLoginDialog(message = '') {
-                if (adminDialogVisible) {
-                    const error = document.getElementById('adminLoginError');
-                    if (error) error.textContent = message || '';
-                    return;
+            function buildAdminDialogMarkup(message = '') {
+                if (adminNeedsSetup) {
+                    return \`
+                        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+                            <h2 class="text-xl font-bold mb-2">初始化管理员账号</h2>
+                            <p class="text-sm text-gray-500 mb-4">检测到系统尚未配置管理员账号，请先创建一个管理员账号后再进入后台。</p>
+                            <div class="space-y-4">
+                                <div id="adminLoginError" class="text-sm text-red-600 min-h-[1.25rem]">\${message}</div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">管理员用户名</label>
+                                    <input type="text" id="adminUsername" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">管理员密码</label>
+                                    <input type="password" id="adminPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                </div>
+                                <button onclick="setupAdmin()" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">创建并登录</button>
+                            </div>
+                        </div>
+                    \`;
                 }
 
-                adminDialogVisible = true;
-                const dialog = document.createElement('div');
-                dialog.id = 'adminLoginDialog';
-                dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                dialog.innerHTML = \`
+                return \`
                     <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
                         <h2 class="text-xl font-bold mb-4">管理员登录</h2>
                         <div class="space-y-4">
@@ -66,11 +78,27 @@ function generateHead() {
                         </div>
                     </div>
                 \`;
+            }
+
+            function showLoginDialog(message = '') {
+                if (adminDialogVisible) {
+                    const error = document.getElementById('adminLoginError');
+                    if (error) error.textContent = message || '';
+                    return;
+                }
+
+                adminDialogVisible = true;
+                const dialog = document.createElement('div');
+                dialog.id = 'adminLoginDialog';
+                dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                dialog.innerHTML = buildAdminDialogMarkup(message);
                 document.body.appendChild(dialog);
 
                 dialog.querySelectorAll('input').forEach(input => {
                     input.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') login();
+                        if (e.key === 'Enter') {
+                            adminNeedsSetup ? setupAdmin() : login();
+                        }
                     });
                 });
             }
@@ -635,6 +663,7 @@ function generateScripts(env, CONFIG) {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
+                adminNeedsSetup = !!data.needsSetup;
                 setAdminAuthenticated(!!data.authenticated);
                 if (!data.authenticated && showDialogOnFail) {
                     showLoginDialog();
@@ -653,9 +682,34 @@ function generateScripts(env, CONFIG) {
                 });
                 const data = await response.json();
                 if (!response.ok || !data.success) {
+                    if (data.needsSetup) {
+                        adminNeedsSetup = true;
+                    }
                     showLoginDialog(data.error || 'Login failed');
                     return;
                 }
+                adminNeedsSetup = false;
+                closeLoginDialog();
+                setAdminAuthenticated(true);
+                await Promise.all([loadNodes(), loadCollections(), loadTemplates(), loadRules(), loadSettings()]);
+                showManagementPage(currentManagementPage);
+            }
+
+            async function setupAdmin() {
+                const username = document.getElementById('adminUsername')?.value || '';
+                const password = document.getElementById('adminPassword')?.value || '';
+                const response = await fetch(CONFIG.API.ADMIN.BASE + '/setup', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    showLoginDialog(data.error || 'Setup failed');
+                    return;
+                }
+                adminNeedsSetup = false;
                 closeLoginDialog();
                 setAdminAuthenticated(true);
                 await Promise.all([loadNodes(), loadCollections(), loadTemplates(), loadRules(), loadSettings()]);

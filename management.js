@@ -159,12 +159,7 @@ function generateMainContent(CONFIG) {
                         </button>
                     </div>
                 </div>
-                <section id="managementPage-overview" data-page-panel="overview">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        ${generateNodeManager()}
-                        ${generateCollectionManager(CONFIG)}
-                    </div>
-                </section>
+                <section id="managementPage-overview" data-page-panel="overview" class="hidden"></section>
                 <section id="managementPage-nodes" data-page-panel="nodes" class="hidden">
                     ${generateNodeManagerV2()}
                 </section>
@@ -638,7 +633,7 @@ function generateScripts(env, CONFIG) {
             let activeTemplateUrl = new URLSearchParams(window.location.search).get('template')
                 || localStorage.getItem('sub_house_active_template_url')
                 || '';
-            let currentManagementPage = 'nodes';
+            let currentManagementPage = 'collections';
 
             function setAdminAuthenticated(authenticated) {
                 const shell = document.getElementById('managementShell');
@@ -2193,7 +2188,7 @@ function generateRuleScripts() {
 function generateUtilityScriptsV2(env, CONFIG) {
     return `
         function showManagementPage(page) {
-            currentManagementPage = page || 'overview';
+            currentManagementPage = page || 'collections';
             document.querySelectorAll('[data-page-panel]').forEach((panel) => {
                 panel.classList.toggle('hidden', panel.getAttribute('data-page-panel') !== currentManagementPage);
             });
@@ -2741,7 +2736,7 @@ function generateNodeScriptsV2() {
 function generateUtilityScripts(env, CONFIG) {
     return `
         function showManagementPage(page) {
-            currentManagementPage = page || 'overview';
+            currentManagementPage = page || 'collections';
             document.querySelectorAll('[data-page-panel]').forEach((panel) => {
                 panel.classList.toggle('hidden', panel.getAttribute('data-page-panel') !== currentManagementPage);
             });

@@ -81,8 +81,8 @@ function generateHead() {
 // 生成页面头部
 function generateHeader(CONFIG, env) {
     return `
-        <header class="bg-white shadow-lg rounded-xl mb-5 backdrop-blur-lg bg-opacity-90">
-            <div class="max-w-7xl mx-auto py-4 px-5 sm:px-6">
+        <header class="bg-white shadow-lg rounded-xl mb-4 backdrop-blur-lg bg-opacity-90">
+            <div class="max-w-7xl mx-auto py-3 px-4 sm:px-5">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
                         <i class="fas fa-server text-blue-500 text-3xl mr-3"></i>
@@ -135,7 +135,7 @@ function generateMainContent(CONFIG) {
                     <div class="flex flex-wrap gap-1.5">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
                             class="hidden px-4 py-2 rounded-lg bg-blue-500 text-white">
-                            ????????
+                            ????
                         </button>
                         <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')"
                             class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">

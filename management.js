@@ -1155,21 +1155,21 @@ function generateCollectionScripts() {
                                     onmouseenter="showSubscriptionQRCode(event, 'base', '\${collection.id}', '通用订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center justify-center px-3.5 py-1.5 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors min-w-[8rem] shadow-sm">
+                                    class="inline-flex items-center justify-center px-3.5 py-1.5 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors min-w-[8rem] shadow-sm">
                                     <i class="fas fa-link mr-1.5"></i>通用订阅
                                 </button>
                                 <button onclick="singboxSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'singbox', '\${collection.id}', 'SingBox 订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-emerald-700 text-sm rounded-lg border border-emerald-200 hover:bg-emerald-50 transition-colors min-w-[7rem]">
+                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-green-700 text-sm rounded-lg border border-green-200 hover:bg-green-50 transition-colors min-w-[7rem]">
                                     <i class="fas fa-box mr-1.5"></i>SingBox订阅
                                 </button>
                                 <button onclick="clashSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'clash', '\${collection.id}', 'Clash 订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-violet-700 text-sm rounded-lg border border-violet-200 hover:bg-violet-50 transition-colors min-w-[6.5rem]">
+                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-purple-700 text-sm rounded-lg border border-purple-200 hover:bg-purple-50 transition-colors min-w-[6.5rem]">
                                     <i class="fas fa-bolt mr-1.5"></i>Clash订阅
                                 </button>
                                 <button onclick="shareCollection('\${collection.id}')"

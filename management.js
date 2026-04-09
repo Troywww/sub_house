@@ -268,6 +268,35 @@ function generateEditorialStyleTag() {
                 background: var(--editorial-ink);
                 color: white;
             }
+            .editorial-pane > div,
+            #managementPage-collections > div,
+            #managementPage-nodes > div {
+                border: 1px solid var(--editorial-line) !important;
+                border-radius: 0 !important;
+                background: var(--editorial-paper) !important;
+                box-shadow: none !important;
+            }
+            .editorial-pane .bg-gray-50,
+            #managementPage-collections .bg-gray-50,
+            #managementPage-nodes .bg-gray-50 {
+                background: rgba(255,255,255,0.65) !important;
+            }
+            .editorial-pane input,
+            .editorial-pane textarea,
+            .editorial-pane select,
+            #managementPage-collections input,
+            #managementPage-collections textarea,
+            #managementPage-collections select,
+            #managementPage-nodes input,
+            #managementPage-nodes textarea,
+            #managementPage-nodes select {
+                border-radius: 0 !important;
+            }
+            .editorial-pane button:not(.editorial-tab),
+            #managementPage-collections button,
+            #managementPage-nodes button {
+                box-shadow: none !important;
+            }
         </style>
     `;
 }
@@ -338,7 +367,7 @@ function generateConsoleMainContent(CONFIG) {
 
             <div id="subscriptionQrPopup" class="hidden fixed z-50 pointer-events-none">
                 <div class="bg-white border border-black/10 shadow-2xl p-3">
-                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">Subscription QR</p>
+                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">?????</p>
                     <div id="subscriptionQrCanvas" class="w-40 h-40 flex items-center justify-center"></div>
                 </div>
             </div>
@@ -761,115 +790,115 @@ function generateSettingsManager() {
 
 function generateNodeManagerV2() {
     return `
-        <div class="bg-white rounded-xl shadow-lg p-8 space-y-6">
-            <div class="flex flex-col lg:flex-row lg:items-end gap-4">
-                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    <input type="text" id="nodeName" placeholder="节点名称"
-                        class="lg:col-span-3 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <input type="text" id="nodeUrl" placeholder="节点 URL"
-                        class="lg:col-span-6 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <input type="text" id="nodeTags" placeholder="标签，逗号分隔"
-                        class="lg:col-span-3 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <button onclick="addNode()"
-                    class="whitespace-nowrap px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
-                    添加节点
-                </button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_220px] gap-4 items-start">
-                <div class="flex flex-wrap items-center gap-3">
-                    <input type="text" id="nodeTagFilter" placeholder="按标签或节点名筛选"
-                        oninput="handleNodeFilterChange(this.value)"
-                        class="w-full sm:w-72 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button type="button" onclick="clearNodeFilter()"
-                        class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
-                        清空筛选
-                    </button>
-                    <div class="inline-flex rounded-lg border border-gray-200 overflow-hidden">
-                        <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')"
-                            class="px-3 py-2 bg-blue-500 text-white text-sm">
-                            平铺显示
-                        </button>
-                        <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')"
-                            class="px-3 py-2 bg-white text-gray-700 text-sm hover:bg-gray-50">
-                            标签分组
-                        </button>
+        <div class="space-y-6">
+            <section class="editorial-panel p-6">
+                <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
+                    <div class="space-y-2">
+                        <div class="editorial-label">[MODULE_02] NODE MANAGEMENT</div>
+                        <h2 class="editorial-title">????</h2>
+                        <p class="editorial-subtle">??????????????????????????</p>
                     </div>
+                    <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">
+                        <i class="fas fa-plus"></i>
+                        ????
+                    </button>
                 </div>
-                <div id="nodeTagSummary" class="flex flex-wrap lg:justify-end gap-2"></div>
-            </div>
-            <div id="nodeList" class="space-y-6"></div>
+            </section>
+
+            <section class="editorial-panel p-6 space-y-5">
+                <div class="editorial-label">[QUICK_CREATE] NEW NODE</div>
+                <div class="grid grid-cols-1 xl:grid-cols-[220px_minmax(0,1fr)_220px_auto] gap-5 items-end">
+                    <div><input type="text" id="nodeName" placeholder="???? / node name" class="editorial-input"></div>
+                    <div><input type="text" id="nodeUrl" placeholder="???? / node url" class="editorial-input"></div>
+                    <div><input type="text" id="nodeTags" placeholder="??,tag1,tag2" class="editorial-input"></div>
+                    <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">????</button>
+                </div>
+            </section>
+
+            <section class="editorial-panel p-6 space-y-5">
+                <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
+                    <div class="space-y-2">
+                        <div class="editorial-label">[FILTERS] SEARCH + VIEW</div>
+                        <div class="flex flex-col md:flex-row md:items-end gap-4">
+                            <div class="w-full md:w-[340px]">
+                                <input type="text" id="nodeTagFilter" placeholder="????????? / filter by tag or name"
+                                    oninput="handleNodeFilterChange(this.value)"
+                                    class="editorial-input">
+                            </div>
+                            <div class="flex items-center gap-0">
+                                <button type="button" onclick="clearNodeFilter()" class="editorial-button">??</button>
+                                <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="editorial-button primary" style="border-left:none;">??</button>
+                                <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="editorial-button" style="border-left:none;">??</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="nodeTagSummary" class="flex flex-wrap gap-0"></div>
+                </div>
+                <div class="editorial-divider"></div>
+                <div id="nodeList" class="space-y-0"></div>
+            </section>
         </div>
     `;
 }
-
 function generateCollectionManagerV2(CONFIG) {
     return `
-        <div class="space-y-4">
-            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-900">集合管理</h2>
-                        <p class="text-sm text-gray-500 mt-1">创建订阅集合、维护有效期并快速分发通用 / Sing-box / Clash 订阅。</p>
+        <div class="space-y-6">
+            <section class="editorial-panel p-6">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+                    <div class="space-y-2">
+                        <div class="editorial-label">[MODULE_01] COLLECTION MANAGEMENT</div>
+                        <h2 class="editorial-title">????</h2>
+                        <p class="editorial-subtle">???????????????????? / Sing-box / Clash ???</p>
                     </div>
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 w-full lg:w-auto" id="collectionStats">
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-2.5 min-w-[112px]">
-                            <div class="text-xs text-gray-500">集合总数</div>
-                            <div id="statCollectionCount" class="mt-1 text-2xl font-semibold text-gray-900">0</div>
+                    <div class="flex gap-0 flex-wrap" id="collectionStats">
+                        <div class="editorial-stat">
+                            <div class="editorial-label mb-2">????</div>
+                            <div id="statCollectionCount" class="text-3xl font-bold leading-none">0</div>
                         </div>
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-2.5 min-w-[112px]">
-                            <div class="text-xs text-gray-500">节点总数</div>
-                            <div id="statNodeCount" class="mt-1 text-2xl font-semibold text-gray-900">0</div>
+                        <div class="editorial-stat" style="border-left:none;">
+                            <div class="editorial-label mb-2">????</div>
+                            <div id="statNodeCount" class="text-3xl font-bold leading-none">0</div>
                         </div>
-                        <div class="rounded-2xl border border-amber-100 bg-amber-50 px-4 py-2.5 min-w-[112px]">
-                            <div class="text-xs text-amber-700">即将到期</div>
-                            <div id="statExpiringCount" class="mt-1 text-2xl font-semibold text-amber-700">0</div>
+                        <div class="editorial-stat" style="border-left:none;">
+                            <div class="editorial-label mb-2 editorial-kpi-warn">????</div>
+                            <div id="statExpiringCount" class="text-3xl font-bold leading-none editorial-kpi-warn">0</div>
                         </div>
-                        <div class="rounded-2xl border border-red-100 bg-red-50 px-4 py-2.5 min-w-[112px]">
-                            <div class="text-xs text-red-700">已过期</div>
-                            <div id="statExpiredCount" class="mt-1 text-2xl font-semibold text-red-700">0</div>
+                        <div class="editorial-stat" style="border-left:none;">
+                            <div class="editorial-label mb-2 editorial-kpi-danger">???</div>
+                            <div id="statExpiredCount" class="text-3xl font-bold leading-none editorial-kpi-danger">0</div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 space-y-4">
-                <div class="flex items-center justify-between gap-3">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">快速创建集合</h3>
-                        <p class="text-sm text-gray-500">先命名集合，再选择需要包含的节点。</p>
-                    </div>
+            <section class="editorial-panel p-6 space-y-5">
+                <div class="editorial-label">[QUICK_CREATE] NEW COLLECTION</div>
+                <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-5 items-end">
+                    <div><input type="text" id="collectionName" placeholder="???? / collection name" class="editorial-input"></div>
+                    <button onclick="addCollection()" class="editorial-button primary whitespace-nowrap">????</button>
                 </div>
-                <div class="flex flex-col xl:flex-row gap-4">
-                    <input type="text" id="collectionName" placeholder="集合名称"
-                        class="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button onclick="addCollection()"
-                        class="whitespace-nowrap px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-200 shadow-sm">
-                        创建集合
-                    </button>
-                </div>
-                <div class="space-y-2">
+                <div class="editorial-divider"></div>
+                <div class="space-y-3">
                     <div class="flex items-center justify-between gap-3">
-                        <h3 class="text-base font-semibold text-gray-800">选择节点</h3>
-                        <p class="text-xs text-gray-400">可先到节点管理页维护标签后再回来选取。</p>
+                        <div class="editorial-label">[SELECT_NODES]</div>
+                        <div class="editorial-subtle">??????????????????????</div>
                     </div>
-                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100"></div>
+                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0"></div>
                 </div>
             </section>
 
-            <section class="space-y-2.5">
-                <div class="flex items-end justify-between gap-3">
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-900">当前所有集合</h3>
-                        <p class="text-sm text-gray-500">优先查看状态、有效期和分发入口，不必先进入编辑弹窗。</p>
-                    </div>
+            <section class="space-y-3">
+                <div class="space-y-1">
+                    <div class="editorial-label">[ACTIVE ARCHIVE]</div>
+                    <h3 class="text-2xl font-semibold tracking-tight text-black">??????</h3>
+                    <p class="editorial-subtle">??????????????????????????</p>
                 </div>
-                <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-4"></div>
+                <div class="editorial-divider"></div>
+                <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-0"></div>
             </section>
         </div>
     `;
 }
-
 function renderSettingsManager() {
     return `
         <div class="bg-white rounded-xl shadow-lg p-8">

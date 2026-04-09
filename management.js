@@ -6,11 +6,11 @@ export function generateManagementPage(env, CONFIG) {
         <!DOCTYPE html>
         <html>
         <head>
-            ${generateHead()}
+            ${generateConsoleHead()}
         </head>
-        <body class="bg-gray-100 min-h-screen">
-            ${generateHeader(CONFIG, env)}
-            ${generateMainContent(CONFIG)}
+        <body class="editorial-admin min-h-screen">
+            ${generateConsoleHeader(CONFIG, env)}
+            ${generateConsoleMainContent(CONFIG)}
             ${generateScripts(env, CONFIG)}
         </body>
         </html>
@@ -19,6 +19,13 @@ export function generateManagementPage(env, CONFIG) {
     return new Response(html, {
         headers: { 'Content-Type': 'text/html;charset=utf-8' }
     });
+}
+
+function generateConsoleHead() {
+    return `
+        ${generateHead()}
+        ${generateEditorialStyleTag()}
+    `;
 }
 
 // 生成头部
@@ -107,6 +114,238 @@ function generateHead() {
 }
 
 // 生成页面头部
+function generateEditorialStyleTag() {
+    return `
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --editorial-bg: rgb(242, 242, 242);
+                --editorial-paper: rgb(255, 255, 255);
+                --editorial-ink: rgb(12, 12, 12);
+                --editorial-muted: rgb(118, 118, 118);
+                --editorial-line: rgba(15, 23, 42, 0.16);
+            }
+            body.editorial-admin {
+                background: var(--editorial-bg);
+                color: var(--editorial-ink);
+                font-family: 'Barlow Condensed', system-ui, sans-serif;
+                letter-spacing: -0.015em;
+            }
+            .editorial-shell {
+                max-width: 1680px;
+                margin: 0 auto;
+                padding: 18px 22px 36px;
+            }
+            .editorial-topbar {
+                border-bottom: 1px solid var(--editorial-line);
+                background: rgba(255, 255, 255, 0.84);
+                backdrop-filter: blur(10px);
+            }
+            .editorial-wordmark {
+                font-size: clamp(1.75rem, 2.2vw, 2.35rem);
+                line-height: 0.95;
+                font-weight: 700;
+                letter-spacing: -0.05em;
+                color: var(--editorial-ink);
+            }
+            .editorial-kicker {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 11px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--editorial-muted);
+            }
+            .editorial-top-actions button {
+                border: 1px solid var(--editorial-line);
+                border-radius: 0;
+                padding: 8px 14px;
+                background: transparent;
+                color: var(--editorial-ink);
+                font-family: 'Barlow Condensed', sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.03em;
+            }
+            .editorial-top-actions .primary {
+                background: var(--editorial-ink);
+                color: white;
+                border-color: var(--editorial-ink);
+            }
+            .editorial-tabbar {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0;
+                border-bottom: 1px solid var(--editorial-line);
+                margin-bottom: 16px;
+            }
+            .editorial-tab {
+                min-width: 132px;
+                padding: 12px 18px 10px;
+                border-right: 1px solid var(--editorial-line);
+                background: transparent;
+                color: var(--editorial-ink);
+                text-align: left;
+            }
+            .editorial-tab.active {
+                background: var(--editorial-ink);
+                color: white;
+            }
+            .editorial-tab .en {
+                display: block;
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 10px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                opacity: 0.55;
+            }
+            .editorial-tab .zh {
+                display: block;
+                margin-top: 3px;
+                font-size: 18px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+            .editorial-panel {
+                border: 1px solid var(--editorial-line);
+                background: var(--editorial-paper);
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .editorial-label {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 11px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--editorial-muted);
+            }
+            .editorial-title {
+                font-size: clamp(2rem, 3vw, 3rem);
+                line-height: 0.92;
+                font-weight: 700;
+                letter-spacing: -0.05em;
+                color: var(--editorial-ink);
+            }
+            .editorial-subtle {
+                font-size: 13px;
+                color: var(--editorial-muted);
+                line-height: 1.45;
+            }
+            .editorial-input {
+                width: 100%;
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid rgba(15, 23, 42, 0.26);
+                border-radius: 0;
+                padding: 10px 0 8px;
+                font-size: 15px;
+                color: var(--editorial-ink);
+            }
+            .editorial-input::placeholder {
+                color: rgba(15, 23, 42, 0.42);
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+            .editorial-button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 9px 16px;
+                border: 1px solid var(--editorial-ink);
+                border-radius: 0;
+                background: transparent;
+                color: var(--editorial-ink);
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+            .editorial-button.primary {
+                background: var(--editorial-ink);
+                color: white;
+            }
+        </style>
+    `;
+}
+
+function generateConsoleHeader(CONFIG, env) {
+    return `
+        <header class="editorial-topbar">
+            <div class="editorial-shell" style="padding-top: 0; padding-bottom: 0;">
+                <div class="flex items-center justify-between min-h-[58px]">
+                    <div class="flex items-end gap-4">
+                        <div class="editorial-wordmark">SUB//HOUSE</div>
+                        <div class="editorial-kicker">Cloudflare Worker Subscription Engine</div>
+                    </div>
+                    <div class="editorial-top-actions flex items-center gap-0">
+                        <button type="button" onclick="openUserLogin()">用户入口</button>
+                        <button type="button" class="primary" onclick="logoutAdmin()">退出登录</button>
+                        <button type="button" onclick="openOtherLink()">其他链接</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+    `;
+}
+
+function generateConsoleMainContent(CONFIG) {
+    return `
+        <main class="editorial-shell">
+            <div id="adminGateHint">
+                <section class="editorial-panel px-8 py-10 text-center">
+                    <div class="editorial-kicker mb-3">[ADMIN_ACCESS]</div>
+                    <h2 class="editorial-title">管理员后台</h2>
+                    <p class="editorial-subtle mt-3 max-w-2xl mx-auto">请先登录后再管理节点、集合、模板、规则和系统设置。</p>
+                    <button onclick="showLoginDialog()" class="editorial-button primary mt-6">立即登录</button>
+                </section>
+            </div>
+
+            <div id="managementShell" class="hidden space-y-4">
+                <nav class="editorial-tabbar">
+                    <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')" class="editorial-tab">
+                        <span class="en">collections</span>
+                        <span class="zh">集合管理</span>
+                    </button>
+                    <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')" class="editorial-tab">
+                        <span class="en">nodes</span>
+                        <span class="zh">节点管理</span>
+                    </button>
+                    <button type="button" data-page-tab="templates" onclick="showManagementPage('templates')" class="editorial-tab">
+                        <span class="en">templates</span>
+                        <span class="zh">模板管理</span>
+                    </button>
+                    <button type="button" data-page-tab="rules" onclick="showManagementPage('rules')" class="editorial-tab">
+                        <span class="en">rules</span>
+                        <span class="zh">规则目录</span>
+                    </button>
+                    <button type="button" data-page-tab="settings" onclick="showManagementPage('settings')" class="editorial-tab">
+                        <span class="en">settings</span>
+                        <span class="zh">配置面板</span>
+                    </button>
+                </nav>
+
+                <section id="managementPage-overview" data-page-panel="overview" class="hidden"></section>
+                <section id="managementPage-collections" data-page-panel="collections">${generateCollectionManagerV2(CONFIG)}</section>
+                <section id="managementPage-nodes" data-page-panel="nodes" class="hidden">${generateNodeManagerV2()}</section>
+                <section id="managementPage-templates" data-page-panel="templates" class="hidden editorial-pane">${generateTemplateManager()}</section>
+                <section id="managementPage-rules" data-page-panel="rules" class="hidden editorial-pane">${generateRuleManager()}</section>
+                <section id="managementPage-settings" data-page-panel="settings" class="hidden editorial-pane">${renderSettingsManager()}</section>
+            </div>
+
+            <div id="subscriptionQrPopup" class="hidden fixed z-50 pointer-events-none">
+                <div class="bg-white border border-black/10 shadow-2xl p-3">
+                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">Subscription QR</p>
+                    <div id="subscriptionQrCanvas" class="w-40 h-40 flex items-center justify-center"></div>
+                </div>
+            </div>
+        </main>
+    `;
+}
+
 function generateHeader(CONFIG, env) {
     return `
         <header class="bg-white shadow-lg rounded-xl mb-3 backdrop-blur-lg bg-opacity-90">
@@ -2335,13 +2574,11 @@ function generateUtilityScriptsV2(env, CONFIG) {
             document.querySelectorAll('[data-page-tab]').forEach((button) => {
                 const tab = button.getAttribute('data-page-tab');
                 if (tab === 'overview') {
-                    button.className = 'hidden px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                    button.className = 'hidden';
                     return;
                 }
                 const active = tab === currentManagementPage;
-                button.className = active
-                    ? 'px-4 py-2 rounded-lg bg-blue-500 text-white'
-                    : 'px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                button.className = active ? 'editorial-tab active' : 'editorial-tab';
             });
         }
 
@@ -2869,13 +3106,11 @@ function generateUtilityScripts(env, CONFIG) {
             document.querySelectorAll('[data-page-tab]').forEach((button) => {
                 const tab = button.getAttribute('data-page-tab');
                 if (tab === 'overview') {
-                    button.className = 'hidden px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                    button.className = 'hidden';
                     return;
                 }
                 const active = tab === currentManagementPage;
-                button.className = active
-                    ? 'px-4 py-2 rounded-lg bg-blue-500 text-white'
-                    : 'px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                button.className = active ? 'editorial-tab active' : 'editorial-tab';
             });
         }
 

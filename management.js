@@ -551,23 +551,11 @@ function generateCollectionManagerV2(CONFIG) {
                         创建集合
                     </button>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_220px] gap-4 items-start">
-                    <div class="flex flex-wrap items-center gap-3">
-                        <input type="text" id="collectionNodeFilter" placeholder="按标签或节点名筛选可选节点"
-                            oninput="handleCollectionNodeFilterChange(this.value)"
-                            class="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <button type="button" onclick="clearCollectionNodeFilter()"
-                            class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
-                            清空筛选
-                        </button>
-                    </div>
-                    <div id="collectionTagSummary" class="flex flex-wrap lg:justify-end gap-2"></div>
-                </div>
                 <div class="space-y-2">
                     <h3 class="text-lg font-semibold text-gray-700">选择节点</h3>
                     <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg"></div>
                 </div>
-                <div id="collectionList" class="space-y-4"></div>
+                <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-4"></div>
             </div>
         </div>
     `;
@@ -2668,31 +2656,11 @@ function generateNodeScriptsV2() {
             }
         }
 
-        function handleCollectionNodeFilterChange(value) {
-            collectionNodeFilter = value || '';
-            updateNodeSelection(cachedNodes);
-        }
-
-        function clearCollectionNodeFilter() {
-            collectionNodeFilter = '';
-            const input = document.getElementById('collectionNodeFilter');
-            if (input) input.value = '';
-            updateNodeSelection(cachedNodes);
-        }
-
-        function applyCollectionTagFilter(tag) {
-            collectionNodeFilter = tag;
-            const input = document.getElementById('collectionNodeFilter');
-            if (input) input.value = tag;
-            updateNodeSelection(cachedNodes);
-        }
-
         function updateNodeSelection(nodes) {
             const nodeSelection = document.getElementById('nodeSelection');
             if (!nodeSelection) return;
 
             const filteredNodes = getFilteredNodesForDisplay(nodes.map(normalizeNodeRecord), collectionNodeFilter);
-            renderTagSummary('collectionTagSummary', nodes.map(normalizeNodeRecord), 'applyCollectionTagFilter');
 
             nodeSelection.innerHTML = filteredNodes.map(node => \`
                 <div class="flex items-center space-x-3 p-3 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200">

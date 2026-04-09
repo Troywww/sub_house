@@ -367,7 +367,7 @@ function generateConsoleMainContent(CONFIG) {
 
             <div id="subscriptionQrPopup" class="hidden fixed z-50 pointer-events-none">
                 <div class="bg-white border border-black/10 shadow-2xl p-3">
-                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">?????????????????????????????????????????????????????????</p>
+                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">?????</p>
                     <div id="subscriptionQrCanvas" class="w-40 h-40 flex items-center justify-center"></div>
                 </div>
             </div>
@@ -847,24 +847,24 @@ function generateCollectionManagerV2(CONFIG) {
                 <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
                     <div class="space-y-2">
                         <div class="editorial-label">[MODULE_01] COLLECTION MANAGEMENT</div>
-                        <h2 class="editorial-title">????</h2>
-                        <p class="editorial-subtle">???????????????????? / Sing-box / Clash ???</p>
+                        <h2 class="editorial-title">集合管理</h2>
+                        <p class="editorial-subtle">创建订阅集合、维护有效期，并快速分发通用 / Sing-box / Clash 订阅。</p>
                     </div>
                     <div class="flex gap-0 flex-wrap" id="collectionStats">
                         <div class="editorial-stat">
-                            <div class="editorial-label mb-2">????</div>
+                            <div class="editorial-label mb-2">集合总数</div>
                             <div id="statCollectionCount" class="text-3xl font-bold leading-none">0</div>
                         </div>
                         <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2">????</div>
+                            <div class="editorial-label mb-2">节点总数</div>
                             <div id="statNodeCount" class="text-3xl font-bold leading-none">0</div>
                         </div>
                         <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2 editorial-kpi-warn">????</div>
+                            <div class="editorial-label mb-2 editorial-kpi-warn">即将到期</div>
                             <div id="statExpiringCount" class="text-3xl font-bold leading-none editorial-kpi-warn">0</div>
                         </div>
                         <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2 editorial-kpi-danger">???</div>
+                            <div class="editorial-label mb-2 editorial-kpi-danger">已过期</div>
                             <div id="statExpiredCount" class="text-3xl font-bold leading-none editorial-kpi-danger">0</div>
                         </div>
                     </div>
@@ -874,14 +874,14 @@ function generateCollectionManagerV2(CONFIG) {
             <section class="editorial-panel p-6 space-y-5">
                 <div class="editorial-label">[QUICK_CREATE] NEW COLLECTION</div>
                 <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-5 items-end">
-                    <div><input type="text" id="collectionName" placeholder="???? / collection name" class="editorial-input"></div>
-                    <button onclick="addCollection()" class="editorial-button primary whitespace-nowrap">????</button>
+                    <div><input type="text" id="collectionName" placeholder="集合名称 / collection name" class="editorial-input"></div>
+                    <button onclick="addCollection()" class="editorial-button primary whitespace-nowrap">创建集合</button>
                 </div>
                 <div class="editorial-divider"></div>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between gap-3">
                         <div class="editorial-label">[SELECT_NODES]</div>
-                        <div class="editorial-subtle">??????????????????????</div>
+                        <div class="editorial-subtle">先在节点管理中维护标签，再回到这里选取节点。</div>
                     </div>
                     <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0"></div>
                 </div>
@@ -890,8 +890,8 @@ function generateCollectionManagerV2(CONFIG) {
             <section class="space-y-3">
                 <div class="space-y-1">
                     <div class="editorial-label">[ACTIVE_ARCHIVE]</div>
-                    <h3 class="text-2xl font-semibold tracking-tight text-black">??????</h3>
-                    <p class="editorial-subtle">??????????????????????????</p>
+                    <h3 class="text-2xl font-semibold tracking-tight text-black">当前所有集合</h3>
+                    <p class="editorial-subtle">优先查看状态、有效期和分发入口，不必先进入编辑弹窗。</p>
                 </div>
                 <div class="editorial-divider"></div>
                 <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-0"></div>

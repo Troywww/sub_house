@@ -131,30 +131,30 @@ function generateMainContent(CONFIG) {
                 </div>
             </div>
             <div id="managementShell" class="hidden px-4 sm:px-0 space-y-8">
-                <div class="bg-white rounded-xl shadow-lg p-3">
+                <div class="bg-white rounded-xl shadow-lg p-2">
                     <div class="flex flex-wrap gap-2">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
                             class="hidden px-4 py-2 rounded-lg bg-blue-500 text-white">
-                            节点与集合
-                        </button>
-                        <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')"
-                            class="px-4 py-2 rounded-lg bg-blue-500 text-white">
-                            节点管理
+                            ????????
                         </button>
                         <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
-                            集合管理
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            ??????
+                        </button>
+                        <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')"
+                            class="px-3 py-1.5 rounded-lg bg-blue-500 text-white">
+                            ??????
                         </button>
                         <button type="button" data-page-tab="templates" onclick="showManagementPage('templates')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             模板管理
                         </button>
                         <button type="button" data-page-tab="rules" onclick="showManagementPage('rules')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             规则目录
                         </button>
                         <button type="button" data-page-tab="settings" onclick="showManagementPage('settings')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             配置面板
                         </button>
                     </div>
@@ -2505,7 +2505,7 @@ function generateNodeScriptsV2() {
                         + (nodeViewMode === 'grouped'
                             ? '<div class="flex items-center justify-between"><h3 class="text-sm font-semibold text-gray-700">' + groupName + '</h3><span class="text-xs text-gray-400">' + uniqueItems.length + ' 个节点</span></div>'
                             : '')
-                        + uniqueItems.map((node) => {
+                        + '<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">' + uniqueItems.map((node) => {
                             const tags = node.tags && node.tags.length
                                 ? node.tags.map((tag) => '<span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">' + tag + '</span>').join('')
                                 : '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">未分组</span>';
@@ -2524,7 +2524,8 @@ function generateNodeScriptsV2() {
                                 + '</div>'
                                 + '</div>';
                         }).join('')
-                        + '</div>';
+                        + '</div>'
+                        + '</div>'; 
                 }).join('')
                 : '<div class="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400">没有匹配的节点</div>';
 

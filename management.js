@@ -31,7 +31,7 @@ function generateConsoleHead() {
 // 生成头部
 function generateHead() {
     return `
-        <title>节点管理系统</title>
+        <title>Sub House Admin Console</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://unpkg.com/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet">
@@ -49,39 +49,39 @@ function generateHead() {
             function buildAdminDialogMarkup(message = '') {
                 if (adminNeedsSetup) {
                     return \`
-                        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-                            <h2 class="text-xl font-bold mb-2">初始化管理员账号</h2>
-                            <p class="text-sm text-gray-500 mb-4">检测到系统尚未配置管理员账号，请先创建一个管理员账号后再进入后台。</p>
+                        <div class="bg-white border border-gray-200 p-6 w-full max-w-md shadow-2xl">
+                            <h2 class="text-xl font-bold mb-2 text-gray-900">Create Admin Account</h2>
+                            <p class="text-sm text-gray-500 mb-4">No admin account is configured yet. Create one to enter the management console.</p>
                             <div class="space-y-4">
                                 <div id="adminLoginError" class="text-sm text-red-600 min-h-[1.25rem]">\${message}</div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">管理员用户名</label>
-                                    <input type="text" id="adminUsername" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                    <label class="block text-sm font-medium text-gray-700">Admin Username</label>
+                                    <input type="text" id="adminUsername" class="mt-1 block w-full px-3 py-2 border border-gray-300">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">管理员密码</label>
-                                    <input type="password" id="adminPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                    <label class="block text-sm font-medium text-gray-700">Admin Password</label>
+                                    <input type="password" id="adminPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300">
                                 </div>
-                                <button onclick="setupAdmin()" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">创建并登录</button>
+                                <button onclick="setupAdmin()" class="w-full px-4 py-2 bg-black text-white hover:bg-gray-900">Create And Login</button>
                             </div>
                         </div>
                     \`;
                 }
 
                 return \`
-                    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-                        <h2 class="text-xl font-bold mb-4">管理员登录</h2>
+                    <div class="bg-white border border-gray-200 p-6 w-full max-w-md shadow-2xl">
+                        <h2 class="text-xl font-bold mb-4 text-gray-900">Admin Login</h2>
                         <div class="space-y-4">
                             <div id="adminLoginError" class="text-sm text-red-600 min-h-[1.25rem]">\${message}</div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">用户名</label>
-                                <input type="text" id="adminUsername" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <label class="block text-sm font-medium text-gray-700">Username</label>
+                                <input type="text" id="adminUsername" class="mt-1 block w-full px-3 py-2 border border-gray-300">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">密码</label>
-                                <input type="password" id="adminPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <label class="block text-sm font-medium text-gray-700">Password</label>
+                                <input type="password" id="adminPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300">
                             </div>
-                            <button onclick="login()" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">登录</button>
+                            <button onclick="login()" class="w-full px-4 py-2 bg-black text-white hover:bg-gray-900">Login</button>
                         </div>
                     </div>
                 \`;
@@ -113,96 +113,163 @@ function generateHead() {
     `;
 }
 
-// 生成页面头部
 function generateEditorialStyleTag() {
     return `
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
         <style>
             :root {
-                --editorial-bg: rgb(242, 242, 242);
-                --editorial-paper: rgb(255, 255, 255);
-                --editorial-ink: rgb(12, 12, 12);
-                --editorial-muted: rgb(118, 118, 118);
-                --editorial-line: rgba(15, 23, 42, 0.14);
+                --editorial-bg: #f4f4f1;
+                --editorial-paper: #ffffff;
+                --editorial-panel: #f0f0ec;
+                --editorial-ink: #111111;
+                --editorial-muted: #666666;
+                --editorial-line: rgba(17, 17, 17, 0.14);
+                --editorial-line-soft: rgba(17, 17, 17, 0.08);
+                --editorial-success: #0d6f3c;
+                --editorial-warn: #9b650d;
+                --editorial-danger: #b42318;
             }
-            body.editorial-admin { background: var(--editorial-bg); color: var(--editorial-ink); font-family: 'Barlow Condensed', system-ui, sans-serif; letter-spacing: -0.015em; }
-            .editorial-shell { max-width: 1680px; margin: 0 auto; padding: 18px 22px 34px; }
-            .editorial-topbar { border-bottom: 1px solid var(--editorial-line); background: rgba(255,255,255,0.86); backdrop-filter: blur(10px); }
-            .editorial-wordmark { font-size: clamp(1.75rem, 2.2vw, 2.35rem); line-height: 0.95; font-weight: 700; letter-spacing: -0.05em; color: var(--editorial-ink); }
-            .editorial-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--editorial-muted); }
-            .editorial-top-actions button { border: 1px solid var(--editorial-line); border-radius: 0; padding: 8px 14px; background: transparent; color: var(--editorial-ink); font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.03em; }
-            .editorial-top-actions .primary { background: var(--editorial-ink); color: white; border-color: var(--editorial-ink); }
-            .editorial-tabbar { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--editorial-line); margin-bottom: 14px; }
-            .editorial-tab { min-width: 132px; padding: 12px 18px 10px; border-right: 1px solid var(--editorial-line); background: transparent; color: var(--editorial-ink); text-align: left; }
-            .editorial-tab.active { background: var(--editorial-ink); color: white; }
-            .editorial-tab .en { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.55; }
-            .editorial-tab .zh { display: block; margin-top: 3px; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
-            .editorial-panel { border: 1px solid var(--editorial-line); background: var(--editorial-paper); border-radius: 0; box-shadow: none; }
-            .editorial-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--editorial-muted); }
-            .editorial-title { font-size: clamp(2rem, 3vw, 3rem); line-height: 0.92; font-weight: 700; letter-spacing: -0.05em; color: var(--editorial-ink); }
-            .editorial-subtle { font-size: 13px; color: var(--editorial-muted); line-height: 1.45; }
-            .editorial-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(15,23,42,0.24); border-radius: 0; padding: 10px 0 8px; font-size: 15px; color: var(--editorial-ink); }
-            .editorial-input::placeholder { color: rgba(15,23,42,0.42); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
-            .editorial-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 16px; border: 1px solid var(--editorial-ink); border-radius: 0; background: transparent; color: var(--editorial-ink); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
-            .editorial-button.primary { background: var(--editorial-ink); color: white; }
-            .editorial-divider { border-top: 1px solid var(--editorial-line); }
-            .editorial-pane > div, #managementPage-collections > div, #managementPage-nodes > div, #managementPage-templates > div, #managementPage-rules > div, #managementPage-settings > div { border: 1px solid var(--editorial-line) !important; border-radius: 0 !important; background: var(--editorial-paper) !important; box-shadow: none !important; }
-            .editorial-pane .bg-gray-50, #managementPage-collections .bg-gray-50, #managementPage-nodes .bg-gray-50, #managementPage-templates .bg-gray-50, #managementPage-rules .bg-gray-50, #managementPage-settings .bg-gray-50 { background: rgba(255,255,255,0.68) !important; }
+            body.editorial-admin { background: linear-gradient(180deg, #f7f7f4 0%, #f0f0eb 100%); color: var(--editorial-ink); font-family: 'Noto Sans SC', sans-serif; letter-spacing: -0.01em; }
+            .editorial-shell { max-width: 1600px; margin: 0 auto; padding: 0 22px 24px; }
+            .editorial-topbar { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--editorial-line); background: rgba(249, 249, 246, 0.92); backdrop-filter: blur(14px); }
+            .editorial-topbar-inner { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+            .editorial-brand { display: flex; align-items: end; gap: 14px; min-width: 0; }
+            .editorial-wordmark { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.75rem, 2.1vw, 2.4rem); line-height: 0.92; font-weight: 700; letter-spacing: -0.05em; color: var(--editorial-ink); white-space: nowrap; }
+            .editorial-kicker, .editorial-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--editorial-muted); }
+            .editorial-top-actions { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+            .editorial-top-actions button { border: 1px solid var(--editorial-line); border-left: none; padding: 9px 14px; background: rgba(255, 255, 255, 0.65); color: var(--editorial-ink); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; min-height: 40px; }
+            .editorial-top-actions button:first-child { border-left: 1px solid var(--editorial-line); }
+            .editorial-top-actions .primary { background: var(--editorial-ink); color: #ffffff; border-color: var(--editorial-ink); }
+            .editorial-main { padding-top: 16px; }
+            .editorial-gate { border: 1px solid var(--editorial-line); background: var(--editorial-paper); padding: 32px 28px; text-align: center; }
+            .editorial-tabbar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border: 1px solid var(--editorial-line); background: rgba(255, 255, 255, 0.72); }
+            .editorial-tab { padding: 13px 16px 12px; border-right: 1px solid var(--editorial-line-soft); background: transparent; color: var(--editorial-ink); text-align: left; }
+            .editorial-tab:last-child { border-right: none; }
+            .editorial-tab.active { background: var(--editorial-ink); color: #ffffff; }
+            .editorial-tab .en { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; }
+            .editorial-tab .zh { display: block; margin-top: 4px; font-size: 18px; font-weight: 700; letter-spacing: -0.03em; }
+            .editorial-page-stack, .editorial-pane-stack { display: flex; flex-direction: column; gap: 16px; }
+            .editorial-panel { border: 1px solid var(--editorial-line); background: rgba(255, 255, 255, 0.88); box-shadow: 0 8px 24px rgba(17, 17, 17, 0.03); }
+            .editorial-panel.inset { background: rgba(240, 240, 236, 0.92); }
+            .editorial-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.25rem, 3vw, 3.35rem); line-height: 0.92; font-weight: 700; letter-spacing: -0.05em; color: var(--editorial-ink); }
+            .editorial-subtle { font-size: 13px; color: var(--editorial-muted); line-height: 1.6; }
+            .editorial-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr); gap: 18px; align-items: end; }
+            .editorial-stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--editorial-line); background: var(--editorial-panel); }
+            .editorial-stat { padding: 14px 16px; border-right: 1px solid var(--editorial-line-soft); border-bottom: 1px solid var(--editorial-line-soft); min-height: 90px; }
+            .editorial-stat:nth-child(2n) { border-right: none; }
+            .editorial-stat:nth-last-child(-n + 2) { border-bottom: none; }
+            .editorial-stat-value { font-family: 'Barlow Condensed', sans-serif; font-size: 2.4rem; line-height: 0.95; font-weight: 700; letter-spacing: -0.05em; }
+            .editorial-kpi-warn { color: var(--editorial-warn); }
+            .editorial-kpi-danger { color: var(--editorial-danger); }
+            .editorial-kpi-success { color: var(--editorial-success); }
+            .editorial-divider { border-top: 1px solid var(--editorial-line-soft); }
+            .editorial-form-grid { display: grid; gap: 16px; }
+            .editorial-form-grid.columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .editorial-form-grid.columns-3 { grid-template-columns: 220px minmax(0, 1fr) 220px auto; }
+            .editorial-form-grid.columns-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .editorial-input, .editorial-select, .editorial-textarea { width: 100%; border: 1px solid var(--editorial-line); background: rgba(255, 255, 255, 0.9); padding: 11px 12px; font-size: 14px; color: var(--editorial-ink); outline: none; }
+            .editorial-textarea { min-height: 360px; resize: vertical; font-family: 'IBM Plex Mono', monospace; line-height: 1.6; }
+            .editorial-input.mono, .editorial-select.mono { font-family: 'IBM Plex Mono', monospace; }
+            .editorial-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--editorial-line); background: rgba(255, 255, 255, 0.92); color: var(--editorial-ink); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; min-height: 42px; white-space: nowrap; }
+            .editorial-button.primary { background: var(--editorial-ink); color: #ffffff; border-color: var(--editorial-ink); }
+            .editorial-button.subscription-primary { background: #111111; color: #ffffff; border-color: #111111; }
+            .editorial-button.subscription-singbox { color: var(--editorial-success); }
+            .editorial-button.subscription-clash { color: #6b46c1; }
+            .editorial-chip, .editorial-chip-count, .editorial-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--editorial-line-soft); background: rgba(255, 255, 255, 0.72); font-size: 12px; color: var(--editorial-ink); }
+            .editorial-chip-count, .editorial-badge { font-family: 'IBM Plex Mono', monospace; color: var(--editorial-muted); }
+            .editorial-status-good { color: var(--editorial-success); background: rgba(13, 111, 60, 0.08); border-color: rgba(13, 111, 60, 0.12); }
+            .editorial-status-warn { color: var(--editorial-warn); background: rgba(155, 101, 13, 0.08); border-color: rgba(155, 101, 13, 0.12); }
+            .editorial-status-danger { color: var(--editorial-danger); background: rgba(180, 35, 24, 0.08); border-color: rgba(180, 35, 24, 0.12); }
+            .editorial-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+            .editorial-card, .editorial-list-card { border: 1px solid var(--editorial-line); background: rgba(255, 255, 255, 0.88); padding: 18px; }
+            .editorial-card-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+            .editorial-card-title { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; color: var(--editorial-ink); line-height: 1.2; }
+            .editorial-card-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+            .editorial-card-meta-item { background: var(--editorial-panel); padding: 12px; min-height: 72px; }
+            .editorial-card-actions, .editorial-subscription-row { display: flex; flex-wrap: wrap; gap: 8px; }
+            .editorial-empty { border: 1px dashed var(--editorial-line); background: rgba(255, 255, 255, 0.65); padding: 28px; text-align: center; color: var(--editorial-muted); }
+            .editorial-side-layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 16px; }
+            .editorial-side-list, .editorial-structure-list { display: flex; flex-direction: column; gap: 12px; max-height: 34rem; overflow: auto; padding-right: 4px; }
+            .editorial-structure-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+            .editorial-structure-box { border: 1px solid var(--editorial-line-soft); background: var(--editorial-panel); padding: 14px; min-height: 220px; }
+            .editorial-structure-item { border: 1px solid var(--editorial-line-soft); background: rgba(255, 255, 255, 0.88); padding: 12px; }
+            .editorial-hint { background: var(--editorial-panel); border: 1px solid var(--editorial-line-soft); padding: 14px; font-size: 13px; color: var(--editorial-muted); line-height: 1.6; }
+            .editorial-modal-backdrop { position: fixed; inset: 0; z-index: 50; background: rgba(17, 17, 17, 0.5); padding: 16px; overflow: auto; }
+            .editorial-modal { background: #ffffff; border: 1px solid var(--editorial-line); max-width: 1080px; width: 100%; margin: 0 auto; max-height: calc(100vh - 32px); display: flex; flex-direction: column; box-shadow: 0 24px 64px rgba(17, 17, 17, 0.12); }
+            .editorial-modal-head, .editorial-modal-foot { padding: 16px 20px; border-bottom: 1px solid var(--editorial-line-soft); background: rgba(248, 248, 245, 0.96); }
+            .editorial-modal-foot { border-top: 1px solid var(--editorial-line-soft); border-bottom: none; display: flex; justify-content: flex-end; gap: 8px; }
+            .editorial-modal-body { padding: 20px; overflow: auto; display: flex; flex-direction: column; gap: 16px; }
+            .editorial-toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); background: #111111; color: #ffffff; padding: 10px 14px; font-size: 13px; z-index: 60; box-shadow: 0 10px 30px rgba(17, 17, 17, 0.18); }
+            #subscriptionQrPopup .editorial-qr-card { background: rgba(255, 255, 255, 0.95); border: 1px solid var(--editorial-line); padding: 12px; box-shadow: 0 16px 40px rgba(17, 17, 17, 0.08); }
+            .editorial-pane > div, #managementPage-collections > div, #managementPage-nodes > div, #managementPage-templates > div, #managementPage-rules > div, #managementPage-settings > div { border: none !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
             .editorial-pane input, .editorial-pane textarea, .editorial-pane select, #managementPage-collections input, #managementPage-collections textarea, #managementPage-collections select, #managementPage-nodes input, #managementPage-nodes textarea, #managementPage-nodes select, #managementPage-templates input, #managementPage-templates textarea, #managementPage-templates select, #managementPage-rules input, #managementPage-rules textarea, #managementPage-rules select, #managementPage-settings input, #managementPage-settings textarea, #managementPage-settings select { border-radius: 0 !important; }
+            @media (max-width: 1279px) {
+                .editorial-hero, .editorial-side-layout, .editorial-form-grid.columns-3, .editorial-form-grid.columns-4, .editorial-card-grid, .editorial-structure-grid { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 900px) {
+                .editorial-shell { padding-left: 14px; padding-right: 14px; }
+                .editorial-topbar-inner, .editorial-brand { align-items: flex-start; flex-direction: column; }
+                .editorial-tabbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+                .editorial-form-grid.columns-2, .editorial-card-meta { grid-template-columns: 1fr; }
+            }
         </style>
     `;
-}function generateConsoleHeader(CONFIG, env) {
+}
+
+function generateConsoleHeader(CONFIG, env) {
     return `
         <header class="editorial-topbar">
-            <div class="editorial-shell" style="padding-top:0;padding-bottom:0;">
-                <div class="flex items-center justify-between min-h-[58px]">
-                    <div class="flex items-end gap-4">
+            <div class="editorial-shell">
+                <div class="editorial-topbar-inner">
+                    <div class="editorial-brand">
                         <div class="editorial-wordmark">SUB//HOUSE</div>
-                        <div class="editorial-kicker">Cloudflare Worker Subscription Engine</div>
+                        <div class="editorial-kicker">Cloudflare Worker Subscription Console</div>
                     </div>
-                    <div class="editorial-top-actions flex items-center gap-0">
-                        <button type="button" onclick="openUserLogin()">????</button>
-                        <button type="button" class="primary" onclick="logoutAdmin()">????</button>
-                        <button type="button" onclick="openOtherLink()">????</button>
+                    <div class="editorial-top-actions">
+                        <button type="button" onclick="openUserLogin()">User Portal</button>
+                        <button type="button" onclick="openOtherLink()">Other Link</button>
+                        <button type="button" class="primary" onclick="logoutAdmin()">Logout</button>
                     </div>
                 </div>
             </div>
         </header>
     `;
-}function generateConsoleMainContent(CONFIG) {
+}
+
+function generateConsoleMainContent(CONFIG) {
     return `
-        <main class="editorial-shell">
+        <main class="editorial-shell editorial-main">
             <div id="adminGateHint">
-                <section class="editorial-panel px-8 py-10 text-center">
+                <section class="editorial-gate">
                     <div class="editorial-kicker mb-3">[ADMIN_ACCESS]</div>
-                    <h2 class="editorial-title">?????</h2>
-                    <p class="editorial-subtle mt-3 max-w-2xl mx-auto">?????????????????????????</p>
-                    <button onclick="showLoginDialog()" class="editorial-button primary mt-6">????</button>
+                    <h2 class="editorial-title">Enter The Management Console</h2>
+                    <p class="editorial-subtle mt-3 max-w-2xl mx-auto">Sign in to manage collections, nodes, templates, rules, and system settings. The dashboard now uses a collection-first editorial console layout with fast subscription distribution actions.</p>
+                    <button onclick="showLoginDialog()" class="editorial-button primary mt-6">Admin Login</button>
                 </section>
             </div>
-            <div id="managementShell" class="hidden space-y-4">
+            <div id="managementShell" class="hidden editorial-page-stack">
                 <nav class="editorial-tabbar">
                     <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')" class="editorial-tab">
                         <span class="en">collections</span>
-                        <span class="zh">????</span>
+                        <span class="zh">Collections</span>
                     </button>
                     <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')" class="editorial-tab">
                         <span class="en">nodes</span>
-                        <span class="zh">????</span>
+                        <span class="zh">Nodes</span>
                     </button>
                     <button type="button" data-page-tab="templates" onclick="showManagementPage('templates')" class="editorial-tab">
                         <span class="en">templates</span>
-                        <span class="zh">????</span>
+                        <span class="zh">Templates</span>
                     </button>
                     <button type="button" data-page-tab="rules" onclick="showManagementPage('rules')" class="editorial-tab">
                         <span class="en">rules</span>
-                        <span class="zh">????</span>
+                        <span class="zh">Rules</span>
                     </button>
                     <button type="button" data-page-tab="settings" onclick="showManagementPage('settings')" class="editorial-tab">
                         <span class="en">settings</span>
-                        <span class="zh">????</span>
+                        <span class="zh">Settings</span>
                     </button>
                 </nav>
                 <section id="managementPage-overview" data-page-panel="overview" class="hidden"></section>
@@ -213,14 +280,16 @@ function generateEditorialStyleTag() {
                 <section id="managementPage-settings" data-page-panel="settings" class="hidden editorial-pane">${renderSettingsManager()}</section>
             </div>
             <div id="subscriptionQrPopup" class="hidden fixed z-50 pointer-events-none">
-                <div class="bg-white border border-black/10 shadow-2xl p-3">
-                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">?????</p>
+                <div class="editorial-qr-card">
+                    <p id="subscriptionQrTitle" class="editorial-kicker mb-2">SUBSCRIPTION QR</p>
                     <div id="subscriptionQrCanvas" class="w-40 h-40 flex items-center justify-center"></div>
                 </div>
             </div>
         </main>
     `;
-}function generateHeader(CONFIG, env) {
+}
+
+function generateHeader(CONFIG, env) {
     return `
         <header class="bg-white shadow-lg rounded-xl mb-3 backdrop-blur-lg bg-opacity-90">
             <div class="max-w-7xl mx-auto py-2.5 px-4 sm:px-5">
@@ -382,213 +451,167 @@ function generateCollectionManager(CONFIG) {
 // 生成脚本部分
 function generateTemplateManager() {
     return `
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800">模板管理</h2>
-                    <p class="text-sm text-gray-500 mt-1">在这里维护 Clash / Sing-box 的模板、规则引用和当前启用模板。</p>
-                </div>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <button onclick="newTemplate()"
-                            class="px-4 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition duration-200">
-                            新建模板
-                        </button>
-                        <select id="templatePresetSelector"
-                            class="min-w-[14rem] px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                            <option value="">选择内置模板预置</option>
+        <div class="editorial-pane-stack">
+            <section class="editorial-panel p-6">
+                <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
+                    <div class="space-y-2">
+                        <div class="editorial-label">[MODULE_03] TEMPLATE WORKBENCH</div>
+                        <h2 class="editorial-title">Template Workbench</h2>
+                        <p class="editorial-subtle">Manage Clash and Sing-box templates, choose the active template, and compose rule references or proxy groups in one place.</p>
+                    </div>
+                    <div class="editorial-card-actions">
+                        <button onclick="newTemplate()" class="editorial-button">New Template</button>
+                        <select id="templatePresetSelector" class="editorial-select mono">
+                            <option value="">Select Built-in Preset</option>
                             ${TEMPLATE_PRESETS.map(preset => `<option value="${preset.id}">${preset.name}</option>`).join('')}
                         </select>
-                        <button onclick="loadBuiltInTemplatePreset()"
-                            class="px-4 py-2 rounded-xl bg-green-600 text-white font-medium shadow-sm hover:bg-green-700 transition duration-200">
-                            载入内置模板
-                        </button>
-                        <button onclick="saveTemplate()"
-                            class="px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow-sm hover:bg-blue-700 transition duration-200">
-                            保存模板
-                        </button>
+                        <button onclick="loadBuiltInTemplatePreset()" class="editorial-button">Load Preset</button>
+                        <button onclick="saveTemplate()" class="editorial-button primary">Save Template</button>
+                    </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-1">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-700">已保存模板</h3>
-                        <span id="activeTemplateBadge" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">未启用</span>
-                    </div>
-                    <div id="templateList" class="space-y-3 max-h-[32rem] overflow-y-auto pr-1"></div>
-                </div>
-                <div class="lg:col-span-2 space-y-4">
-                    <input type="hidden" id="templateId">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">模板名称</label>
-                        <input type="text" id="templateName" placeholder="例如：默认分流模板"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                    <div class="flex flex-wrap gap-2 text-sm">
-                        <button onclick="useCurrentTemplate()"
-                            class="px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition duration-200">
-                            设为当前模板
-                        </button>
-                        <button onclick="viewCurrentTemplateConfig()"
-                            class="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition duration-200">
-                            查看当前默认订阅配置
-                        </button>
-                        <button onclick="deleteTemplate()"
-                            class="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition duration-200">
-                            删除模板
-                        </button>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">模板内容</label>
-                        <textarea id="templateContent" rows="18"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="ruleset=默认规则,[]MATCH&#10;custom_proxy_group=节点选择\`select\`[]DIRECT"></textarea>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg space-y-3">
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <select id="templateRuleSelector"
-                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">从规则目录选择一个规则并插入模板</option>
-                            </select>
-                            <button onclick="insertSelectedRuleIntoTemplate()"
-                                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200">
-                                插入选中规则
-                            </button>
+            </section>
+            <section class="editorial-side-layout">
+                <aside class="editorial-panel p-4">
+                    <div class="flex items-center justify-between gap-3 mb-3">
+                        <div>
+                            <div class="editorial-label">[STORED_TEMPLATES]</div>
+                            <div class="text-lg font-semibold mt-1">Saved Templates</div>
                         </div>
-                        <p class="text-sm text-gray-500">会自动插入形如 <code class="bg-white px-1 py-0.5 rounded">ruleset=显示名,@rule_id</code> 的规则引用。</p>
+                        <span id="activeTemplateBadge" class="editorial-badge">Not Active</span>
                     </div>
-                    <div class="p-4 bg-gray-50 rounded-lg space-y-3">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                            <input type="text" id="groupNameInput" placeholder="分组名称"
-                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <select id="groupTypeInput"
-                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <div id="templateList" class="editorial-side-list"></div>
+                </aside>
+                <div class="editorial-pane-stack">
+                    <section class="editorial-panel p-6 space-y-4">
+                        <input type="hidden" id="templateId">
+                        <div>
+                            <label class="editorial-label block mb-2">Template Name</label>
+                            <input type="text" id="templateName" placeholder="Default Routing Template" class="editorial-input">
+                        </div>
+                        <div class="editorial-card-actions">
+                            <button onclick="useCurrentTemplate()" class="editorial-button">Set Active</button>
+                            <button onclick="viewCurrentTemplateConfig()" class="editorial-button">View Active Config</button>
+                            <button onclick="deleteTemplate()" class="editorial-button danger">Delete</button>
+                        </div>
+                        <div>
+                            <label class="editorial-label block mb-2">Template Content</label>
+                            <textarea id="templateContent" rows="18" class="editorial-textarea" placeholder="ruleset=Default,[]MATCH&#10;custom_proxy_group=Proxy&#96;select&#96;[]DIRECT"></textarea>
+                        </div>
+                    </section>
+                    <section class="editorial-panel inset p-6 space-y-4">
+                        <div class="editorial-label">[RULE_INSERTION]</div>
+                        <div class="editorial-card-actions">
+                            <select id="templateRuleSelector" class="editorial-select">
+                                <option value="">Choose a rule to insert</option>
+                            </select>
+                            <button onclick="insertSelectedRuleIntoTemplate()" class="editorial-button">Insert Rule</button>
+                        </div>
+                        <p class="editorial-subtle">Insert a stored rule reference into the current template with one click.</p>
+                    </section>
+                    <section class="editorial-panel inset p-6 space-y-4">
+                        <div class="editorial-label">[PROXY_GROUPS]</div>
+                        <div class="editorial-form-grid columns-4">
+                            <input type="text" id="groupNameInput" placeholder="Group Name" class="editorial-input">
+                            <select id="groupTypeInput" class="editorial-select mono">
                                 <option value="select">select</option>
                                 <option value="url-test">url-test</option>
                             </select>
-                            <input type="text" id="groupFilterInput" placeholder="过滤器，例如 港|HK"
-                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <input type="text" id="groupRefsInput" placeholder="引用目标，逗号分隔"
-                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <input type="text" id="groupFilterInput" placeholder="Filter e.g. HK|SG" class="editorial-input mono">
+                            <input type="text" id="groupRefsInput" placeholder="Refs separated by comma" class="editorial-input mono">
                         </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="insertGroupLine()"
-                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">
-                                插入分组
-                            </button>
-                            <button onclick="insertDefaultSelectGroup()"
-                                class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition duration-200">
-                                插入默认分组
-                            </button>
+                        <div class="editorial-card-actions">
+                            <button onclick="insertGroupLine()" class="editorial-button">Insert Group</button>
+                            <button onclick="insertDefaultSelectGroup()" class="editorial-button">Insert Default Group</button>
                         </div>
-                        <p class="text-sm text-gray-500">会自动生成 <code class="bg-white px-1 py-0.5 rounded">custom_proxy_group=...</code> 并插入到模板文本中。</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg text-sm text-gray-600 space-y-1">
-                        <p>模板语法示例：</p>
-                        <p><code class="bg-white px-1 py-0.5 rounded">ruleset=规则名,@rule_id</code></p>
-                        <p><code class="bg-white px-1 py-0.5 rounded">custom_proxy_group=分组名\`select/url-test\`过滤器\`[]DIRECT</code></p>
-                    </div>
-                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                        <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="editorial-hint">
+                            Syntax examples:<br>
+                            <code>ruleset=Applications,@applications</code><br>
+                            <code>custom_proxy_group=Proxy&#96;select&#96;[]DIRECT</code>
+                        </div>
+                    </section>
+                    <section class="editorial-structure-grid">
+                        <div class="editorial-structure-box">
                             <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-semibold text-gray-800">已解析规则</h3>
-                                <span id="templateRuleCount" class="text-xs px-2 py-1 rounded-full bg-white text-gray-600">0</span>
+                                <div class="text-sm font-semibold">Parsed Rules</div>
+                                <span id="templateRuleCount" class="editorial-badge">0</span>
                             </div>
-                            <div id="templateParsedRules" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                            <div id="templateParsedRules" class="editorial-structure-list"></div>
                         </div>
-                        <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="editorial-structure-box">
                             <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-semibold text-gray-800">已解析分组</h3>
-                                <span id="templateGroupCount" class="text-xs px-2 py-1 rounded-full bg-white text-gray-600">0</span>
+                                <div class="text-sm font-semibold">Parsed Groups</div>
+                                <span id="templateGroupCount" class="editorial-badge">0</span>
                             </div>
-                            <div id="templateParsedGroups" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                            <div id="templateParsedGroups" class="editorial-structure-list"></div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-            </div>
+            </section>
         </div>
     `;
 }
 
 function generateRuleManager() {
     return `
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800">规则目录</h2>
-                    <p class="text-sm text-gray-500 mt-1">为同一条规则定义稳定 ID，并分别配置 Clash / Mihomo 与 Sing-box 的远程规则地址。</p>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="newRule()"
-                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
-                        新建规则
-                    </button>
-                    <button onclick="importRulePresets()"
-                        class="px-4 py-2 rounded-xl bg-purple-600 text-white font-medium shadow-sm hover:bg-purple-700 transition duration-200">
-                        导入 DustinWin 规则集
-                    </button>
-                    <button onclick="saveRule()"
-                        class="px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow-sm hover:bg-blue-700 transition duration-200">
-                        保存规则
-                    </button>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-1">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">已保存规则</h3>
-                    <div id="ruleList" class="space-y-3 max-h-[28rem] overflow-y-auto pr-1"></div>
-                </div>
-                <div class="lg:col-span-2 space-y-4">
-                    <input type="hidden" id="ruleIdOriginal">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">规则 ID</label>
-                            <input type="text" id="ruleId" placeholder="例如：applications"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">显示名称</label>
-                            <input type="text" id="ruleName" placeholder="例如：常见应用"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
+        <div class="editorial-pane-stack">
+            <section class="editorial-panel p-6">
+                <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
+                    <div class="space-y-2">
+                        <div class="editorial-label">[MODULE_04] RULE DIRECTORY</div>
+                        <h2 class="editorial-title">Rule Directory</h2>
+                        <p class="editorial-subtle">Store stable rule ids for Clash, Mihomo, and Sing-box, then reference them from templates without editing raw links repeatedly.</p>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="p-4 bg-gray-50 rounded-lg space-y-3">
-                            <h3 class="font-semibold text-gray-800">Clash / Mihomo</h3>
-                            <input type="text" id="ruleClashUrl" placeholder="https://..."
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <input type="text" id="ruleClashFormat" placeholder="可选，例如 text / yaml"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div class="p-4 bg-gray-50 rounded-lg space-y-3">
-                            <h3 class="font-semibold text-gray-800">Sing-box</h3>
-                            <input type="text" id="ruleSingboxUrl" placeholder="https://..."
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <input type="text" id="ruleSingboxFormat" placeholder="可选，例如 source / binary / srs"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 text-sm">
-                        <button onclick="insertRuleReference()"
-                            class="px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition duration-200">
-                            插入到当前模板
-                        </button>
-                        <button onclick="copyRuleReference()"
-                            class="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition duration-200">
-                            复制 @rule_id
-                        </button>
-                        <button onclick="deleteRule()"
-                            class="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition duration-200">
-                            删除当前规则
-                        </button>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg text-sm text-gray-600 space-y-1">
-                        <p>模板中可以直接这样引用：</p>
-                        <p><code class="bg-white px-1 py-0.5 rounded">ruleset=DIRECT,@applications</code></p>
-                        <p>生成 Clash 时会读取该规则的 <code>clash.url</code>，生成 Sing-box 时会读取 <code>singbox.url</code>。</p>
-                        <p>“导入 DustinWin 规则集”会补齐 mrs / srs 新式规则集，适合 mihomo / sing-box 原生远程规则模式。</p>
+                    <div class="editorial-card-actions">
+                        <button onclick="newRule()" class="editorial-button">New Rule</button>
+                        <button onclick="importRulePresets()" class="editorial-button">Import DustinWin Set</button>
+                        <button onclick="saveRule()" class="editorial-button primary">Save Rule</button>
                     </div>
                 </div>
-            </div>
+            </section>
+            <section class="editorial-side-layout">
+                <aside class="editorial-panel p-4">
+                    <div class="editorial-label mb-2">[STORED_RULES]</div>
+                    <div class="text-lg font-semibold mb-4">Saved Rules</div>
+                    <div id="ruleList" class="editorial-side-list"></div>
+                </aside>
+                <div class="editorial-pane-stack">
+                    <section class="editorial-panel p-6 space-y-4">
+                        <input type="hidden" id="ruleIdOriginal">
+                        <div class="editorial-form-grid columns-2">
+                            <div>
+                                <label class="editorial-label block mb-2">Rule Id</label>
+                                <input type="text" id="ruleId" placeholder="applications" class="editorial-input mono">
+                            </div>
+                            <div>
+                                <label class="editorial-label block mb-2">Display Name</label>
+                                <input type="text" id="ruleName" placeholder="Applications" class="editorial-input">
+                            </div>
+                        </div>
+                        <div class="editorial-form-grid columns-2">
+                            <div class="editorial-panel inset p-4 space-y-3">
+                                <div class="text-sm font-semibold">Clash / Mihomo</div>
+                                <input type="text" id="ruleClashUrl" placeholder="https://..." class="editorial-input mono">
+                                <input type="text" id="ruleClashFormat" placeholder="Optional format: text / yaml" class="editorial-input mono">
+                            </div>
+                            <div class="editorial-panel inset p-4 space-y-3">
+                                <div class="text-sm font-semibold">Sing-box</div>
+                                <input type="text" id="ruleSingboxUrl" placeholder="https://..." class="editorial-input mono">
+                                <input type="text" id="ruleSingboxFormat" placeholder="Optional format: source / binary / srs" class="editorial-input mono">
+                            </div>
+                        </div>
+                        <div class="editorial-card-actions">
+                            <button onclick="insertRuleReference()" class="editorial-button">Insert Into Template</button>
+                            <button onclick="copyRuleReference()" class="editorial-button">Copy @rule_id</button>
+                            <button onclick="deleteRule()" class="editorial-button danger">Delete Rule</button>
+                        </div>
+                        <div class="editorial-hint">
+                            Template reference example:<br>
+                            <code>ruleset=DIRECT,@applications</code><br>
+                            Clash uses <code>clash.url</code>; Sing-box uses <code>singbox.url</code> when a subscription is generated.
+                        </div>
+                    </section>
+                </div>
+            </section>
         </div>
     `;
 }
@@ -635,151 +658,137 @@ function generateSettingsManager() {
 
 function generateNodeManagerV2() {
     return `
-        <div class="space-y-6">
+        <div class="editorial-pane-stack">
             <section class="editorial-panel p-6">
                 <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
                     <div class="space-y-2">
                         <div class="editorial-label">[MODULE_02] NODE MANAGEMENT</div>
-                        <h2 class="editorial-title">节点管理</h2>
-                        <p class="editorial-subtle">维护节点链接与标签，并以更高的信息密度浏览、筛选和整理节点资源。</p>
+                        <h2 class="editorial-title">Node Workspace</h2>
+                        <p class="editorial-subtle">Create, tag, filter, and review node resources with a denser workstation layout. Tags can be used for grouping and collection selection.</p>
                     </div>
-                    <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">
-                        <i class="fas fa-plus"></i>
-                        添加节点
-                    </button>
+                    <button onclick="addNode()" class="editorial-button primary">Add Node</button>
                 </div>
             </section>
-
-            <section class="editorial-panel p-6 space-y-5">
-                <div class="editorial-label">[QUICK_CREATE] NEW NODE</div>
-                <div class="grid grid-cols-1 xl:grid-cols-[220px_minmax(0,1fr)_220px_auto] gap-5 items-end">
-                    <div><input type="text" id="nodeName" placeholder="节点名称 / node name" class="editorial-input"></div>
-                    <div><input type="text" id="nodeUrl" placeholder="节点链接 / node url" class="editorial-input"></div>
-                    <div><input type="text" id="nodeTags" placeholder="标签,tag1,tag2" class="editorial-input"></div>
-                    <button onclick="addNode()" class="editorial-button primary whitespace-nowrap">添加节点</button>
+            <section class="editorial-panel inset p-6 space-y-4">
+                <div class="editorial-label">[QUICK_CREATE]</div>
+                <div class="editorial-form-grid columns-3">
+                    <input type="text" id="nodeName" placeholder="Node Name" class="editorial-input">
+                    <input type="text" id="nodeUrl" placeholder="Node Url" class="editorial-input mono">
+                    <input type="text" id="nodeTags" placeholder="tag-a, tag-b" class="editorial-input mono">
+                    <button onclick="addNode()" class="editorial-button primary">Create</button>
                 </div>
             </section>
-
-            <section class="editorial-panel p-6 space-y-5">
+            <section class="editorial-panel p-6 space-y-4">
                 <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
                     <div class="space-y-2">
-                        <div class="editorial-label">[FILTERS] SEARCH + VIEW</div>
-                        <div class="flex flex-col md:flex-row md:items-end gap-4">
-                            <div class="w-full md:w-[340px]">
-                                <input type="text" id="nodeTagFilter" placeholder="按标签或节点名筛选 / filter by tag or name"
-                                    oninput="handleNodeFilterChange(this.value)"
-                                    class="editorial-input">
-                            </div>
-                            <div class="flex items-center gap-0">
-                                <button type="button" onclick="clearNodeFilter()" class="editorial-button">清空</button>
-                                <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="editorial-button primary" style="border-left:none;">平铺</button>
-                                <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="editorial-button" style="border-left:none;">分组</button>
-                            </div>
+                        <div class="editorial-label">[FILTER_AND_VIEW]</div>
+                        <div class="editorial-card-actions">
+                            <input type="text" id="nodeTagFilter" placeholder="Search by name or tag" oninput="handleNodeFilterChange(this.value)" class="editorial-input" style="min-width: 320px;">
+                            <button type="button" onclick="clearNodeFilter()" class="editorial-button">Clear</button>
+                            <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="editorial-button primary">Flat</button>
+                            <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="editorial-button">Grouped</button>
                         </div>
                     </div>
-                    <div id="nodeTagSummary" class="flex flex-wrap gap-0"></div>
+                    <div id="nodeTagSummary" class="editorial-card-actions"></div>
                 </div>
                 <div class="editorial-divider"></div>
-                <div id="nodeList" class="space-y-0"></div>
+                <div id="nodeList" class="editorial-pane-stack"></div>
             </section>
         </div>
     `;
 }
 function generateCollectionManagerV2(CONFIG) {
     return `
-        <div class="space-y-6">
+        <div class="editorial-pane-stack">
             <section class="editorial-panel p-6">
-                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+                <div class="editorial-hero">
                     <div class="space-y-2">
                         <div class="editorial-label">[MODULE_01] COLLECTION MANAGEMENT</div>
-                        <h2 class="editorial-title">集合管理</h2>
-                        <p class="editorial-subtle">创建订阅集合、维护有效期，并快速分发通用 / Sing-box / Clash 订阅。</p>
+                        <h2 class="editorial-title">Collection Console</h2>
+                        <p class="editorial-subtle">Create collection bundles, control expiry and access, and keep universal, Clash, and Sing-box subscriptions available from the primary workspace.</p>
                     </div>
-                    <div class="flex gap-0 flex-wrap" id="collectionStats">
+                    <div id="collectionStats" class="editorial-stat-grid">
                         <div class="editorial-stat">
-                            <div class="editorial-label mb-2">集合总数</div>
-                            <div id="statCollectionCount" class="text-3xl font-bold leading-none">0</div>
+                            <div class="editorial-label mb-2">Collections</div>
+                            <div id="statCollectionCount" class="editorial-stat-value">0</div>
                         </div>
-                        <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2">节点总数</div>
-                            <div id="statNodeCount" class="text-3xl font-bold leading-none">0</div>
+                        <div class="editorial-stat">
+                            <div class="editorial-label mb-2">Nodes</div>
+                            <div id="statNodeCount" class="editorial-stat-value">0</div>
                         </div>
-                        <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2 editorial-kpi-warn">即将到期</div>
-                            <div id="statExpiringCount" class="text-3xl font-bold leading-none editorial-kpi-warn">0</div>
+                        <div class="editorial-stat">
+                            <div class="editorial-label editorial-kpi-warn mb-2">Expiring Soon</div>
+                            <div id="statExpiringCount" class="editorial-stat-value editorial-kpi-warn">0</div>
                         </div>
-                        <div class="editorial-stat" style="border-left:none;">
-                            <div class="editorial-label mb-2 editorial-kpi-danger">已过期</div>
-                            <div id="statExpiredCount" class="text-3xl font-bold leading-none editorial-kpi-danger">0</div>
+                        <div class="editorial-stat">
+                            <div class="editorial-label editorial-kpi-danger mb-2">Expired</div>
+                            <div id="statExpiredCount" class="editorial-stat-value editorial-kpi-danger">0</div>
                         </div>
                     </div>
                 </div>
             </section>
-
-            <section class="editorial-panel p-6 space-y-5">
-                <div class="editorial-label">[QUICK_CREATE] NEW COLLECTION</div>
-                <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-5 items-end">
-                    <div><input type="text" id="collectionName" placeholder="集合名称 / collection name" class="editorial-input"></div>
-                    <button onclick="addCollection()" class="editorial-button primary whitespace-nowrap">创建集合</button>
+            <section class="editorial-panel inset p-6 space-y-4">
+                <div class="editorial-label">[QUICK_CREATE]</div>
+                <div class="editorial-card-actions">
+                    <input type="text" id="collectionName" placeholder="Collection Name" class="editorial-input" style="min-width: 320px;">
+                    <button onclick="addCollection()" class="editorial-button primary">Create Collection</button>
                 </div>
                 <div class="editorial-divider"></div>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between gap-3">
-                        <div class="editorial-label">[SELECT_NODES]</div>
-                        <div class="editorial-subtle">先在节点管理中维护标签，再回到这里选取节点。</div>
+                        <div class="editorial-label">[NODE_SELECTION]</div>
+                        <div class="editorial-subtle">Select nodes below before creating a new collection. Existing collections can be edited later.</div>
                     </div>
-                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0"></div>
+                    <div id="nodeSelection" class="editorial-card-grid"></div>
                 </div>
             </section>
-
             <section class="space-y-3">
                 <div class="space-y-1">
-                    <div class="editorial-label">[ACTIVE_ARCHIVE]</div>
-                    <h3 class="text-2xl font-semibold tracking-tight text-black">当前所有集合</h3>
-                    <p class="editorial-subtle">优先查看状态、有效期和分发入口，不必先进入编辑弹窗。</p>
+                    <div class="editorial-label">[ACTIVE_COLLECTIONS]</div>
+                    <div class="text-2xl font-semibold tracking-tight">Current Collections</div>
+                    <p class="editorial-subtle">Each card shows username, expiry state, node preview, and direct subscription actions.</p>
                 </div>
                 <div class="editorial-divider"></div>
-                <div id="collectionList" class="grid grid-cols-1 xl:grid-cols-2 gap-0"></div>
+                <div id="collectionList" class="editorial-card-grid"></div>
             </section>
         </div>
     `;
 }
 function renderSettingsManager() {
     return `
-        <div class="bg-white rounded-xl shadow-lg p-8">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">配置面板</h2>
-                <p class="text-sm text-gray-500 mt-1">管理后台管理员账号、密码，以及顶部“其他链接”按钮使用的地址。</p>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">管理员账号</label>
-                        <input type="text" id="settingsAdminUsername" placeholder="例如：admin"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">管理员密码</label>
-                        <input type="password" id="settingsAdminPassword" placeholder="留空则保持当前密码"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                    <p id="settingsPasswordHint" class="text-sm text-gray-500">当前密码状态：未设置</p>
+        <div class="editorial-pane-stack">
+            <section class="editorial-panel p-6">
+                <div class="space-y-2 mb-6">
+                    <div class="editorial-label">[MODULE_05] SYSTEM SETTINGS</div>
+                    <h2 class="editorial-title">System Settings</h2>
+                    <p class="editorial-subtle">Update admin credentials and control the header link used by the "Other Link" action.</p>
                 </div>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">其他链接</label>
-                        <input type="text" id="settingsOtherLinkUrl" placeholder="https://..."
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <div class="editorial-form-grid columns-2">
+                    <div class="editorial-panel inset p-5 space-y-4">
+                        <div class="text-sm font-semibold">Admin Credentials</div>
+                        <div>
+                            <label class="editorial-label block mb-2">Admin Username</label>
+                            <input type="text" id="settingsAdminUsername" placeholder="admin" class="editorial-input">
+                        </div>
+                        <div>
+                            <label class="editorial-label block mb-2">Admin Password</label>
+                            <input type="password" id="settingsAdminPassword" placeholder="Leave blank to keep the current password" class="editorial-input">
+                        </div>
+                        <p id="settingsPasswordHint" class="editorial-subtle">Password status: not set</p>
                     </div>
-                    <p class="text-sm text-gray-500">顶部“其他链接”按钮会打开这里配置的地址。</p>
+                    <div class="editorial-panel inset p-5 space-y-4">
+                        <div class="text-sm font-semibold">External Link</div>
+                        <div>
+                            <label class="editorial-label block mb-2">Header Link Url</label>
+                            <input type="text" id="settingsOtherLinkUrl" placeholder="https://..." class="editorial-input mono">
+                        </div>
+                        <p class="editorial-subtle">The top-right "Other Link" button opens this url.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="mt-6">
-                <button onclick="saveSettings()"
-                    class="px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow-sm hover:bg-blue-700 transition duration-200">
-                    保存配置
-                </button>
-            </div>
+                <div class="mt-6">
+                    <button onclick="saveSettings()" class="editorial-button primary">Save Settings</button>
+                </div>
+            </section>
         </div>
     `;
 }
@@ -1178,14 +1187,14 @@ function generateNodeScripts() {
 function generateCollectionScripts() {
     return `
         function updateCollectionStats(collections, nodes) {
-            const now = new Date();
+            const now = Date.now();
             const expiringSoonThreshold = 7 * 24 * 60 * 60 * 1000;
             let expiringSoon = 0;
             let expired = 0;
 
             collections.forEach((collection) => {
-                const expiry = collection.tokenExpiry ? new Date(collection.tokenExpiry) : null;
-                if (!expiry || Number.isNaN(expiry.getTime())) return;
+                const expiry = collection.tokenExpiry ? new Date(collection.tokenExpiry).getTime() : NaN;
+                if (Number.isNaN(expiry)) return;
                 if (expiry < now) {
                     expired += 1;
                 } else if (expiry - now <= expiringSoonThreshold) {
@@ -1204,6 +1213,52 @@ function generateCollectionScripts() {
             setText('statExpiredCount', expired);
         }
 
+        function renderCollectionCard(collection) {
+            return \
+                '<article class="editorial-card editorial-list-card">' +
+                    '<div class="space-y-4 h-full">' +
+                        '<div class="editorial-card-head">' +
+                            '<div class="min-w-0 flex-1">' +
+                                '<div class="flex items-center gap-2 flex-wrap">' +
+                                    '<h3 class="editorial-card-title truncate">' + collection.name + '</h3>' +
+                                    '<span id="expiry_' + collection.id + '" class="editorial-badge">Loading</span>' +
+                                '</div>' +
+                                '<p class="editorial-subtle mt-2">Collection id: <span class="font-mono">' + collection.id + '</span></p>' +
+                            '</div>' +
+                            '<div class="editorial-card-actions">' +
+                                '<button onclick="editCollection(\'' + collection.id + '\')" class="editorial-button">Edit</button>' +
+                                '<button onclick="deleteCollection(\'' + collection.id + '\')" class="editorial-button danger">Delete</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="editorial-card-meta">' +
+                            '<div class="editorial-card-meta-item">' +
+                                '<div class="editorial-label mb-2">Username</div>' +
+                                '<div id="username_' + collection.id + '" class="text-sm font-semibold truncate">--</div>' +
+                            '</div>' +
+                            '<div class="editorial-card-meta-item">' +
+                                '<div class="editorial-label mb-2">Nodes</div>' +
+                                '<div id="nodeCount_' + collection.id + '" class="text-sm font-semibold">0</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="space-y-2">' +
+                            '<div class="flex items-center justify-between gap-3">' +
+                                '<div class="editorial-label">[NODE_PREVIEW]</div>' +
+                                '<div class="editorial-subtle">Up to 5 items</div>' +
+                            '</div>' +
+                            '<div id="nodeList_' + collection.id + '" class="editorial-card-actions">' +
+                                '<span class="editorial-badge">Loading</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="editorial-subscription-row pt-2">' +
+                            '<button onclick="universalSubscription(\'' + collection.id + '\')" onmouseenter="showSubscriptionQRCode(event, \'base\', \'" + collection.id + "\', \'Universal\')" onmousemove="moveSubscriptionQRCode(event)" onmouseleave="hideSubscriptionQRCode()" class="editorial-button subscription-primary">Universal</button>' +
+                            '<button onclick="singboxSubscription(\'' + collection.id + '\')" onmouseenter="showSubscriptionQRCode(event, \'singbox\', \'" + collection.id + "\', \'Sing-box\')" onmousemove="moveSubscriptionQRCode(event)" onmouseleave="hideSubscriptionQRCode()" class="editorial-button subscription-singbox">Sing-box</button>' +
+                            '<button onclick="clashSubscription(\'' + collection.id + '\')" onmouseenter="showSubscriptionQRCode(event, \'clash\', \'" + collection.id + "\', \'Clash\')" onmousemove="moveSubscriptionQRCode(event)" onmouseleave="hideSubscriptionQRCode()" class="editorial-button subscription-clash">Clash</button>' +
+                            '<button onclick="shareCollection(\'' + collection.id + '\')" class="editorial-button">Share</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</article>';
+        }
+
         async function loadCollections() {
             try {
                 const [collectionsResponse, nodesResponse] = await Promise.all([
@@ -1212,155 +1267,61 @@ function generateCollectionScripts() {
                 ]);
                 const collections = await collectionsResponse.json();
                 const allNodes = await nodesResponse.json();
-                console.log('Loaded collections:', collections);
                 updateCollectionStats(collections, allNodes);
-                
+
                 const collectionList = document.getElementById('collectionList');
-                collectionList.innerHTML = collections.map(collection => \`
-                    <article class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-all duration-200">
-                        <div class="flex flex-col gap-4 h-full">
-                            <div class="flex justify-between items-start gap-4">
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <h3 class="text-lg font-semibold text-gray-900 flex items-center min-w-0">
-                                            <i class="fas fa-layer-group text-blue-500 mr-2"></i>
-                                            <span class="truncate">\${collection.name}</span>
-                                        </h3>
-                                        <span id="expiry_\${collection.id}" class="text-sm text-gray-500"></span>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-3 mt-4">
-                                        <div class="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
-                                            <div class="text-xs text-gray-500">访问用户名</div>
-                                            <div id="username_\${collection.id}" class="mt-1 text-sm font-medium text-gray-800 truncate">--</div>
-                                        </div>
-                                        <div class="rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
-                                            <div class="text-xs text-gray-500">节点数量</div>
-                                            <div id="nodeCount_\${collection.id}" class="mt-1 text-sm font-medium text-gray-800">0</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-2 shrink-0">
-                                    <button onclick="editCollection('\${collection.id}')"
-                                        class="p-2 text-gray-400 hover:text-blue-500 transition-colors rounded-lg hover:bg-blue-50"
-                                        title="编辑集合">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="deleteCollection('\${collection.id}')"
-                                        class="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
-                                        title="删除集合">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
+                if (!collectionList) return;
 
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <h4 class="text-sm font-medium text-gray-700">节点摘要</h4>
-                                    <span class="text-xs text-gray-400">最多展示前 5 个</span>
-                                </div>
-                                <div id="nodeList_\${collection.id}" class="flex flex-wrap gap-2 min-h-[2.25rem]">
-                                    <span class="px-2 py-1 rounded-full bg-gray-100 text-gray-400 text-xs">加载中</span>
-                                </div>
-                            </div>
+                collectionList.innerHTML = collections.length
+                    ? collections.map(renderCollectionCard).join('')
+                    : '<div class="editorial-empty" style="grid-column: 1 / -1;">No collections yet. Create your first collection from the quick-create panel above.</div>';
 
-                            <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-100 mt-auto">
-                                <button onclick="universalSubscription('\${collection.id}')"
-                                    onmouseenter="showSubscriptionQRCode(event, 'base', '\${collection.id}', '通用订阅')"
-                                    onmousemove="moveSubscriptionQRCode(event)"
-                                    onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center justify-center px-3.5 py-1.5 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors min-w-[8rem] shadow-sm">
-                                    <i class="fas fa-link mr-1.5"></i>通用订阅
-                                </button>
-                                <button onclick="singboxSubscription('\${collection.id}')"
-                                    onmouseenter="showSubscriptionQRCode(event, 'singbox', '\${collection.id}', 'SingBox 订阅')"
-                                    onmousemove="moveSubscriptionQRCode(event)"
-                                    onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-green-700 text-sm rounded-lg border border-green-200 hover:bg-green-50 transition-colors min-w-[7rem]">
-                                    <i class="fas fa-box mr-1.5"></i>SingBox订阅
-                                </button>
-                                <button onclick="clashSubscription('\${collection.id}')"
-                                    onmouseenter="showSubscriptionQRCode(event, 'clash', '\${collection.id}', 'Clash 订阅')"
-                                    onmousemove="moveSubscriptionQRCode(event)"
-                                    onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-purple-700 text-sm rounded-lg border border-purple-200 hover:bg-purple-50 transition-colors min-w-[6.5rem]">
-                                    <i class="fas fa-bolt mr-1.5"></i>Clash订阅
-                                </button>
-                                <button onclick="shareCollection('\${collection.id}')"
-                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-gray-700 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors min-w-[5.5rem]">
-                                    <i class="fas fa-share-alt mr-1.5"></i>分享
-                                </button>
-                            </div>
-                        </div>
-                        </div>
-                    </article>
-                \`).join('');
-
-                // 更新每个集合的节点列表和有效期
                 collections.forEach(collection => {
-                    updateCollectionNodes(collection);
+                    updateCollectionNodes(collection, allNodes);
                 });
             } catch (e) {
                 console.error('Error loading collections:', e);
             }
         }
 
-        async function updateCollectionNodes(collection) {
+        async function updateCollectionNodes(collection, cachedNodes) {
             try {
-                const [nodesResponse, tokenResponse] = await Promise.all([
-                    fetchWithAuth('/api/nodes'),
-                    fetchWithAuth(\`/api/collections/token/\${collection.id}\`)
-                ]);
-                
-                const nodes = await nodesResponse.json();
+                const tokenResponse = await fetchWithAuth('/api/collections/token/' + collection.id);
                 const token = await tokenResponse.json();
+                const nodes = Array.isArray(cachedNodes) ? cachedNodes : await (await fetchWithAuth('/api/nodes')).json();
                 const collectionNodes = nodes.filter(node => collection.nodeIds.includes(node.id));
-                const usernameElement = document.getElementById(\`username_\${collection.id}\`);
-                const nodeCountElement = document.getElementById(\`nodeCount_\${collection.id}\`);
-                if (usernameElement) {
-                    usernameElement.textContent = token.username || '--';
+                const usernameElement = document.getElementById('username_' + collection.id);
+                const nodeCountElement = document.getElementById('nodeCount_' + collection.id);
+                const expiryElement = document.getElementById('expiry_' + collection.id);
+                const nodeList = document.getElementById('nodeList_' + collection.id);
+
+                if (usernameElement) usernameElement.textContent = token.username || '--';
+                if (nodeCountElement) nodeCountElement.textContent = String(collectionNodes.length);
+
+                if (expiryElement) {
+                    if (token.expiry) {
+                        const expDate = new Date(token.expiry);
+                        const delta = expDate.getTime() - Date.now();
+                        const expired = delta < 0;
+                        const near = !expired && delta <= 7 * 24 * 60 * 60 * 1000;
+                        expiryElement.textContent = expired ? 'Expired' : near ? 'Expiring Soon' : 'Active';
+                        expiryElement.className = expired
+                            ? 'editorial-badge editorial-status-danger'
+                            : near
+                                ? 'editorial-badge editorial-status-warn'
+                                : 'editorial-badge editorial-status-good';
+                    } else {
+                        expiryElement.textContent = 'No Expiry';
+                        expiryElement.className = 'editorial-badge';
+                    }
                 }
-                if (nodeCountElement) {
-                    nodeCountElement.textContent = String(collectionNodes.length);
-                }
-                
-                // 更新有效期显示
-                const expiryElement = document.getElementById(\`expiry_\${collection.id}\`);
-                if (expiryElement && token.expiry) {
-                    const expDate = new Date(token.expiry);
-                    const isExpired = expDate < new Date();
-                    const isNearExpiry = !isExpired && (expDate - new Date() < 7 * 24 * 60 * 60 * 1000);
-                    
-                    expiryElement.innerHTML = \`
-                        <span class="text-gray-500">
-                            (到期：\${expDate.toLocaleDateString('zh-CN', {
-                                year: 'numeric',
-                                month: 'numeric',
-                                day: 'numeric'
-                            })})
-                        </span>
-                        \${isExpired ? \`
-                            <span class="ml-1 px-1.5 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">
-                                已过期
-                            </span>
-                        \` : isNearExpiry ? \`
-                            <span class="ml-1 px-1.5 py-0.5 bg-yellow-100 text-yellow-600 text-xs rounded-full">
-                                即将到期
-                            </span>
-                        \` : ''}
-                    \`;
-                }
-                
-                // 更新节点列表，使用更简洁的样式
-                const nodeList = document.getElementById(\`nodeList_\${collection.id}\`);
+
                 if (nodeList) {
                     const previewNodes = collectionNodes.slice(0, 5);
                     const overflow = collectionNodes.length - previewNodes.length;
-                    nodeList.innerHTML = previewNodes.map(node => \`
-                        <span class="inline-flex items-center px-2.5 py-1 bg-gray-50 text-gray-700 text-xs rounded-full border border-gray-200">
-                            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span>
-                            \${node.name}
-                        </span>
-                    \`).join('') + (overflow > 0 ? \`<span class="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">+\${overflow}</span>\` : '') || '<span class="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-400 text-xs rounded-full">暂无节点</span>';
+                    nodeList.innerHTML = previewNodes.length
+                        ? previewNodes.map(node => '<span class="editorial-chip">' + node.name + '</span>').join('') + (overflow > 0 ? '<span class="editorial-chip-count">+' + overflow + '</span>' : '')
+                        : '<span class="editorial-badge">No nodes selected</span>';
                 }
             } catch (e) {
                 console.error('Error updating collection nodes:', e);
@@ -1368,36 +1329,32 @@ function generateCollectionScripts() {
         }
 
         async function addCollection() {
-            const name = document.getElementById('collectionName').value;
-            const nodeIds = Array.from(document.querySelectorAll('#nodeSelection input:checked'))
-                .map(checkbox => checkbox.value);
-            
+            const name = document.getElementById('collectionName').value.trim();
+            const nodeIds = Array.from(document.querySelectorAll('#nodeSelection input:checked')).map(checkbox => checkbox.value);
+
             if (!name) {
-                alert('请输入集合名称');
+                alert('Please enter a collection name.');
                 return;
             }
-            
             if (nodeIds.length === 0) {
-                alert('请选择至少一个节点');
+                alert('Please select at least one node.');
                 return;
             }
-            
+
             try {
                 const response = await fetchWithAuth('/api/collections', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, nodeIds })
                 });
-                
                 if (response.ok) {
                     document.getElementById('collectionName').value = '';
-                    document.querySelectorAll('#nodeSelection input').forEach(
-                        checkbox => checkbox.checked = false
-                    );
+                    document.querySelectorAll('#nodeSelection input').forEach(checkbox => checkbox.checked = false);
                     await loadCollections();
+                    showToast('Collection created.');
                 }
             } catch (e) {
-                alert('创建集合失败');
+                alert('Failed to create collection.');
             }
         }
 
@@ -1407,151 +1364,13 @@ function generateCollectionScripts() {
                     fetchWithAuth('/api/collections'),
                     fetchWithAuth('/api/nodes')
                 ]);
-                
                 const collections = await collectionsResponse.json();
                 const allNodes = await nodesResponse.json();
                 const collection = collections.find(c => c.id === id);
-                
-                if (collection) {
-                    showCollectionEditDialog(collection, allNodes);
-                }
+                if (collection) showCollectionEditDialog(collection, allNodes);
             } catch (e) {
-                console.error('编辑集合失败:', e);
-                alert('编辑集合失败');
-            }
-        }
-
-        async function showCollectionEditDialog(collection, nodes) {
-            // 获取前用户令牌信息
-            const response = await fetchWithAuth(\`/api/collections/token/\${collection.id}\`);
-            let userToken = {};
-            if (response.ok) {
-                userToken = await response.json();
-            }
-
-            // 格式化日期为 YYYY-MM-DD 格式
-            const formatDateForInput = (dateString) => {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                return date.toISOString().split('T')[0];
-            };
-
-            const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
-            dialog.innerHTML = \`
-                <div class="bg-white rounded-lg p-6 w-full max-w-2xl space-y-4">
-                    <h2 class="text-xl font-bold text-gray-900">编辑集合</h2>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">集合名称</label>
-                        <input type="text" id="collectionName" value="\${collection.name}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">访问用户名</label>
-                            <input type="text" id="collectionUsername" value="\${userToken.username || ''}"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <p class="mt-1 text-sm text-gray-500">留空将自动生成用户名</p>
-                            \${userToken.username ? \`
-                                <p class="mt-1 text-sm text-blue-600">当前用户名: \${userToken.username}</p>
-                            \` : ''}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">访问密码</label>
-                            <input type="password" id="collectionPassword" value=""
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <p class="mt-1 text-sm text-gray-500">Leave blank to keep the current password. Fill this field only when you want to reset it.</p>
-                            \${userToken.hasPassword ? \`
-                                <p class="mt-1 text-sm text-blue-600">Password is set for this collection.</p>
-                            \` : \`
-                                <p class="mt-1 text-sm text-gray-500">No password is currently set for this collection.</p>
-                            \`}
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">有效期</label>
-                        <input type="date" id="collectionExpiry" 
-                            value="\${formatDateForInput(userToken.expiry)}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <p class="mt-1 text-sm text-gray-500">可选，设置订阅的有效期</p>
-                        \${userToken.expiry ? \`
-                            <p class="mt-1 text-sm text-blue-600">
-                                当前有效期: \${new Date(userToken.expiry).toLocaleDateString()}
-                            </p>
-                        \` : ''}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">选择节点</label>
-                        <div class="max-h-60 overflow-y-auto bg-gray-50 p-4 rounded-md space-y-2">
-                            \${nodes.map(node => \`
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" value="\${node.id}" 
-                                        \${collection.nodeIds?.includes(node.id) ? 'checked' : ''}>
-                                    <span>\${node.name}</span>
-                                </label>
-                            \`).join('')}
-                        </div>
-                    </div>
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="this.closest('.fixed').remove()"
-                            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">
-                            取消
-                        </button>
-                        <button onclick="updateCollection('\${collection.id}')"
-                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
-                            保存
-                        </button>
-                    </div>
-                </div>
-            \`;
-            document.body.appendChild(dialog);
-        }
-
-        async function updateCollection(id) {
-            // 获取编辑对话框中的所有输入值
-            const dialog = document.querySelector('.fixed');
-            if (!dialog) {
-                console.error('Dialog not found');
-                return;
-            }
-
-            const nameInput = dialog.querySelector('#collectionName');
-            if (!nameInput) {
-                console.error('Name input not found');
-                return;
-            }
-
-            const name = nameInput.value;
-            const username = dialog.querySelector('#collectionUsername').value;
-            const password = dialog.querySelector('#collectionPassword').value;
-            const expiry = dialog.querySelector('#collectionExpiry').value;
-            const nodeIds = Array.from(dialog.querySelectorAll('input[type="checkbox"]:checked'))
-                .map(checkbox => checkbox.value);
-            
-            try {
-                const response = await fetchWithAuth('/api/collections', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        id, 
-                        nodeIds, 
-                        username, 
-                        password,
-                        expiry: expiry || null,
-                        name
-                    })
-                });
-                
-                if (response.ok) {
-                    dialog.remove();
-                    await loadCollections();
-                } else {
-                    const error = await response.json();
-                    throw new Error(error.error || '更新失败');
-                }
-            } catch (e) {
-                console.error('Update failed:', e);
-                alert('更新集合失败: ' + e.message);
+                console.error('Edit collection failed:', e);
+                alert('Failed to open the collection editor.');
             }
         }
 
@@ -1568,43 +1387,36 @@ function generateCollectionScripts() {
             requestAnimationFrame(() => {
                 const rect = panel.getBoundingClientRect();
                 panel.style.position = 'fixed';
-                panel.style.left = \`\${Math.max(16, (window.innerWidth - rect.width) / 2)}px\`;
-                panel.style.top = \`\${Math.max(16, (window.innerHeight - rect.height) / 2)}px\`;
-                panel.style.width = \`\${rect.width}px\`;
+                panel.style.left = Math.max(16, (window.innerWidth - rect.width) / 2) + 'px';
+                panel.style.top = Math.max(16, (window.innerHeight - rect.height) / 2) + 'px';
+                panel.style.width = rect.width + 'px';
                 panel.style.maxWidth = 'calc(100vw - 2rem)';
                 panel.style.margin = '0';
             });
 
             handle.style.cursor = 'move';
-
             handle.addEventListener('pointerdown', (event) => {
                 if (event.target.closest('button')) return;
-
                 event.preventDefault();
                 const startRect = panel.getBoundingClientRect();
                 const startX = event.clientX;
                 const startY = event.clientY;
-
                 const onMove = (moveEvent) => {
                     const maxLeft = Math.max(16, window.innerWidth - panel.offsetWidth - 16);
                     const maxTop = Math.max(16, window.innerHeight - panel.offsetHeight - 16);
                     const nextLeft = Math.min(maxLeft, Math.max(16, startRect.left + moveEvent.clientX - startX));
                     const nextTop = Math.min(maxTop, Math.max(16, startRect.top + moveEvent.clientY - startY));
-                    panel.style.left = \`\${nextLeft}px\`;
-                    panel.style.top = \`\${nextTop}px\`;
+                    panel.style.left = nextLeft + 'px';
+                    panel.style.top = nextTop + 'px';
                 };
-
-                const onUp = () => {
-                    window.removeEventListener('pointermove', onMove);
-                };
-
+                const onUp = () => window.removeEventListener('pointermove', onMove);
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', onUp, { once: true });
             });
         }
 
         async function showCollectionEditDialog(collection, nodes) {
-            const response = await fetchWithAuth(\`/api/collections/token/\${collection.id}\`);
+            const response = await fetchWithAuth('/api/collections/token/' + collection.id);
             let userToken = {};
             if (response.ok) {
                 userToken = await response.json();
@@ -1617,76 +1429,56 @@ function generateCollectionScripts() {
             };
 
             closeCollectionEditDialog();
-
             const dialog = document.createElement('div');
             dialog.id = 'collectionEditDialog';
-            dialog.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 overflow-y-auto p-4';
-            dialog.innerHTML = \`
-                <div data-dialog-panel class="bg-white rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col" style="height: min(900px, calc(100vh - 2rem)); max-height: calc(100vh - 2rem);">
-                    <div data-dialog-drag-handle class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-100 bg-white select-none">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">编辑集合</h2>
-                            <p class="text-sm text-gray-500 mt-1">窗口支持拖动，内容过长时可滚动查看。</p>
-                        </div>
-                        <button type="button" onclick="closeCollectionEditDialog()" class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    <div class="p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">集合名称</label>
-                            <input type="text" id="collectionName" value="\${collection.name}"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">访问用户名</label>
-                                <input type="text" id="collectionUsername" value="\${userToken.username || ''}"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <p class="mt-1 text-sm text-gray-500">留空将自动生成用户名。</p>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">访问密码</label>
-                                <input type="password" id="collectionPassword" value=""
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <p class="mt-1 text-sm text-gray-500">留空则保持当前密码不变。</p>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">有效期</label>
-                            <input type="date" id="collectionExpiry" value="\${formatDateForInput(userToken.expiry)}"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <p class="mt-1 text-sm text-gray-500">可选，不填写表示不过期。</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">选择节点</label>
-                            <div class="max-h-72 overflow-y-auto bg-gray-50 p-4 rounded-md space-y-2 border border-gray-100">
-                                \${nodes.map(node => \`
-                                    <label class="flex items-center space-x-2">
-                                        <input type="checkbox" data-node-checkbox value="\${node.id}" \${collection.nodeIds?.includes(node.id) ? 'checked' : ''}>
-                                        <span>\${node.name}</span>
-                                    </label>
-                                \`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-end space-x-3 px-6 py-4 border-t border-gray-100 bg-white shrink-0">
-                        <button type="button" onclick="closeCollectionEditDialog()"
-                            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">
-                            取消
-                        </button>
-                        <button type="button" onclick="updateCollection('\${collection.id}')"
-                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
-                            保存
-                        </button>
-                    </div>
-                </div>
-            \`;
+            dialog.className = 'editorial-modal-backdrop';
+            dialog.innerHTML = \
+                '<div data-dialog-panel class="editorial-modal" style="height: min(900px, calc(100vh - 2rem));">' +
+                    '<div data-dialog-drag-handle class="editorial-modal-head flex items-center justify-between gap-4 select-none">' +
+                        '<div>' +
+                            '<div class="editorial-label">[EDIT_COLLECTION]</div>' +
+                            '<h2 class="text-xl font-bold text-gray-900 mt-1">Edit Collection</h2>' +
+                            '<p class="editorial-subtle mt-1">Drag this window if needed. The footer stays visible while the form scrolls.</p>' +
+                        '</div>' +
+                        '<button type="button" onclick="closeCollectionEditDialog()" class="editorial-button">Close</button>' +
+                    '</div>' +
+                    '<div class="editorial-modal-body">' +
+                        '<div>' +
+                            '<label class="editorial-label block mb-2">Collection Name</label>' +
+                            '<input type="text" id="collectionName" value="' + collection.name + '" class="editorial-input">' +
+                        '</div>' +
+                        '<div class="editorial-form-grid columns-2">' +
+                            '<div>' +
+                                '<label class="editorial-label block mb-2">Username</label>' +
+                                '<input type="text" id="collectionUsername" value="' + (userToken.username || '') + '" class="editorial-input">' +
+                                '<p class="editorial-subtle mt-2">Leave blank to auto-generate a username.</p>' +
+                            '</div>' +
+                            '<div>' +
+                                '<label class="editorial-label block mb-2">Password</label>' +
+                                '<input type="password" id="collectionPassword" value="" class="editorial-input">' +
+                                '<p class="editorial-subtle mt-2">Leave blank to keep the current password.</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div>' +
+                            '<label class="editorial-label block mb-2">Expiry Date</label>' +
+                            '<input type="date" id="collectionExpiry" value="' + formatDateForInput(userToken.expiry) + '" class="editorial-input">' +
+                            '<p class="editorial-subtle mt-2">Leave empty if the subscription should not expire.</p>' +
+                        '</div>' +
+                        '<div>' +
+                            '<label class="editorial-label block mb-2">Node Selection</label>' +
+                            '<div class="editorial-card-grid">' +
+                                nodes.map(node => '<label class="editorial-card p-4 flex items-start gap-3"><input type="checkbox" data-node-checkbox value="' + node.id + '" ' + (collection.nodeIds?.includes(node.id) ? 'checked' : '') + '><span><strong>' + node.name + '</strong><br><span class="editorial-subtle">' + ((node.tags || []).join(', ') || 'No tags') + '</span></span></label>').join('') +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="editorial-modal-foot">' +
+                        '<button type="button" onclick="closeCollectionEditDialog()" class="editorial-button">Cancel</button>' +
+                        '<button type="button" onclick="updateCollection(\'' + collection.id + '\')" class="editorial-button primary">Save Changes</button>' +
+                    '</div>' +
+                '</div>';
 
             dialog.addEventListener('click', (event) => {
-                if (event.target === dialog) {
-                    closeCollectionEditDialog();
-                }
+                if (event.target === dialog) closeCollectionEditDialog();
             });
 
             document.body.appendChild(dialog);
@@ -1695,109 +1487,82 @@ function generateCollectionScripts() {
 
         async function updateCollection(id) {
             const dialog = document.getElementById('collectionEditDialog');
-            if (!dialog) {
-                console.error('Dialog not found');
-                return;
-            }
-
-            const nameInput = dialog.querySelector('#collectionName');
-            if (!nameInput) {
-                console.error('Name input not found');
-                return;
-            }
-
-            const name = nameInput.value;
+            if (!dialog) return;
+            const name = dialog.querySelector('#collectionName').value;
             const username = dialog.querySelector('#collectionUsername').value;
             const password = dialog.querySelector('#collectionPassword').value;
             const expiry = dialog.querySelector('#collectionExpiry').value;
-            const nodeIds = Array.from(dialog.querySelectorAll('[data-node-checkbox]:checked'))
-                .map((checkbox) => checkbox.value);
+            const nodeIds = Array.from(dialog.querySelectorAll('[data-node-checkbox]:checked')).map((checkbox) => checkbox.value);
 
             try {
                 const response = await fetchWithAuth('/api/collections', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id,
-                        nodeIds,
-                        username,
-                        password,
-                        expiry: expiry || null,
-                        name
-                    })
+                    body: JSON.stringify({ id, nodeIds, username, password, expiry: expiry || null, name })
                 });
-
                 if (response.ok) {
                     closeCollectionEditDialog();
                     await loadCollections();
+                    showToast('Collection updated.');
                 } else {
                     const error = await response.json();
-                    throw new Error(error.error || '更新失败');
+                    throw new Error(error.error || 'Update failed');
                 }
             } catch (e) {
                 console.error('Update failed:', e);
-                alert('更新集合失败: ' + e.message);
+                alert('Failed to update collection: ' + e.message);
             }
         }
 
         async function deleteCollection(id) {
-            if (!confirm('确定要删除这个集合吗？')) return;
-            
+            if (!confirm('Delete this collection?')) return;
             try {
                 const response = await fetchWithAuth('/api/collections', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id })
                 });
-                
                 if (response.ok) {
                     await loadCollections();
+                    showToast('Collection deleted.');
                 }
             } catch (e) {
-                alert('删除集合失败');
+                alert('Failed to delete collection.');
             }
         }
 
-        // 订阅相关函数
         async function shareCollection(id) {
-            const shareUrl = \`\${window.location.origin}/api/share/\${id}\`;
+            const shareUrl = window.location.origin + '/api/share/' + id;
             try {
                 await navigator.clipboard.writeText(shareUrl);
-                showToast('分享链接已复制到剪贴板');
+                showToast('Share link copied.');
             } catch (e) {
-                alert('复制分享链接失败');
+                alert('Failed to copy the share link.');
             }
         }
 
         function universalSubscription(id) {
-            const shareUrl = \`\${window.location.origin}/api/share/\${id}\`;
-            const subUrl = CONFIG.SUB_WORKER_URL ? 
-                \`\${CONFIG.SUB_WORKER_URL}/base?url=\${encodeURIComponent(shareUrl)}\` :
-                \`\${shareUrl}/base?internal=1\`;
-            copyToClipboard(subUrl, '通用订阅链接已复制到剪贴板');
+            const shareUrl = window.location.origin + '/api/share/' + id;
+            const subUrl = CONFIG.SUB_WORKER_URL ? CONFIG.SUB_WORKER_URL + '/base?url=' + encodeURIComponent(shareUrl) : shareUrl + '/base?internal=1';
+            copyToClipboard(subUrl, 'Universal subscription copied.');
         }
 
         function singboxSubscription(id) {
-            const shareUrl = \`\${window.location.origin}/api/share/\${id}\`;
+            const shareUrl = window.location.origin + '/api/share/' + id;
             const templateParam = getTemplateParam();
-            const subUrl = CONFIG.SUB_WORKER_URL ? 
-                \`\${CONFIG.SUB_WORKER_URL}/singbox?url=\${encodeURIComponent(shareUrl)}\${templateParam}\` :
-                \`\${shareUrl}/singbox?internal=1\${templateParam}\`;
-            copyToClipboard(subUrl, 'Sing-box 订阅链接已复制到剪贴板');
+            const subUrl = CONFIG.SUB_WORKER_URL ? CONFIG.SUB_WORKER_URL + '/singbox?url=' + encodeURIComponent(shareUrl) + templateParam : shareUrl + '/singbox?internal=1' + templateParam;
+            copyToClipboard(subUrl, 'Sing-box subscription copied.');
         }
 
         function clashSubscription(id) {
-            const shareUrl = \`\${window.location.origin}/api/share/\${id}\`;
+            const shareUrl = window.location.origin + '/api/share/' + id;
             const templateParam = getTemplateParam();
-            const subUrl = CONFIG.SUB_WORKER_URL ? 
-                \`\${CONFIG.SUB_WORKER_URL}/clash?url=\${encodeURIComponent(shareUrl)}\${templateParam}\` :
-                \`\${shareUrl}/clash?internal=1\${templateParam}\`;
-            copyToClipboard(subUrl, 'Clash 订阅链接已复制到剪贴板');
+            const subUrl = CONFIG.SUB_WORKER_URL ? CONFIG.SUB_WORKER_URL + '/clash?url=' + encodeURIComponent(shareUrl) + templateParam : shareUrl + '/clash?internal=1' + templateParam;
+            copyToClipboard(subUrl, 'Clash subscription copied.');
         }
     `;
 }
 
-// 生成工具函数脚本
 function generateTemplateScripts() {
     return `
         function getTemplateParam() {
@@ -1812,19 +1577,19 @@ function generateTemplateScripts() {
 
             const active = templates.find(template => template.internalUrl === activeTemplateUrl);
             if (active) {
-                badge.textContent = \`当前模板：\${active.name}\`;
-                badge.className = 'text-xs px-2 py-1 rounded-full bg-green-100 text-green-700';
+                badge.textContent = 'Active: ' + active.name;
+                badge.className = 'editorial-badge editorial-status-good';
                 return;
             }
 
             if (activeTemplateUrl) {
-                badge.textContent = '使用外部模板';
-                badge.className = 'text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700';
+                badge.textContent = 'External Template';
+                badge.className = 'editorial-badge editorial-status-warn';
                 return;
             }
 
-            badge.textContent = '未启用';
-            badge.className = 'text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600';
+            badge.textContent = 'Not Active';
+            badge.className = 'editorial-badge';
         }
 
         function setActiveTemplateUrl(url) {
@@ -1841,9 +1606,7 @@ function generateTemplateScripts() {
             const response = await fetchWithAuth(CONFIG.API.SETTINGS, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    activeTemplateUrl: url || ''
-                })
+                body: JSON.stringify({ activeTemplateUrl: url || '' })
             });
             const data = await response.json();
             if (!response.ok || !data.success) {
@@ -1875,7 +1638,7 @@ function generateTemplateScripts() {
         }
 
         function parseTemplateContent(content) {
-            const lines = String(content || '').split(/\\r?\\n/);
+            const lines = String(content || '').split(/\r?\n/);
             const rules = [];
             const groups = [];
 
@@ -1916,30 +1679,19 @@ function generateTemplateScripts() {
             if (!textarea) return;
 
             const parsed = parseTemplateContent(textarea.value);
-
             if (ruleCount) ruleCount.textContent = String(parsed.rules.length);
             if (groupCount) groupCount.textContent = String(parsed.groups.length);
 
             if (ruleContainer) {
                 ruleContainer.innerHTML = parsed.rules.length
-                    ? parsed.rules.map((item) => {
-                        return '<div class="border border-gray-200 rounded-lg bg-white p-3">'
-                            + '<div class="font-medium text-gray-800 break-all">' + escapeHtml(item.name || '未命名规则') + '</div>'
-                            + '<div class="text-xs text-gray-500 mt-1 break-all">' + escapeHtml(item.source || '') + '</div>'
-                            + '</div>';
-                    }).join('')
-                    : '<div class="text-sm text-gray-500">暂无已解析规则</div>';
+                    ? parsed.rules.map((item) => '<div class="editorial-structure-item"><div class="font-medium break-all">' + escapeHtml(item.name || 'Unnamed Rule') + '</div><div class="text-xs text-gray-500 mt-1 break-all">' + escapeHtml(item.source || '') + '</div></div>').join('')
+                    : '<div class="editorial-empty">No parsed rules yet.</div>';
             }
 
             if (groupContainer) {
                 groupContainer.innerHTML = parsed.groups.length
-                    ? parsed.groups.map((item) => {
-                        return '<div class="border border-gray-200 rounded-lg bg-white p-3">'
-                            + '<div class="font-medium text-gray-800 break-all">' + escapeHtml(item.name || '未命名分组') + '</div>'
-                            + '<div class="text-xs text-gray-500 mt-1 break-all">' + escapeHtml((item.type || '') + (item.summary ? ' | ' + item.summary : '')) + '</div>'
-                            + '</div>';
-                    }).join('')
-                    : '<div class="text-sm text-gray-500">暂无已解析分组</div>';
+                    ? parsed.groups.map((item) => '<div class="editorial-structure-item"><div class="font-medium break-all">' + escapeHtml(item.name || 'Unnamed Group') + '</div><div class="text-xs text-gray-500 mt-1 break-all">' + escapeHtml((item.type || '') + (item.summary ? ' | ' + item.summary : '')) + '</div></div>').join('')
+                    : '<div class="editorial-empty">No parsed groups yet.</div>';
             }
         }
 
@@ -1953,7 +1705,7 @@ function generateTemplateScripts() {
         function newTemplate() {
             fillTemplateForm({
                 name: '',
-                content: 'ruleset=默认规则,[]MATCH\\n\\ncustom_proxy_group=节点选择\`select\`[]DIRECT'
+                content: 'ruleset=Default,[]MATCH\n\ncustom_proxy_group=Proxy\select\[]DIRECT'
             });
         }
 
@@ -1962,26 +1714,26 @@ function generateTemplateScripts() {
             if (!container) return;
 
             if (!templates.length) {
-                container.innerHTML = '<div class="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">暂无模板</div>';
+                container.innerHTML = '<div class="editorial-empty">No templates have been saved yet.</div>';
                 updateActiveTemplateBadge();
                 return;
             }
 
-            container.innerHTML = templates.map(template => \`
-                <div class="border rounded-lg p-3 transition-colors duration-200 \${template.internalUrl === activeTemplateUrl ? 'border-green-400 bg-green-50' : 'border-gray-200 hover:border-blue-300'}">
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="min-w-0">
-                            <div class="font-medium text-gray-800 truncate">\${template.name}</div>
-                            <div class="text-xs text-gray-500 mt-1">更新时间：\${template.updatedAt ? new Date(template.updatedAt).toLocaleString() : '未知'}</div>
-                        </div>
-                        <button onclick="editTemplate('\${template.id}')" class="text-sm text-blue-600 hover:text-blue-700">编辑</button>
-                    </div>
-                    <div class="flex flex-wrap gap-2 mt-3 text-xs">
-                        <button onclick="activateTemplateById('\${template.id}')" class="px-2 py-1 rounded bg-green-100 text-green-700 hover:bg-green-200">启用</button>
-                        <button onclick="copyTemplateUrl('\${template.id}')" class="px-2 py-1 rounded bg-yellow-100 text-yellow-700 hover:bg-yellow-200">复制地址</button>
-                    </div>
-                </div>
-            \`).join('');
+            container.innerHTML = templates.map(template => \
+                '<div class="editorial-structure-item">' +
+                    '<div class="flex items-start justify-between gap-3">' +
+                        '<div class="min-w-0">' +
+                            '<div class="font-medium truncate">' + escapeHtml(template.name) + '</div>' +
+                            '<div class="text-xs text-gray-500 mt-1">Updated: ' + escapeHtml(template.updatedAt ? new Date(template.updatedAt).toLocaleString() : 'Unknown') + '</div>' +
+                        '</div>' +
+                        '<button onclick="editTemplate(\'' + escapeHtml(template.id) + '\')" class="editorial-button">Edit</button>' +
+                    '</div>' +
+                    '<div class="editorial-card-actions mt-3">' +
+                        '<button onclick="activateTemplateById(\'' + escapeHtml(template.id) + '\')" class="editorial-button">Activate</button>' +
+                        '<button onclick="copyTemplateUrl(\'' + escapeHtml(template.id) + '\')" class="editorial-button">Copy Url</button>' +
+                    '</div>' +
+                '</div>'
+            ).join('');
 
             updateActiveTemplateBadge();
         }
@@ -1996,7 +1748,7 @@ function generateTemplateScripts() {
                 console.error('Load templates error:', error);
                 const container = document.getElementById('templateList');
                 if (container) {
-                    container.innerHTML = '<div class="text-sm text-red-500 bg-red-50 rounded-lg p-4">加载失败</div>';
+                    container.innerHTML = '<div class="editorial-empty">Failed to load templates.</div>';
                 }
             }
         }
@@ -2009,7 +1761,7 @@ function generateTemplateScripts() {
                 fillTemplateForm(template);
             } catch (error) {
                 console.error('Edit template error:', error);
-                alert('加载模板失败');
+                alert('Failed to load the template.');
             }
         }
 
@@ -2019,12 +1771,11 @@ function generateTemplateScripts() {
             const content = document.getElementById('templateContent').value;
 
             if (!name) {
-                alert('请输入模板名称');
+                alert('Please enter a template name.');
                 return;
             }
-
             if (!content.trim()) {
-                alert('请输入模板内容');
+                alert('Please enter template content.');
                 return;
             }
 
@@ -2038,26 +1789,23 @@ function generateTemplateScripts() {
                 if (!response.ok) throw new Error(data.error || 'Save failed');
                 fillTemplateForm(data);
                 await loadTemplates();
-                showToast('保存成功');
+                showToast('Template saved.');
             } catch (error) {
                 console.error('Save template error:', error);
-                alert('保存失败：' + error.message);
+                alert('Failed to save template: ' + error.message);
             }
         }
 
         async function deleteTemplate() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
-                alert('请先选择一个已保存的模板');
+                alert('Select a saved template first.');
                 return;
             }
-
-            if (!confirm('确定要删除当前模板吗？')) return;
+            if (!confirm('Delete the current template?')) return;
 
             try {
-                const response = await fetchWithAuth(\`${CONFIG.API.TEMPLATES}/\${encodeURIComponent(id)}\`, {
-                    method: 'DELETE'
-                });
+                const response = await fetchWithAuth(\`${CONFIG.API.TEMPLATES}/\${encodeURIComponent(id)}\`, { method: 'DELETE' });
                 if (!response.ok) {
                     const data = await response.json();
                     throw new Error(data.error || 'Delete failed');
@@ -2068,10 +1816,10 @@ function generateTemplateScripts() {
                 }
                 fillTemplateForm({});
                 await loadTemplates();
-                showToast('删除成功');
+                showToast('Template deleted.');
             } catch (error) {
                 console.error('Delete template error:', error);
-                alert('删除失败：' + error.message);
+                alert('Failed to delete template: ' + error.message);
             }
         }
 
@@ -2080,16 +1828,16 @@ function generateTemplateScripts() {
             if (!template) return;
             try {
                 await saveActiveTemplateUrl(template.internalUrl);
-                showToast('已切换当前模板');
+                showToast('Active template updated.');
             } catch (error) {
-                alert('切换当前模板失败：' + error.message);
+                alert('Failed to activate template: ' + error.message);
             }
         }
 
         async function useCurrentTemplate() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
-                alert('请先保存当前模板');
+                alert('Save the current template first.');
                 return;
             }
             await activateTemplateById(id);
@@ -2098,13 +1846,13 @@ function generateTemplateScripts() {
         function copyTemplateUrl(id) {
             const template = templates.find(item => item.id === id);
             if (!template) return;
-            copyToClipboard(template.internalUrl, '模板地址已复制到剪贴板');
+            copyToClipboard(template.internalUrl, 'Template url copied.');
         }
 
         function copyCurrentTemplateUrl() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
-                alert('请先选择一个模板');
+                alert('Select a template first.');
                 return;
             }
             copyTemplateUrl(id);
@@ -2115,7 +1863,7 @@ function generateTemplateScripts() {
             const selectedTemplate = id ? templates.find(item => item.id === id) : null;
             const targetUrl = activeTemplateUrl || selectedTemplate?.internalUrl || '';
             if (!targetUrl) {
-                alert('请先选择或启用一个模板');
+                alert('Select or activate a template first.');
                 return;
             }
             window.open(targetUrl, '_blank', 'noopener');
@@ -2125,28 +1873,84 @@ function generateTemplateScripts() {
             const selector = document.getElementById('templatePresetSelector');
             const presetId = selector ? selector.value : '';
             if (!presetId) {
-                alert('请先选择一个内置模板');
+                alert('Choose a built-in preset first.');
                 return;
             }
 
             const preset = BUILT_IN_TEMPLATE_PRESETS.find(item => item.id === presetId);
             if (!preset) {
-                alert('未找到所选模板预置');
+                alert('Unable to find the selected preset.');
                 return;
             }
 
             const currentTemplateId = document.getElementById('templateId').value.trim();
             const currentTemplateName = document.getElementById('templateName').value.trim();
-            const nextName = currentTemplateId || currentTemplateName
-                ? preset.name + ' - 副本'
-                : preset.name;
+            const nextName = currentTemplateId || currentTemplateName ? preset.name + ' - Copy' : preset.name;
+            fillTemplateForm({ id: '', name: nextName, content: preset.content });
+            showToast('Preset loaded. Save it as a new template when ready.');
+        }
 
-            fillTemplateForm({
-                id: '',
-                name: nextName,
-                content: preset.content
-            });
-            showToast('已载入内置模板，请保存为新模板');
+        function appendLineToTemplate(line, successMessage) {
+            const templateContent = document.getElementById('templateContent');
+            if (!templateContent) {
+                alert('Template editor not found.');
+                return false;
+            }
+            const prefix = templateContent.value && !templateContent.value.endsWith('\n') ? '\n' : '';
+            templateContent.value += prefix + line + '\n';
+            templateContent.focus();
+            renderTemplateStructure();
+            if (successMessage) showToast(successMessage);
+            return true;
+        }
+
+        function insertSelectedRuleIntoTemplate() {
+            const selector = document.getElementById('templateRuleSelector');
+            if (!selector || !selector.value) {
+                alert('Select a rule first.');
+                return;
+            }
+            const rule = rules.find(item => item.id === selector.value);
+            if (!rule) {
+                alert('Selected rule was not found.');
+                return;
+            }
+            appendLineToTemplate('ruleset=' + rule.name + ',@' + rule.id, 'Rule reference inserted.');
+        }
+
+        function insertGroupLine() {
+            const name = document.getElementById('groupNameInput').value.trim();
+            const type = document.getElementById('groupTypeInput').value;
+            const filter = document.getElementById('groupFilterInput').value.trim();
+            const refs = document.getElementById('groupRefsInput').value
+                .split(',')
+                .map(item => item.trim())
+                .filter(Boolean)
+                .map(item => item.startsWith('[]') ? item : '[]' + item);
+
+            if (!name) {
+                alert('Please enter a group name.');
+                return;
+            }
+
+            let line = 'custom_proxy_group=' + name + '\`' + type + '\`';
+            if (type === 'url-test') {
+                line += (filter || '.*') + '\`http://www.gstatic.com/generate_204\`300,,50';
+            } else {
+                line += (filter || '.*');
+            }
+            if (refs.length) {
+                line += '\`' + refs.join('\`');
+            }
+            appendLineToTemplate(line, 'Group line inserted.');
+        }
+
+        function insertDefaultSelectGroup() {
+            document.getElementById('groupNameInput').value = 'Proxy';
+            document.getElementById('groupTypeInput').value = 'select';
+            document.getElementById('groupFilterInput').value = '';
+            document.getElementById('groupRefsInput').value = 'DIRECT';
+            insertGroupLine();
         }
 
         setupTemplateEditorObservers();
@@ -2171,12 +1975,7 @@ function generateRuleScripts() {
         }
 
         function newRule() {
-            fillRuleForm({
-                id: '',
-                name: '',
-                clash: { url: '', format: '' },
-                singbox: { url: '', format: '' }
-            });
+            fillRuleForm({ id: '', name: '', clash: { url: '', format: '' }, singbox: { url: '', format: '' } });
         }
 
         function renderRules() {
@@ -2185,30 +1984,27 @@ function generateRuleScripts() {
             if (!container) return;
 
             if (!rules.length) {
-                container.innerHTML = '<div class="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">暂无规则，请先创建一条规则。</div>';
-                if (selector) {
-                    selector.innerHTML = '<option value="">暂无可插入规则</option>';
-                }
+                container.innerHTML = '<div class="editorial-empty">No rules yet. Create one to build your template references.</div>';
+                if (selector) selector.innerHTML = '<option value="">No rules available</option>';
                 return;
             }
 
             if (selector) {
-                selector.innerHTML = '<option value="">选择规则后插入模板</option>' +
-                    rules.map(rule => '<option value="' + escapeHtml(rule.id || '') + '">' + escapeHtml(rule.name || '') + ' (@' + escapeHtml(rule.id || '') + ')</option>').join('');
+                selector.innerHTML = '<option value="">Choose a rule</option>' + rules.map(rule => '<option value="' + escapeHtml(rule.id || '') + '">' + escapeHtml(rule.name || '') + ' (@' + escapeHtml(rule.id || '') + ')</option>').join('');
             }
 
             container.innerHTML = rules.map(rule => {
-                const clashUrl = (rule.clash && rule.clash.url) || '未配置';
-                const singboxUrl = (rule.singbox && rule.singbox.url) || '未配置';
-                return '<div class="border rounded-lg p-3 transition-colors duration-200 border-gray-200 hover:border-blue-300">'
+                const clashUrl = (rule.clash && rule.clash.url) || 'Not configured';
+                const singboxUrl = (rule.singbox && rule.singbox.url) || 'Not configured';
+                return '<div class="editorial-structure-item">'
                     + '<div class="flex items-start justify-between gap-3">'
                     + '<div class="min-w-0">'
-                    + '<div class="font-medium text-gray-800 truncate">' + escapeHtml(rule.name || '') + '</div>'
+                    + '<div class="font-medium truncate">' + escapeHtml(rule.name || '') + '</div>'
                     + '<div class="text-xs text-gray-500 mt-1 font-mono">@' + escapeHtml(rule.id || '') + '</div>'
                     + '</div>'
-                    + '<button onclick="editRule(' + "'" + escapeHtml(rule.id || '') + "'" + ')" class="text-sm text-blue-600 hover:text-blue-700">编辑</button>'
+                    + '<button onclick="editRule(' + "'" + escapeHtml(rule.id || '') + "'" + ')" class="editorial-button">Edit</button>'
                     + '</div>'
-                    + '<div class="mt-3 text-xs text-gray-500 space-y-1">'
+                    + '<div class="text-xs text-gray-500 mt-3 space-y-1">'
                     + '<div class="truncate">Clash: ' + escapeHtml(clashUrl) + '</div>'
                     + '<div class="truncate">Sing-box: ' + escapeHtml(singboxUrl) + '</div>'
                     + '</div>'
@@ -2225,9 +2021,7 @@ function generateRuleScripts() {
             } catch (error) {
                 console.error('Load rules error:', error);
                 const container = document.getElementById('ruleList');
-                if (container) {
-                    container.innerHTML = '<div class="text-sm text-red-500 bg-red-50 rounded-lg p-4">规则加载失败，请稍后重试。</div>';
-                }
+                if (container) container.innerHTML = '<div class="editorial-empty">Failed to load rules.</div>';
             }
         }
 
@@ -2239,14 +2033,12 @@ function generateRuleScripts() {
                     body: JSON.stringify({})
                 });
                 const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to import presets');
-                }
+                if (!response.ok) throw new Error(data.error || 'Failed to import presets');
                 await loadRules();
-                showToast('已导入 ' + data.imported + ' 条 DustinWin 规则集，跳过 ' + data.skipped + ' 条已存在规则');
+                showToast('Imported ' + data.imported + ' preset rules. Skipped ' + data.skipped + ' existing items.');
             } catch (error) {
                 console.error('Import presets error:', error);
-                alert('导入 DustinWin 规则集失败：' + error.message);
+                alert('Failed to import presets: ' + error.message);
             }
         }
 
@@ -2258,7 +2050,7 @@ function generateRuleScripts() {
                 fillRuleForm(rule);
             } catch (error) {
                 console.error('Edit rule error:', error);
-                alert('加载规则失败');
+                alert('Failed to load the selected rule.');
             }
         }
 
@@ -2272,23 +2064,21 @@ function generateRuleScripts() {
             const singboxFormat = document.getElementById('ruleSingboxFormat').value.trim();
 
             if (!id) {
-                alert('请填写规则 ID');
+                alert('Please enter a rule id.');
                 return;
             }
-
             if (!name) {
-                alert('请填写显示名称');
+                alert('Please enter a display name.');
                 return;
             }
-
             if (!clashUrl && !singboxUrl) {
-                alert('Clash 和 Sing-box 至少填写一个规则地址');
+                alert('Provide at least one Clash or Sing-box rule source.');
                 return;
             }
 
             const payload = {
-                id: id,
-                name: name,
+                id,
+                name,
                 clash: { url: clashUrl, format: clashFormat },
                 singbox: { url: singboxUrl, format: singboxFormat }
             };
@@ -2304,36 +2094,33 @@ function generateRuleScripts() {
                 if (!response.ok) throw new Error(data.error || 'Save failed');
                 fillRuleForm(data);
                 await loadRules();
-                showToast('规则已保存');
+                showToast('Rule saved.');
             } catch (error) {
                 console.error('Save rule error:', error);
-                alert('保存失败：' + error.message);
+                alert('Failed to save rule: ' + error.message);
             }
         }
 
         async function deleteRule() {
             const id = document.getElementById('ruleIdOriginal').value.trim();
             if (!id) {
-                alert('请先选择要删除的规则');
+                alert('Select a saved rule first.');
                 return;
             }
-
-            if (!confirm('确认删除这条规则吗？')) return;
+            if (!confirm('Delete this rule?')) return;
 
             try {
-                const response = await fetchWithAuth('${CONFIG.API.RULES}/' + encodeURIComponent(id), {
-                    method: 'DELETE'
-                });
+                const response = await fetchWithAuth('${CONFIG.API.RULES}/' + encodeURIComponent(id), { method: 'DELETE' });
                 if (!response.ok) {
                     const data = await response.json();
                     throw new Error(data.error || 'Delete failed');
                 }
                 fillRuleForm({});
                 await loadRules();
-                showToast('规则已删除');
+                showToast('Rule deleted.');
             } catch (error) {
                 console.error('Delete rule error:', error);
-                alert('删除失败：' + error.message);
+                alert('Failed to delete rule: ' + error.message);
             }
         }
 
@@ -2345,95 +2132,30 @@ function generateRuleScripts() {
         function copyRuleReference() {
             const ref = getCurrentRuleReference();
             if (!ref) {
-                alert('请先填写规则 ID');
+                alert('Please enter or select a rule id first.');
                 return;
             }
-            copyToClipboard(ref, '规则引用已复制');
+            copyToClipboard(ref, 'Rule reference copied.');
         }
 
         function insertRuleReference() {
             const ref = getCurrentRuleReference();
             if (!ref) {
-                alert('请先填写规则 ID');
+                alert('Please enter or select a rule id first.');
                 return;
             }
             const templateContent = document.getElementById('templateContent');
             if (!templateContent) {
-                alert('未找到模板编辑器');
+                alert('Template editor not found.');
                 return;
             }
             const displayName = document.getElementById('ruleName').value.trim() || ref.slice(1);
             const line = 'ruleset=' + displayName + ',' + ref;
-            const prefix = templateContent.value && !templateContent.value.endsWith('\\n') ? '\\n' : '';
-            templateContent.value += prefix + line + '\\n';
+            const prefix = templateContent.value && !templateContent.value.endsWith('\n') ? '\n' : '';
+            templateContent.value += prefix + line + '\n';
             templateContent.focus();
             renderTemplateStructure();
-            showToast('规则引用已插入模板');
-        }
-
-        function appendLineToTemplate(line, successMessage) {
-            const templateContent = document.getElementById('templateContent');
-            if (!templateContent) {
-                alert('未找到模板编辑器');
-                return false;
-            }
-            const prefix = templateContent.value && !templateContent.value.endsWith('\\n') ? '\\n' : '';
-            templateContent.value += prefix + line + '\\n';
-            templateContent.focus();
-            renderTemplateStructure();
-            if (successMessage) showToast(successMessage);
-            return true;
-        }
-
-        function insertSelectedRuleIntoTemplate() {
-            const selector = document.getElementById('templateRuleSelector');
-            if (!selector || !selector.value) {
-                alert('请先选择一条规则');
-                return;
-            }
-            const rule = rules.find(item => item.id === selector.value);
-            if (!rule) {
-                alert('未找到选中的规则');
-                return;
-            }
-            appendLineToTemplate('ruleset=' + rule.name + ',@' + rule.id, '规则引用已插入');
-        }
-
-        function insertGroupLine() {
-            const name = document.getElementById('groupNameInput').value.trim();
-            const type = document.getElementById('groupTypeInput').value;
-            const filter = document.getElementById('groupFilterInput').value.trim();
-            const refs = document.getElementById('groupRefsInput').value
-                .split(',')
-                .map(item => item.trim())
-                .filter(Boolean)
-                .map(item => item.startsWith('[]') ? item : '[]' + item);
-
-            if (!name) {
-                alert('请填写分组名称');
-                return;
-            }
-
-            let line = 'custom_proxy_group=' + name + '\`' + type + '\`';
-            if (type === 'url-test') {
-                line += (filter || '.*') + '\`http://www.gstatic.com/generate_204\`300,,50';
-            } else {
-                line += (filter || '.*');
-            }
-
-            if (refs.length) {
-                line += '\`' + refs.join('\`');
-            }
-
-            appendLineToTemplate(line, '分组规则已插入');
-        }
-
-        function insertDefaultSelectGroup() {
-            document.getElementById('groupNameInput').value = '节点选择';
-            document.getElementById('groupTypeInput').value = 'select';
-            document.getElementById('groupFilterInput').value = '';
-            document.getElementById('groupRefsInput').value = 'DIRECT';
-            insertGroupLine();
+            showToast('Rule reference inserted.');
         }
     `;
 }
@@ -2451,8 +2173,7 @@ function generateUtilityScriptsV2(env, CONFIG) {
                     button.className = 'hidden';
                     return;
                 }
-                const active = tab === currentManagementPage;
-                button.className = active ? 'editorial-tab active' : 'editorial-tab';
+                button.className = tab === currentManagementPage ? 'editorial-tab active' : 'editorial-tab';
             });
         }
 
@@ -2465,29 +2186,18 @@ function generateUtilityScriptsV2(env, CONFIG) {
             const passwordInput = document.getElementById('settingsAdminPassword');
             const otherLinkInput = document.getElementById('settingsOtherLinkUrl');
             const passwordHint = document.getElementById('settingsPasswordHint');
-
-            if (usernameInput) {
-                usernameInput.value = currentSettings.adminUsername || '';
-            }
-            if (passwordInput) {
-                passwordInput.value = '';
-            }
-            if (otherLinkInput) {
-                otherLinkInput.value = currentSettings.otherLinkUrl || '';
-            }
+            if (usernameInput) usernameInput.value = currentSettings.adminUsername || '';
+            if (passwordInput) passwordInput.value = '';
+            if (otherLinkInput) otherLinkInput.value = currentSettings.otherLinkUrl || '';
             if (passwordHint) {
-                passwordHint.textContent = currentSettings.hasAdminPassword
-                    ? '当前密码状态：已设置'
-                    : '当前密码状态：未设置';
+                passwordHint.textContent = currentSettings.hasAdminPassword ? 'Password status: configured' : 'Password status: not set';
             }
         }
 
         async function loadSettings() {
             try {
                 const response = await fetchWithAuth(CONFIG.API.SETTINGS);
-                if (!response.ok) {
-                    throw new Error('Failed to load settings');
-                }
+                if (!response.ok) throw new Error('Failed to load settings');
                 const data = await response.json();
                 currentSettings = {
                     adminUsername: data.adminUsername || '',
@@ -2509,21 +2219,14 @@ function generateUtilityScriptsV2(env, CONFIG) {
             const adminUsername = document.getElementById('settingsAdminUsername')?.value.trim() || '';
             const adminPassword = document.getElementById('settingsAdminPassword')?.value || '';
             const otherLinkUrl = document.getElementById('settingsOtherLinkUrl')?.value.trim() || '';
-
             try {
                 const response = await fetchWithAuth(CONFIG.API.SETTINGS, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        adminUsername,
-                        adminPassword,
-                        otherLinkUrl
-                    })
+                    body: JSON.stringify({ adminUsername, adminPassword, otherLinkUrl })
                 });
                 const data = await response.json();
-                if (!response.ok || !data.success) {
-                    throw new Error(data.error || '保存配置失败');
-                }
+                if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save settings');
                 currentSettings = {
                     adminUsername: data.adminUsername || '',
                     hasAdminPassword: Boolean(data.hasAdminPassword),
@@ -2531,9 +2234,9 @@ function generateUtilityScriptsV2(env, CONFIG) {
                     activeTemplateUrl: data.activeTemplateUrl || currentSettings.activeTemplateUrl || ''
                 };
                 applySettingsToForm();
-                showToast('配置已保存');
+                showToast('Settings saved.');
             } catch (error) {
-                alert('保存配置失败：' + error.message);
+                alert('Failed to save settings: ' + error.message);
             }
         }
 
@@ -2541,7 +2244,7 @@ function generateUtilityScriptsV2(env, CONFIG) {
             const formValue = document.getElementById('settingsOtherLinkUrl')?.value.trim() || '';
             const targetUrl = currentSettings.otherLinkUrl || formValue;
             if (!targetUrl) {
-                showToast('请先在配置面板填写“其他链接”地址');
+                showToast('Configure the external link in Settings first.');
                 return;
             }
             window.open(targetUrl, '_blank', 'noopener');
@@ -2551,17 +2254,12 @@ function generateUtilityScriptsV2(env, CONFIG) {
         let subscriptionQrCurrentKey = '';
 
         function buildManagementSubscriptionUrl(id, type) {
-            const shareUrl = \`\${window.location.origin}/api/share/\${id}\`;
+            const shareUrl = window.location.origin + '/api/share/' + id;
             const templateParam = type === 'base' ? '' : (typeof getTemplateParam === 'function' ? getTemplateParam() : '');
-            const typePath = type === 'base'
-                ? '/base'
-                : type === 'singbox'
-                    ? '/singbox'
-                    : '/clash';
-
+            const typePath = type === 'base' ? '/base' : type === 'singbox' ? '/singbox' : '/clash';
             return CONFIG.SUB_WORKER_URL
-                ? \`\${CONFIG.SUB_WORKER_URL}\${typePath}?url=\${encodeURIComponent(shareUrl)}\${templateParam}\`
-                : \`\${shareUrl}\${typePath}?internal=1\${templateParam}\`;
+                ? CONFIG.SUB_WORKER_URL + typePath + '?url=' + encodeURIComponent(shareUrl) + templateParam
+                : shareUrl + typePath + '?internal=1' + templateParam;
         }
 
         function showSubscriptionQRCode(event, type, id, title) {
@@ -2569,10 +2267,9 @@ function generateUtilityScriptsV2(env, CONFIG) {
             const qrCanvas = document.getElementById('subscriptionQrCanvas');
             const qrTitle = document.getElementById('subscriptionQrTitle');
             if (!popup || !qrCanvas || typeof QRCode === 'undefined') return;
-
             clearTimeout(subscriptionQrHideTimer);
             const url = buildManagementSubscriptionUrl(id, type);
-            const key = \`\${type}:\${id}:\${url}\`;
+            const key = type + ':' + id + ':' + url;
             if (subscriptionQrCurrentKey !== key) {
                 qrCanvas.innerHTML = '';
                 new QRCode(qrCanvas, {
@@ -2585,11 +2282,7 @@ function generateUtilityScriptsV2(env, CONFIG) {
                 });
                 subscriptionQrCurrentKey = key;
             }
-
-            if (qrTitle) {
-                qrTitle.textContent = title;
-            }
-
+            if (qrTitle) qrTitle.textContent = title;
             popup.classList.remove('hidden');
             moveSubscriptionQRCode(event);
         }
@@ -2597,31 +2290,21 @@ function generateUtilityScriptsV2(env, CONFIG) {
         function moveSubscriptionQRCode(event) {
             const popup = document.getElementById('subscriptionQrPopup');
             if (!popup || popup.classList.contains('hidden')) return;
-
             const margin = 16;
             const rect = popup.getBoundingClientRect();
             let left = event.clientX + 18;
             let top = event.clientY + 18;
-
-            if (left + rect.width > window.innerWidth - margin) {
-                left = event.clientX - rect.width - 18;
-            }
-            if (top + rect.height > window.innerHeight - margin) {
-                top = event.clientY - rect.height - 18;
-            }
-
-            popup.style.left = \`\${Math.max(margin, left)}px\`;
-            popup.style.top = \`\${Math.max(margin, top)}px\`;
+            if (left + rect.width > window.innerWidth - margin) left = event.clientX - rect.width - 18;
+            if (top + rect.height > window.innerHeight - margin) top = event.clientY - rect.height - 18;
+            popup.style.left = Math.max(margin, left) + 'px';
+            popup.style.top = Math.max(margin, top) + 'px';
         }
 
         function hideSubscriptionQRCode() {
             const popup = document.getElementById('subscriptionQrPopup');
             if (!popup) return;
-
             clearTimeout(subscriptionQrHideTimer);
-            subscriptionQrHideTimer = setTimeout(() => {
-                popup.classList.add('hidden');
-            }, 60);
+            subscriptionQrHideTimer = setTimeout(() => popup.classList.add('hidden'), 60);
         }
 
         async function copyToClipboard(text, message) {
@@ -2629,16 +2312,16 @@ function generateUtilityScriptsV2(env, CONFIG) {
                 await navigator.clipboard.writeText(text);
                 showToast(message);
             } catch (e) {
-                alert('复制失败');
+                alert('Copy failed.');
             }
         }
 
         function showToast(message) {
             const toast = document.createElement('div');
-            toast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg';
+            toast.className = 'editorial-toast';
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+            setTimeout(() => toast.remove(), 2200);
         }
     `;
 }
@@ -2651,10 +2334,7 @@ function generateNodeScriptsV2() {
         let cachedNodes = [];
 
         function normalizeNodeRecord(node) {
-            return {
-                ...node,
-                tags: Array.isArray(node.tags) ? node.tags : []
-            };
+            return { ...node, tags: Array.isArray(node.tags) ? node.tags : [] };
         }
 
         function parseNodeTags(rawValue) {
@@ -2670,7 +2350,7 @@ function generateNodeScriptsV2() {
             return nodes.filter((node) => {
                 const nameMatch = String(node.name || '').toLowerCase().includes(value);
                 const tagMatch = (node.tags || []).some((tag) => String(tag).toLowerCase().includes(value));
-                const ungroupedMatch = value === '未分组' && (!node.tags || node.tags.length === 0);
+                const ungroupedMatch = value === 'untagged' && (!node.tags || node.tags.length === 0);
                 return nameMatch || tagMatch || ungroupedMatch;
             });
         }
@@ -2678,17 +2358,15 @@ function generateNodeScriptsV2() {
         function renderTagSummary(targetId, nodes, clickHandler) {
             const container = document.getElementById(targetId);
             if (!container) return;
-
             const counts = new Map();
             nodes.forEach((node) => {
-                const tags = node.tags && node.tags.length ? node.tags : ['未分组'];
+                const tags = node.tags && node.tags.length ? node.tags : ['untagged'];
                 tags.forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1));
             });
-
             const entries = Array.from(counts.entries()).sort((a, b) => a[0].localeCompare(b[0]));
             container.innerHTML = entries.length
-                ? entries.map(([tag, count]) => '<button type="button" onclick="' + clickHandler + '(\\'' + tag.replace(/'/g, "\\\\'") + '\\')" class="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"><span>' + tag + '</span><span class="ml-1 text-xs text-gray-500">' + count + '</span></button>').join('')
-                : '<span class="text-sm text-gray-400">暂无标签</span>';
+                ? entries.map(([tag, count]) => '<button type="button" onclick="' + clickHandler + '(\'' + tag.replace(/'/g, "\\'") + '\')" class="editorial-chip"><span>' + tag + '</span><span class="editorial-chip-count">' + count + '</span></button>').join('')
+                : '<span class="editorial-badge">No tags</span>';
         }
 
         async function loadNodes() {
@@ -2701,7 +2379,7 @@ function generateNodeScriptsV2() {
                 }
             } catch (e) {
                 console.error('Error loading nodes:', e);
-                alert('加载节点失败');
+                alert('Failed to load nodes.');
             }
         }
 
@@ -2709,16 +2387,8 @@ function generateNodeScriptsV2() {
             nodeViewMode = mode === 'grouped' ? 'grouped' : 'all';
             const allBtn = document.getElementById('nodeViewMode-all');
             const groupedBtn = document.getElementById('nodeViewMode-grouped');
-            if (allBtn) {
-                allBtn.className = nodeViewMode === 'all'
-                    ? 'px-3 py-2 bg-blue-500 text-white text-sm'
-                    : 'px-3 py-2 bg-white text-gray-700 text-sm hover:bg-gray-50';
-            }
-            if (groupedBtn) {
-                groupedBtn.className = nodeViewMode === 'grouped'
-                    ? 'px-3 py-2 bg-blue-500 text-white text-sm'
-                    : 'px-3 py-2 bg-white text-gray-700 text-sm hover:bg-gray-50';
-            }
+            if (allBtn) allBtn.className = nodeViewMode === 'all' ? 'editorial-button primary' : 'editorial-button';
+            if (groupedBtn) groupedBtn.className = nodeViewMode === 'grouped' ? 'editorial-button primary' : 'editorial-button';
             renderNodes(cachedNodes);
         }
 
@@ -2744,129 +2414,115 @@ function generateNodeScriptsV2() {
         function renderNodes(nodes) {
             const nodeList = document.getElementById('nodeList');
             if (!nodeList) return;
-
             const filteredNodes = getFilteredNodesForDisplay(nodes, nodeTagFilter);
             renderTagSummary('nodeTagSummary', nodes, 'applyNodeTagFilter');
 
             const grouped = new Map();
             if (nodeViewMode === 'grouped') {
                 filteredNodes.forEach((node) => {
-                    const tags = node.tags && node.tags.length ? node.tags : ['未分组'];
+                    const tags = node.tags && node.tags.length ? node.tags : ['untagged'];
                     tags.forEach((tag) => {
                         if (!grouped.has(tag)) grouped.set(tag, []);
                         grouped.get(tag).push(node);
                     });
                 });
             } else {
-                grouped.set('全部节点', filteredNodes);
+                grouped.set('all nodes', filteredNodes);
             }
 
             nodeList.innerHTML = filteredNodes.length
                 ? Array.from(grouped.entries()).map(([groupName, items]) => {
                     const uniqueItems = Array.from(new Map(items.map(item => [item.id, item])).values());
                     return '<div class="space-y-3">'
-                        + (nodeViewMode === 'grouped'
-                            ? '<div class="flex items-center justify-between"><h3 class="text-sm font-semibold text-gray-700">' + groupName + '</h3><span class="text-xs text-gray-400">' + uniqueItems.length + ' 个节点</span></div>'
-                            : '')
-                        + '<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">' + uniqueItems.map((node) => {
+                        + (nodeViewMode === 'grouped' ? '<div class="flex items-center justify-between"><h3 class="text-sm font-semibold text-gray-700">' + groupName + '</h3><span class="editorial-badge">' + uniqueItems.length + '</span></div>' : '')
+                        + '<div class="editorial-card-grid">'
+                        + uniqueItems.map((node) => {
                             const tags = node.tags && node.tags.length
-                                ? node.tags.map((tag) => '<span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">' + tag + '</span>').join('')
-                                : '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">未分组</span>';
-                            return '<div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200">'
-                                + '<div class="flex justify-between items-start gap-4">'
+                                ? node.tags.map((tag) => '<span class="editorial-chip">' + tag + '</span>').join('')
+                                : '<span class="editorial-badge">untagged</span>';
+                            return '<article class="editorial-card editorial-list-card">'
+                                + '<div class="editorial-card-head">'
                                 + '<div class="flex-1 min-w-0">'
-                                + '<h3 class="font-medium text-gray-800 flex items-center mb-1"><i class="fas fa-network-wired text-blue-500 mr-2"></i>' + node.name + '</h3>'
-                                + '<div class="text-sm text-gray-500 font-mono truncate">' + node.url + '</div>'
-                                + '<div class="flex flex-wrap gap-2 mt-3">' + tags + '</div>'
+                                + '<h3 class="editorial-card-title">' + node.name + '</h3>'
+                                + '<div class="editorial-subtle mt-2 break-all"><span class="font-mono">' + node.url + '</span></div>'
+                                + '<div class="editorial-card-actions mt-3">' + tags + '</div>'
                                 + '</div>'
-                                + '<div class="flex items-center space-x-2 ml-4">'
-                                + '<button onclick="editNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors" title="编辑节点"><i class="fas fa-edit"></i></button>'
-                                + '<button onclick="copyNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors" title="复制链接"><i class="fas fa-copy"></i></button>'
-                                + '<button onclick="deleteNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="删除节点"><i class="fas fa-trash-alt"></i></button>'
+                                + '<div class="editorial-card-actions">'
+                                + '<button onclick="editNode(\'' + node.id + '\')" class="editorial-button">Edit</button>'
+                                + '<button onclick="copyNode(\'' + node.id + '\')" class="editorial-button">Copy</button>'
+                                + '<button onclick="deleteNode(\'' + node.id + '\')" class="editorial-button danger">Delete</button>'
                                 + '</div>'
                                 + '</div>'
-                                + '</div>';
+                                + '</article>';
                         }).join('')
                         + '</div>'
-                        + '</div>'; 
+                        + '</div>';
                 }).join('')
-                : '<div class="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400">没有匹配的节点</div>';
-
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
-                document.head.appendChild(link);
-            }
+                : '<div class="editorial-empty">No matching nodes.</div>';
         }
 
         async function addNode() {
             const name = document.getElementById('nodeName').value;
             const url = document.getElementById('nodeUrl').value;
             const tags = parseNodeTags(document.getElementById('nodeTags')?.value || '');
-
             if (!name || !url) {
-                alert('请填写完整信息');
+                alert('Please fill in both node name and node url.');
                 return;
             }
-
             try {
                 const response = await fetchWithAuth('/api/nodes', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, url, tags })
                 });
-
                 if (response.ok) {
                     document.getElementById('nodeName').value = '';
                     document.getElementById('nodeUrl').value = '';
                     const tagInput = document.getElementById('nodeTags');
                     if (tagInput) tagInput.value = '';
                     await loadNodes();
+                    showToast('Node created.');
                 }
             } catch (e) {
-                alert('添加节点失败');
+                alert('Failed to create node.');
             }
         }
 
         async function editNode(id) {
             const node = cachedNodes.find((item) => item.id === id);
-            if (node) {
-                showEditDialog(node);
-            }
+            if (node) showEditDialog(node);
         }
 
         function showEditDialog(node) {
             const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            dialog.className = 'editorial-modal-backdrop';
             dialog.innerHTML = \`
-                <div class="bg-white rounded-lg shadow-xl p-6 max-w-lg w-full mx-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">编辑节点</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
+                <div class="editorial-modal" style="max-width: 720px;">
+                    <div class="editorial-modal-head flex items-center justify-between gap-4">
+                        <div>
+                            <div class="editorial-label">[EDIT_NODE]</div>
+                            <h3 class="text-xl font-semibold text-gray-800 mt-1">Edit Node</h3>
+                        </div>
+                        <button onclick="this.closest('.editorial-modal-backdrop').remove()" class="editorial-button">Close</button>
                     </div>
-                    <div class="space-y-4">
+                    <div class="editorial-modal-body">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点名称</label>
-                            <input type="text" id="editNodeName" value="\${node.name}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="editorial-label block mb-2">Node Name</label>
+                            <input type="text" id="editNodeName" value="\${node.name}" class="editorial-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点URL</label>
-                            <input type="text" id="editNodeUrl" value="\${node.url}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label class="editorial-label block mb-2">Node Url</label>
+                            <input type="text" id="editNodeUrl" value="\${node.url}" class="editorial-input mono">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点标签</label>
-                            <input type="text" id="editNodeTags" value="\${(node.tags || []).join(', ')}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例如：HK, Premium, Test">
-                            <p class="mt-1 text-sm text-gray-500">多个标签请用英文逗号分隔。</p>
+                            <label class="editorial-label block mb-2">Tags</label>
+                            <input type="text" id="editNodeTags" value="\${(node.tags || []).join(', ')}" class="editorial-input mono" placeholder="HK, Premium, Test">
+                            <p class="editorial-subtle mt-2">Separate multiple tags with commas.</p>
                         </div>
                     </div>
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">取消</button>
-                        <button onclick="updateNode('\${node.id}')" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">保存</button>
+                    <div class="editorial-modal-foot">
+                        <button onclick="this.closest('.editorial-modal-backdrop').remove()" class="editorial-button">Cancel</button>
+                        <button onclick="updateNode('\${node.id}')" class="editorial-button primary">Save</button>
                     </div>
                 </div>
             \`;
@@ -2877,25 +2533,23 @@ function generateNodeScriptsV2() {
             const name = document.getElementById('editNodeName').value;
             const url = document.getElementById('editNodeUrl').value;
             const tags = parseNodeTags(document.getElementById('editNodeTags')?.value || '');
-
             if (!name || !url) {
-                alert('请填写完整信息');
+                alert('Please fill in both node name and node url.');
                 return;
             }
-
             try {
                 const response = await fetchWithAuth('/api/nodes', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, name, url, tags })
                 });
-
                 if (response.ok) {
-                    document.querySelector('.fixed').remove();
+                    document.querySelector('.editorial-modal-backdrop').remove();
                     await loadNodes();
+                    showToast('Node updated.');
                 }
             } catch (e) {
-                alert('更新节点失败');
+                alert('Failed to update node.');
             }
         }
 
@@ -2903,49 +2557,46 @@ function generateNodeScriptsV2() {
             const node = cachedNodes.find((item) => item.id === id);
             if (node) {
                 await navigator.clipboard.writeText(node.url);
-                showToast('已复制到剪贴板');
+                showToast('Node url copied.');
             }
         }
 
         async function deleteNode(id) {
-            if (!confirm('确定要删除这个节点吗？')) return;
-
+            if (!confirm('Delete this node?')) return;
             try {
                 const response = await fetchWithAuth('/api/nodes', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id })
                 });
-
                 if (response.ok) {
                     await loadNodes();
+                    showToast('Node deleted.');
                 }
             } catch (e) {
-                alert('删除节点失败');
+                alert('Failed to delete node.');
             }
         }
 
         function updateNodeSelection(nodes) {
             const nodeSelection = document.getElementById('nodeSelection');
             if (!nodeSelection) return;
-
             const filteredNodes = getFilteredNodesForDisplay(nodes.map(normalizeNodeRecord), collectionNodeFilter);
-
             nodeSelection.innerHTML = filteredNodes.map(node => \`
-                <div class="flex items-center space-x-3 p-3 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200">
-                    <input type="checkbox" id="select_\${node.id}" value="\${node.id}" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                    <label for="select_\${node.id}" class="flex-1 min-w-0 text-sm text-gray-700 cursor-pointer">
+                <label class="editorial-card p-4 flex items-start gap-3">
+                    <input type="checkbox" id="select_\${node.id}" value="\${node.id}">
+                    <span class="flex-1 min-w-0 text-sm text-gray-700">
                         <div class="font-medium truncate">\${node.name}</div>
-                        <div class="flex flex-wrap gap-1 mt-1">\${(node.tags && node.tags.length ? node.tags : ['未分组']).map(tag => '<span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs">' + tag + '</span>').join('')}</div>
-                    </label>
-                </div>
+                        <div class="editorial-card-actions mt-2">\${(node.tags && node.tags.length ? node.tags : ['untagged']).map(tag => '<span class="editorial-chip">' + tag + '</span>').join('')}</div>
+                    </span>
+                </label>
             \`).join('');
-
             const selectionControls = document.createElement('div');
-            selectionControls.className = 'md:col-span-2 xl:col-span-3 flex justify-end gap-2';
+            selectionControls.className = 'editorial-card-actions';
+            selectionControls.style.gridColumn = '1 / -1';
             selectionControls.innerHTML = \`
-                <button onclick="selectAllNodes()" class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors duration-200">全选</button>
-                <button onclick="deselectAllNodes()" class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors duration-200">取消全选</button>
+                <button onclick="selectAllNodes()" class="editorial-button">Select All</button>
+                <button onclick="deselectAllNodes()" class="editorial-button">Clear Selection</button>
             \`;
             nodeSelection.insertBefore(selectionControls, nodeSelection.firstChild);
         }

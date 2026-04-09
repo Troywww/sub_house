@@ -109,8 +109,8 @@ function generateHead() {
 // 生成页面头部
 function generateHeader(CONFIG, env) {
     return `
-        <header class="bg-white shadow-lg rounded-xl mb-4 backdrop-blur-lg bg-opacity-90">
-            <div class="max-w-7xl mx-auto py-3 px-4 sm:px-5">
+        <header class="bg-white shadow-lg rounded-xl mb-3 backdrop-blur-lg bg-opacity-90">
+            <div class="max-w-7xl mx-auto py-2.5 px-4 sm:px-5">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
                         <i class="fas fa-server text-blue-500 text-3xl mr-3"></i>
@@ -121,20 +121,20 @@ function generateHeader(CONFIG, env) {
                             <p class="text-sm text-gray-500 mt-1">Cloudflare Worker 节点与订阅管理</p>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
                         <div class="flex space-x-2">
                             <button onclick="openUserLogin()"
-                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600 transition-all duration-200">
+                                class="inline-flex items-center px-3.5 py-1.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600 transition-all duration-200">
                                 <i class="fas fa-user text-white mr-2"></i>用户入口
                             </button>
                         </div>
                         <div class="flex space-x-2">
                             <button onclick="logoutAdmin()"
-                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-all duration-200">
+                                class="inline-flex items-center px-3.5 py-1.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-all duration-200">
                                 <i class="fas fa-sign-out-alt text-white mr-2"></i>退出登录
                             </button>
                             <button onclick="openOtherLink()"
-                                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-200">
+                                class="inline-flex items-center px-3.5 py-1.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-200">
                                 <i class="fas fa-link text-white mr-2"></i>其他链接
                             </button>
                         </div>
@@ -148,7 +148,7 @@ function generateHeader(CONFIG, env) {
 // 生成主要内容
 function generateMainContent(CONFIG) {
     return `
-        <main class="max-w-7xl mx-auto py-4 sm:px-5 lg:px-6">
+        <main class="max-w-7xl mx-auto py-3 sm:px-5 lg:px-6">
             <div id="adminGateHint" class="px-4 sm:px-0">
                 <div class="bg-white rounded-xl shadow-lg p-10 text-center">
                     <h2 class="text-2xl font-bold text-gray-800">管理员后台</h2>
@@ -158,7 +158,7 @@ function generateMainContent(CONFIG) {
                     </button>
                 </div>
             </div>
-            <div id="managementShell" class="hidden px-4 sm:px-0 space-y-8">
+            <div id="managementShell" class="hidden px-4 sm:px-0 space-y-5">
                 <div class="bg-white rounded-xl shadow-lg p-1.5">
                     <div class="flex flex-wrap gap-1.5">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
@@ -566,27 +566,27 @@ function generateNodeManagerV2() {
 
 function generateCollectionManagerV2(CONFIG) {
     return `
-        <div class="space-y-5">
-            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+        <div class="space-y-4">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-900">集合管理</h2>
                         <p class="text-sm text-gray-500 mt-1">创建订阅集合、维护有效期并快速分发通用 / Sing-box / Clash 订阅。</p>
                     </div>
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full lg:w-auto" id="collectionStats">
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 min-w-[120px]">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 w-full lg:w-auto" id="collectionStats">
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-2.5 min-w-[112px]">
                             <div class="text-xs text-gray-500">集合总数</div>
                             <div id="statCollectionCount" class="mt-1 text-2xl font-semibold text-gray-900">0</div>
                         </div>
-                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 min-w-[120px]">
+                        <div class="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-2.5 min-w-[112px]">
                             <div class="text-xs text-gray-500">节点总数</div>
                             <div id="statNodeCount" class="mt-1 text-2xl font-semibold text-gray-900">0</div>
                         </div>
-                        <div class="rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 min-w-[120px]">
+                        <div class="rounded-2xl border border-amber-100 bg-amber-50 px-4 py-2.5 min-w-[112px]">
                             <div class="text-xs text-amber-700">即将到期</div>
                             <div id="statExpiringCount" class="mt-1 text-2xl font-semibold text-amber-700">0</div>
                         </div>
-                        <div class="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 min-w-[120px]">
+                        <div class="rounded-2xl border border-red-100 bg-red-50 px-4 py-2.5 min-w-[112px]">
                             <div class="text-xs text-red-700">已过期</div>
                             <div id="statExpiredCount" class="mt-1 text-2xl font-semibold text-red-700">0</div>
                         </div>
@@ -594,7 +594,7 @@ function generateCollectionManagerV2(CONFIG) {
                 </div>
             </section>
 
-            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 space-y-4">
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900">快速创建集合</h3>
@@ -618,7 +618,7 @@ function generateCollectionManagerV2(CONFIG) {
                 </div>
             </section>
 
-            <section class="space-y-3">
+            <section class="space-y-2.5">
                 <div class="flex items-end justify-between gap-3">
                     <div>
                         <h3 class="text-xl font-semibold text-gray-900">当前所有集合</h3>
@@ -1151,32 +1151,33 @@ function generateCollectionScripts() {
                             </div>
 
                             <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-100 mt-auto">
-                                <button onclick="shareCollection('\${collection.id}')"
-                                    class="inline-flex items-center px-3 py-1.5 bg-white text-gray-700 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-share-alt mr-1.5"></i>分享
-                                </button>
                                 <button onclick="universalSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'base', '\${collection.id}', '通用订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center px-3 py-1.5 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors">
+                                    class="inline-flex items-center justify-center px-3.5 py-1.5 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors min-w-[8rem] shadow-sm">
                                     <i class="fas fa-link mr-1.5"></i>通用订阅
                                 </button>
                                 <button onclick="singboxSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'singbox', '\${collection.id}', 'SingBox 订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center px-3 py-1.5 bg-white text-emerald-700 text-sm rounded-lg border border-emerald-200 hover:bg-emerald-50 transition-colors">
+                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-emerald-700 text-sm rounded-lg border border-emerald-200 hover:bg-emerald-50 transition-colors min-w-[7rem]">
                                     <i class="fas fa-box mr-1.5"></i>SingBox订阅
                                 </button>
                                 <button onclick="clashSubscription('\${collection.id}')"
                                     onmouseenter="showSubscriptionQRCode(event, 'clash', '\${collection.id}', 'Clash 订阅')"
                                     onmousemove="moveSubscriptionQRCode(event)"
                                     onmouseleave="hideSubscriptionQRCode()"
-                                    class="inline-flex items-center px-3 py-1.5 bg-white text-violet-700 text-sm rounded-lg border border-violet-200 hover:bg-violet-50 transition-colors">
+                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-violet-700 text-sm rounded-lg border border-violet-200 hover:bg-violet-50 transition-colors min-w-[6.5rem]">
                                     <i class="fas fa-bolt mr-1.5"></i>Clash订阅
                                 </button>
+                                <button onclick="shareCollection('\${collection.id}')"
+                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-white text-gray-700 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors min-w-[5.5rem]">
+                                    <i class="fas fa-share-alt mr-1.5"></i>分享
+                                </button>
                             </div>
+                        </div>
                         </div>
                     </article>
                 \`).join('');

@@ -1164,17 +1164,6 @@ export class AuthService extends BaseService {
         };
     }
 
-    async hasPersistedAdminCredentials() {
-        const settingsRaw = await this.env.NODE_STORE.get(this.config.APP_SETTINGS_KEY);
-        if (!settingsRaw) return false;
-        try {
-            const settings = JSON.parse(settingsRaw) || {};
-            return Boolean(settings.adminUsername && settings.adminPassword);
-        } catch {
-            return false;
-        }
-    }
-
     async hasConfiguredAdminCredentials() {
         const { username, password } = await this.getAdminCredentials();
         return Boolean(username && password);
@@ -1257,8 +1246,7 @@ export class AuthService extends BaseService {
             if (!await this.hasConfiguredAdminCredentials()) {
                 return new Response(JSON.stringify({
                     success: false,
-                    error: 'Admin credentials are not configured',
-                    needsSetup: true
+                    error: 'Admin credentials are not configured'
                 }), {
                     status: 500,
                     headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
@@ -1287,69 +1275,11 @@ export class AuthService extends BaseService {
         if (path === this.config.API.ADMIN.SESSION && request.method === 'GET') {
             const cookies = this.parseCookies(request);
             const session = await this.getSession(cookies[this.config.COOKIE.ADMIN_SESSION_NAME || 'admin_session']);
-            const needsSetup = !await this.hasConfiguredAdminCredentials();
             return new Response(JSON.stringify({
                 authenticated: !!session,
-                username: session?.username || null,
-                needsSetup
+                username: session?.username || null
             }), {
                 headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-            });
-        }
-
-        if (path === `${this.config.API.ADMIN.BASE}/setup` && request.method === 'POST') {
-            if (await this.hasConfiguredAdminCredentials()) {
-                return new Response(JSON.stringify({
-                    success: false,
-                    error: 'Admin credentials are already configured'
-                }), {
-                    status: 409,
-                    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-                });
-            }
-
-            const { username, password } = await request.json();
-            const normalizedUsername = String(username || '').trim();
-            const normalizedPassword = String(password || '').trim();
-
-            if (!normalizedUsername || !normalizedPassword) {
-                return new Response(JSON.stringify({
-                    success: false,
-                    error: 'Username and password are required'
-                }), {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-                });
-            }
-
-            const raw = await this.env.NODE_STORE.get(this.config.APP_SETTINGS_KEY);
-            let currentSettings = {};
-            if (raw) {
-                try {
-                    currentSettings = JSON.parse(raw) || {};
-                } catch {
-                    currentSettings = {};
-                }
-            }
-
-            const nextSettings = {
-                ...currentSettings,
-                adminUsername: normalizedUsername,
-                adminPassword: normalizedPassword,
-                updatedAt: new Date().toISOString()
-            };
-            await this.env.NODE_STORE.put(this.config.APP_SETTINGS_KEY, JSON.stringify(nextSettings));
-
-            const { token } = await this.createSession(normalizedUsername);
-            return new Response(JSON.stringify({
-                success: true,
-                username: normalizedUsername
-            }), {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Set-Cookie': this.buildSessionCookie(token)
-                }
             });
         }
 

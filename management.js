@@ -31,6 +31,7 @@ function generateHead() {
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <script>
             let adminDialogVisible = false;
+            let adminNeedsSetup = false;
 
             function closeLoginDialog() {
                 const dialog = document.getElementById('adminLoginDialog');
@@ -38,18 +39,29 @@ function generateHead() {
                 adminDialogVisible = false;
             }
 
-            function showLoginDialog(message = '') {
-                if (adminDialogVisible) {
-                    const error = document.getElementById('adminLoginError');
-                    if (error) error.textContent = message || '';
-                    return;
+            function buildAdminDialogMarkup(message = '') {
+                if (adminNeedsSetup) {
+                    return \`
+                        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+                            <h2 class="text-xl font-bold mb-2">初始化管理员账号</h2>
+                            <p class="text-sm text-gray-500 mb-4">检测到系统尚未配置管理员账号，请先创建一个管理员账号后再进入后台。</p>
+                            <div class="space-y-4">
+                                <div id="adminLoginError" class="text-sm text-red-600 min-h-[1.25rem]">\${message}</div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">管理员用户名</label>
+                                    <input type="text" id="adminUsername" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">管理员密码</label>
+                                    <input type="password" id="adminPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                </div>
+                                <button onclick="setupAdmin()" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">创建并登录</button>
+                            </div>
+                        </div>
+                    \`;
                 }
 
-                adminDialogVisible = true;
-                const dialog = document.createElement('div');
-                dialog.id = 'adminLoginDialog';
-                dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                dialog.innerHTML = \`
+                return \`
                     <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
                         <h2 class="text-xl font-bold mb-4">管理员登录</h2>
                         <div class="space-y-4">
@@ -66,11 +78,27 @@ function generateHead() {
                         </div>
                     </div>
                 \`;
+            }
+
+            function showLoginDialog(message = '') {
+                if (adminDialogVisible) {
+                    const error = document.getElementById('adminLoginError');
+                    if (error) error.textContent = message || '';
+                    return;
+                }
+
+                adminDialogVisible = true;
+                const dialog = document.createElement('div');
+                dialog.id = 'adminLoginDialog';
+                dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                dialog.innerHTML = buildAdminDialogMarkup(message);
                 document.body.appendChild(dialog);
 
                 dialog.querySelectorAll('input').forEach(input => {
                     input.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') login();
+                        if (e.key === 'Enter') {
+                            adminNeedsSetup ? setupAdmin() : login();
+                        }
                     });
                 });
             }
@@ -81,13 +109,13 @@ function generateHead() {
 // 生成页面头部
 function generateHeader(CONFIG, env) {
     return `
-        <header class="bg-white shadow-lg rounded-xl mb-8 backdrop-blur-lg bg-opacity-90">
-            <div class="max-w-7xl mx-auto py-6 px-6 sm:px-8">
+        <header class="bg-white shadow-lg rounded-xl mb-4 backdrop-blur-lg bg-opacity-90">
+            <div class="max-w-7xl mx-auto py-3 px-4 sm:px-5">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
                         <i class="fas fa-server text-blue-500 text-3xl mr-3"></i>
                         <div>
-                            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+                            <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
                                 节点管理系统
                             </h1>
                             <p class="text-sm text-gray-500 mt-1">Cloudflare Worker 节点与订阅管理</p>
@@ -120,7 +148,7 @@ function generateHeader(CONFIG, env) {
 // 生成主要内容
 function generateMainContent(CONFIG) {
     return `
-        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <main class="max-w-7xl mx-auto py-4 sm:px-5 lg:px-6">
             <div id="adminGateHint" class="px-4 sm:px-0">
                 <div class="bg-white rounded-xl shadow-lg p-10 text-center">
                     <h2 class="text-2xl font-bold text-gray-800">管理员后台</h2>
@@ -131,30 +159,30 @@ function generateMainContent(CONFIG) {
                 </div>
             </div>
             <div id="managementShell" class="hidden px-4 sm:px-0 space-y-8">
-                <div class="bg-white rounded-xl shadow-lg p-3">
-                    <div class="flex flex-wrap gap-2">
+                <div class="bg-white rounded-xl shadow-lg p-1.5">
+                    <div class="flex flex-wrap gap-1.5">
                         <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')"
                             class="hidden px-4 py-2 rounded-lg bg-blue-500 text-white">
-                            节点与集合
-                        </button>
-                        <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')"
-                            class="px-4 py-2 rounded-lg bg-blue-500 text-white">
-                            节点管理
+                            ????
                         </button>
                         <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             集合管理
                         </button>
+                        <button type="button" data-page-tab="nodes" onclick="showManagementPage('nodes')"
+                            class="px-3 py-1.5 rounded-lg bg-blue-500 text-white">
+                            节点管理
+                        </button>
                         <button type="button" data-page-tab="templates" onclick="showManagementPage('templates')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             模板管理
                         </button>
                         <button type="button" data-page-tab="rules" onclick="showManagementPage('rules')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             规则目录
                         </button>
                         <button type="button" data-page-tab="settings" onclick="showManagementPage('settings')"
-                            class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            class="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
                             配置面板
                         </button>
                     </div>
@@ -635,6 +663,7 @@ function generateScripts(env, CONFIG) {
                     credentials: 'same-origin'
                 });
                 const data = await response.json();
+                adminNeedsSetup = !!data.needsSetup;
                 setAdminAuthenticated(!!data.authenticated);
                 if (!data.authenticated && showDialogOnFail) {
                     showLoginDialog();
@@ -653,9 +682,34 @@ function generateScripts(env, CONFIG) {
                 });
                 const data = await response.json();
                 if (!response.ok || !data.success) {
+                    if (data.needsSetup) {
+                        adminNeedsSetup = true;
+                    }
                     showLoginDialog(data.error || 'Login failed');
                     return;
                 }
+                adminNeedsSetup = false;
+                closeLoginDialog();
+                setAdminAuthenticated(true);
+                await Promise.all([loadNodes(), loadCollections(), loadTemplates(), loadRules(), loadSettings()]);
+                showManagementPage(currentManagementPage);
+            }
+
+            async function setupAdmin() {
+                const username = document.getElementById('adminUsername')?.value || '';
+                const password = document.getElementById('adminPassword')?.value || '';
+                const response = await fetch(CONFIG.API.ADMIN.BASE + '/setup', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    showLoginDialog(data.error || 'Setup failed');
+                    return;
+                }
+                adminNeedsSetup = false;
                 closeLoginDialog();
                 setAdminAuthenticated(true);
                 await Promise.all([loadNodes(), loadCollections(), loadTemplates(), loadRules(), loadSettings()]);
@@ -2505,7 +2559,7 @@ function generateNodeScriptsV2() {
                         + (nodeViewMode === 'grouped'
                             ? '<div class="flex items-center justify-between"><h3 class="text-sm font-semibold text-gray-700">' + groupName + '</h3><span class="text-xs text-gray-400">' + uniqueItems.length + ' 个节点</span></div>'
                             : '')
-                        + uniqueItems.map((node) => {
+                        + '<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">' + uniqueItems.map((node) => {
                             const tags = node.tags && node.tags.length
                                 ? node.tags.map((tag) => '<span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">' + tag + '</span>').join('')
                                 : '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">未分组</span>';
@@ -2524,7 +2578,8 @@ function generateNodeScriptsV2() {
                                 + '</div>'
                                 + '</div>';
                         }).join('')
-                        + '</div>';
+                        + '</div>'
+                        + '</div>'; 
                 }).join('')
                 : '<div class="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400">没有匹配的节点</div>';
 

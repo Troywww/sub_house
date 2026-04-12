@@ -831,11 +831,9 @@ export class SettingsService extends BaseService {
     async handleRequest(request) {
         if (request.method === 'GET') {
             const settings = await this.getSettings();
-            const effectiveUsername = settings.adminUsername || this.env.DEFAULT_USERNAME || this.config.DEFAULT_USERNAME || '';
-            const effectivePassword = settings.adminPassword || this.env.DEFAULT_PASSWORD || this.config.DEFAULT_PASSWORD || '';
             return new Response(JSON.stringify({
-                adminUsername: effectiveUsername,
-                hasAdminPassword: Boolean(effectivePassword),
+                adminUsername: settings.adminUsername || '',
+                hasAdminPassword: Boolean(settings.adminPassword),
                 otherLinkUrl: settings.otherLinkUrl || '',
                 activeTemplateUrl: settings.activeTemplateUrl || ''
             }), {
@@ -1156,8 +1154,8 @@ export class AuthService extends BaseService {
                 settings = {};
             }
         }
-        const username = settings.adminUsername || this.env.DEFAULT_USERNAME || this.config.DEFAULT_USERNAME || '';
-        const password = settings.adminPassword || this.env.DEFAULT_PASSWORD || this.config.DEFAULT_PASSWORD || '';
+        const username = settings.adminUsername || '';
+        const password = settings.adminPassword || '';
         return {
             username,
             password
@@ -1381,8 +1379,7 @@ export class AuthService extends BaseService {
                 status: 401,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'WWW-Authenticate': 'Basic realm="Admin Access"'
+                    'Access-Control-Allow-Origin': '*'
                 }
             });
         }

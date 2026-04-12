@@ -9,7 +9,7 @@ export const CONFIG = {
     SUB_WORKER_URL: '',
     SUBSCRIBER_URL: '',
     QUICK_SUB_URL: '',
-    DEFAULT_TEMPLATE_URL: 'https://raw.githubusercontent.com/Troywww/singbox_conf/main/singbox_clash_conf.txt',
+    DEFAULT_TEMPLATE_URL: '',
 
     // 认证配置
     DEFAULT_USERNAME: '',
@@ -598,8 +598,7 @@ export function getConfig(key, env = {}) {
     const envMap = {
         SUB_WORKER_URL: 'SUB_WORKER_URL',
         SUBSCRIBER_URL: 'SUBSCRIBER_URL',
-        QUICK_SUB_URL: 'QUICK_SUB_URL',
-        DEFAULT_TEMPLATE_URL: 'DEFAULT_TEMPLATE_URL'
+        QUICK_SUB_URL: 'QUICK_SUB_URL'
     };
 
     // 如果存在对应的环境变量，优先使用环境变量的值

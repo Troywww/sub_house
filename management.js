@@ -837,8 +837,8 @@ function generateNodeManagerV2() {
                         <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="px-3 py-2 text-sm whitespace-nowrap">&#26631;&#31614;&#20998;&#32452;</button>
                     </div>
                 </div>
-                <div class="space-y-2">
-                    <div class="text-sm font-medium text-gray-500">&#26631;&#31614;&#31579;&#36873;</div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="text-sm font-medium text-gray-500 whitespace-nowrap">&#26631;&#31614;&#31579;&#36873;</div>
                     <div id="nodeTagSummary" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>

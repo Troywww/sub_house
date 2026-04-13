@@ -102,6 +102,74 @@ https://your-converter.example.com/clash?url=<encoded-share-url>&template=<encod
 https://inner.template.secret/id-<templateId>
 ```
 
+## 可解析的输入格式
+
+解析器既支持单节点链接，也支持远程订阅内容或配置内容。
+
+### 单节点链接
+
+每一行都可以是一个单独的节点链接，例如：
+
+- `vmess://...`
+- `vless://...`
+- `trojan://...`
+- `ss://...`
+- `ssr://...`
+- `hysteria://...`
+- `hysteria2://...`
+- `hy2://...`
+- `tuic://...`
+- `anytls://...`
+- `socks5://...`
+- `socks://...`
+- `http://...`
+- `https://...`
+
+示例：
+
+```text
+vmess://eyJhZGQiOiJleGFtcGxlLmNvbSIsInBvcnQiOiI0NDMiLCJpZCI6InV1aWQiLCJwcyI6Ik5vZGUifQ==
+vless://uuid@example.com:443?security=tls&type=ws#My-VLESS
+trojan://password@example.com:443?security=tls#My-Trojan
+ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ=@example.com:8388#My-SS
+```
+
+### 纯文本订阅
+
+也支持普通文本形式的订阅内容，其中每一行可以是：
+
+- 一个节点链接
+- 一个远程订阅 URL
+
+因此可以在递归深度限制内继续展开嵌套订阅。
+
+### Base64 订阅
+
+如果远程订阅返回的正文本身是一段 Base64 文本，并且解码后包含 `vmess://`、`trojan://` 等节点协议前缀，系统会自动把它识别为常见的 base 订阅并解码。
+
+通常可以理解为：
+
+- 订阅响应体本身是 Base64
+- 解码后的内容是多行节点链接
+
+### Clash YAML 订阅
+
+如果内容中包含顶层 `proxies:` 段，系统会按 Clash 风格 YAML 处理，并从 `proxies` 中提取节点。
+
+### sing-box JSON 订阅
+
+如果内容中包含 `outbounds` 数组，系统会按 sing-box 风格 JSON 处理，并从 `outbounds` 中提取受支持的节点。
+
+### 内部集合订阅
+
+项目也支持自己的内部集合链接格式：
+
+```text
+http://inner.nodes.secret/id-<collectionId>
+```
+
+这类链接会从 KV 中解析出对应集合，再展开集合内的节点。
+
 ## 协议支持
 
 ### Base

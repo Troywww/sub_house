@@ -102,6 +102,74 @@ Notes:
 https://inner.template.secret/id-<templateId>
 ```
 
+## Supported Input Formats
+
+The parser can ingest both single-node links and remote subscription/configuration content.
+
+### Single-node links
+
+Each line can be a single node link such as:
+
+- `vmess://...`
+- `vless://...`
+- `trojan://...`
+- `ss://...`
+- `ssr://...`
+- `hysteria://...`
+- `hysteria2://...`
+- `hy2://...`
+- `tuic://...`
+- `anytls://...`
+- `socks5://...`
+- `socks://...`
+- `http://...`
+- `https://...`
+
+Examples:
+
+```text
+vmess://eyJhZGQiOiJleGFtcGxlLmNvbSIsInBvcnQiOiI0NDMiLCJpZCI6InV1aWQiLCJwcyI6Ik5vZGUifQ==
+vless://uuid@example.com:443?security=tls&type=ws#My-VLESS
+trojan://password@example.com:443?security=tls#My-Trojan
+ss://YWVzLTI1Ni1nY206cGFzc3dvcmQ=@example.com:8388#My-SS
+```
+
+### Plain subscription text
+
+The parser also supports plain-text subscriptions where each line is:
+
+- a node link, or
+- another remote subscription URL
+
+This allows nested subscriptions within the recursion limit.
+
+### Base64 subscriptions
+
+If a remote subscription body is plain Base64 text and the decoded result contains node schemes such as `vmess://` or `trojan://`, it is treated as a standard base subscription and decoded automatically.
+
+In practice, this usually means:
+
+- the subscription response body itself is Base64
+- the decoded content becomes multiple node links separated by line breaks
+
+### Clash YAML subscriptions
+
+Clash-style YAML is supported when the content contains a top-level `proxies:` section. The parser reads proxy entries from that section and normalizes them into internal nodes.
+
+### sing-box JSON subscriptions
+
+sing-box style JSON is supported when the content contains an `outbounds` array. The parser reads supported outbound entries from `outbounds` and converts them into internal nodes.
+
+### Internal collection subscription
+
+The project also supports its own internal collection link format:
+
+```text
+http://inner.nodes.secret/id-<collectionId>
+```
+
+This is resolved from KV and expanded into the nodes inside that collection.
+
 ## Supported Protocols
 
 ### Base

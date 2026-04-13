@@ -2,13 +2,13 @@
 
 [English](./README.MD) | [简体中文](./README.zh-CN.md)
 
-Sub House is a Cloudflare Workers based subscription management panel for nodes, collections, templates, rules, and end-user subscription delivery.
+Sub House is a Cloudflare-based subscription management panel for nodes, collections, templates, rules, and end-user subscription delivery.
 
 It provides:
 
-- Admin management UI at `/`
+- Admin UI at `/`
 - End-user subscription UI at `/user`
-- Collection-based subscription export for:
+- Collection-based subscription outputs for:
   - `base`
   - `clash`
   - `singbox`
@@ -20,7 +20,7 @@ It provides:
 - Generate `base`, `clash`, and `singbox` subscription outputs
 - Maintain internal templates for Clash / Sing-box generation
 - Maintain remote rule definitions and import built-in DustinWin presets
-- Hover QR preview and one-click copy for subscription links
+- QR preview and one-click copy for subscription links
 - Session-based admin login and user login
 
 ## Admin Initialization
@@ -32,7 +32,7 @@ On first visit, if `app_settings` in `NODE_STORE` does not contain:
 - `adminUsername`
 - `adminPassword`
 
-the admin UI will enter setup mode and require you to create the first admin account before normal login becomes available.
+the admin UI enters setup mode and requires you to create the first admin account before normal login becomes available.
 
 ## Routes
 
@@ -60,10 +60,47 @@ Subscription outputs:
 
 Templates are stored internally in `TEMPLATE_CONFIG`.
 
-- The active template is the one saved in app settings as `activeTemplateUrl`
-- Only the currently selected internal template is used
+- The active template is stored in app settings as `activeTemplateUrl`
+- Only the currently selected internal template is used automatically
 - If no active template is set, `singbox` and `clash` exports run without a `template` parameter
-- There is no longer a default remote template URL fallback
+- There is no default remote template fallback anymore
+
+### Template Subscription Link Format
+
+The current active template is appended automatically for `clash` and `singbox` when it exists.
+
+Manual formats are:
+
+Internal subscription route with an internal template:
+
+```text
+/api/share/:collectionId/singbox?internal=1&template=https%3A%2F%2Finner.template.secret%2Fid-<templateId>
+/api/share/:collectionId/clash?internal=1&template=https%3A%2F%2Finner.template.secret%2Fid-<templateId>
+```
+
+Internal subscription route with an external template URL:
+
+```text
+/api/share/:collectionId/singbox?internal=1&template=https%3A%2F%2Fexample.com%2Fcustom-template.txt
+/api/share/:collectionId/clash?internal=1&template=https%3A%2F%2Fexample.com%2Fcustom-template.txt
+```
+
+If you are using an external converter through `SUB_WORKER_URL`, the same idea becomes:
+
+```text
+https://your-converter.example.com/singbox?url=<encoded-share-url>&template=<encoded-template-url>
+https://your-converter.example.com/clash?url=<encoded-share-url>&template=<encoded-template-url>
+```
+
+Notes:
+
+- `base` does not use the `template` parameter
+- To use another internal template that is not the current one, copy its internal template address from the template manager and place it in the `template=` parameter manually
+- The internal template URL format is:
+
+```text
+https://inner.template.secret/id-<templateId>
+```
 
 ## Supported Protocols
 
@@ -169,17 +206,26 @@ npm install -g wrangler
 wrangler login
 ```
 
-### Configure Wrangler
+### Deploy as a Worker
 
-Use the included example file:
+This is the recommended deployment mode for this repository.
 
-```text
-wrangler.example.jsonc
+1. Copy `wrangler.example.jsonc` to `wrangler.jsonc`
+2. Fill in your Worker name and KV namespace IDs
+3. Keep your real `wrangler.jsonc` local only
+4. Start local development:
+
+```bash
+wrangler dev
 ```
 
-Copy it to `wrangler.jsonc` and replace the Worker name and KV namespace IDs with your own values.
+5. Deploy:
 
-Example:
+```bash
+wrangler deploy
+```
+
+Minimal example:
 
 ```jsonc
 {
@@ -196,17 +242,38 @@ Example:
 
 No initial default admin credentials or default template variables are required.
 
-### Local Development
+### Deploy on Cloudflare Pages
+
+This project can also run on Cloudflare Pages in advanced mode because it already uses `_worker.js`.
+
+Recommended Pages setup:
+
+1. Create a Pages project
+2. Use advanced mode with `_worker.js`
+3. Set the build output directory to the repository root `.` so `_worker.js` and its imported modules are included
+4. Bind the same KV namespaces in Pages:
+   - `NODE_STORE`
+   - `TEMPLATE_CONFIG`
+   - `RULE_CONFIG`
+
+Git integration:
+
+- Connect the GitHub repository
+- Use the repository root as the output directory
+- This project does not require a frontend build step
+
+Direct Upload / Wrangler:
 
 ```bash
-wrangler dev
+npx wrangler pages project create
+npx wrangler pages deploy .
 ```
 
-### Deploy
+Notes for Pages:
 
-```bash
-wrangler deploy
-```
+- Cloudflare Pages advanced mode supports `_worker.js` officially
+- If you later add static assets, your `_worker.js` must explicitly forward asset requests with `env.ASSETS.fetch(request)`
+- For the current project structure, Worker deployment is still the simpler and recommended path
 
 ## Basic Usage
 

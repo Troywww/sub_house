@@ -835,7 +835,7 @@ function generateNodeManagerV2() {
                     </div>
                     <input type="text" id="nodeTagFilter" placeholder="&#25628;&#32034;&#33410;&#28857;&#25110;&#26631;&#31614;"
                         oninput="handleNodeFilterChange(this.value)"
-                        class="console-input w-full sm:w-64 lg:w-72 xl:w-80 flex-shrink-0">
+                        class="console-input w-56 lg:w-64 xl:w-72 flex-shrink-0">
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <div class="text-sm font-medium text-gray-500 whitespace-nowrap">&#26631;&#31614;&#31579;&#36873;</div>

@@ -826,8 +826,8 @@ function generateNodeManagerV2() {
                 </div>
                 <button onclick="addNode()" class="console-button console-button-dark whitespace-nowrap">&#28155;&#21152;&#33410;&#28857;</button>
             </div>
-            <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-                <div class="flex flex-wrap items-center gap-2 lg:flex-nowrap min-w-0">
+            <div class="space-y-3">
+                <div class="flex flex-wrap items-center gap-2 min-w-0">
                     <input type="text" id="nodeTagFilter" placeholder="&#25353;&#26631;&#31614;&#25110;&#33410;&#28857;&#21517;&#31216;&#31579;&#36873;"
                         oninput="handleNodeFilterChange(this.value)"
                         class="console-input w-full sm:w-72 lg:w-80 xl:w-96 flex-shrink-0">
@@ -837,7 +837,10 @@ function generateNodeManagerV2() {
                         <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="px-3 py-2 text-sm whitespace-nowrap">&#26631;&#31614;&#20998;&#32452;</button>
                     </div>
                 </div>
-                <div id="nodeTagSummary" class="flex flex-wrap gap-2 xl:justify-end"></div>
+                <div class="space-y-2">
+                    <div class="text-sm font-medium text-gray-500">&#26631;&#31614;&#31579;&#36873;</div>
+                    <div id="nodeTagSummary" class="flex flex-wrap gap-2"></div>
+                </div>
             </div>
             <div id="nodeList" class="space-y-4"></div>
         </div>

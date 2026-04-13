@@ -828,14 +828,14 @@ function generateNodeManagerV2() {
             </div>
             <div class="space-y-3">
                 <div class="flex flex-wrap items-center gap-2 min-w-0">
-                    <input type="text" id="nodeTagFilter" placeholder="&#25353;&#26631;&#31614;&#25110;&#33410;&#28857;&#21517;&#31216;&#31579;&#36873;"
-                        oninput="handleNodeFilterChange(this.value)"
-                        class="console-input w-full sm:w-72 lg:w-80 xl:w-96 flex-shrink-0">
                     <button type="button" onclick="clearNodeFilter()" class="console-button console-button-compact console-button-toolbar whitespace-nowrap flex-shrink-0">&#28165;&#31354;&#31579;&#36873;</button>
                     <div class="inline-flex overflow-hidden rounded flex-shrink-0" style="border:1px solid rgba(198,198,198,0.6);">
                         <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="px-3 py-2 text-sm whitespace-nowrap">&#24179;&#38138;&#26174;&#31034;</button>
                         <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="px-3 py-2 text-sm whitespace-nowrap">&#26631;&#31614;&#20998;&#32452;</button>
                     </div>
+                    <input type="text" id="nodeTagFilter" placeholder="&#25628;&#32034;&#33410;&#28857;&#25110;&#26631;&#31614;"
+                        oninput="handleNodeFilterChange(this.value)"
+                        class="console-input w-full sm:w-64 lg:w-72 xl:w-80 flex-shrink-0">
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <div class="text-sm font-medium text-gray-500 whitespace-nowrap">&#26631;&#31614;&#31579;&#36873;</div>

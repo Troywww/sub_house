@@ -1,5 +1,5 @@
 import Parser from './parser.js';
-import { CONFIG } from '../config.js';
+import { CONFIG, RULE_PRESETS } from '../config.js';
 
 // 定义节点协议列表
 const NODE_PROTOCOLS = ['vless:', 'vmess:', 'trojan:', 'ss:', 'ssr:', 'hysteria:', 'tuic:', 'hy2:', 'hysteria2:'];
@@ -9,7 +9,7 @@ const BASE_CONFIG = CONFIG.CLASH_BASE_CONFIG;
 
 // 设置默认模板URL和环境变量处理
 const getTemplateUrl = (env) => {
-    return env?.c || CONFIG.DEFAULT_TEMPLATE_URL;
+    return env?.DEFAULT_TEMPLATE_URL || CONFIG.DEFAULT_TEMPLATE_URL;
 };
 
 export async function handleClashRequest(request, env) {
@@ -30,25 +30,10 @@ export async function handleClashRequest(request, env) {
         const templateUrl = url.searchParams.get('template') || getTemplateUrl(env);
         
         // 获取模板内容
-        let templateContent;
-        if (templateUrl.startsWith('https://inner.template.secret/id-')) {
-            const templateId = templateUrl.replace('https://inner.template.secret/id-', '');
-            const templateData = await env.TEMPLATE_CONFIG.get(templateId);
-            if (!templateData) {
-                return new Response('Template not found', { status: 404 });
-            }
-            const templateInfo = JSON.parse(templateData);
-            templateContent = templateInfo.content;
-        } else {
-            const templateResponse = await fetch(templateUrl);
-            if (!templateResponse.ok) {
-                return new Response('Failed to fetch template', { status: 500 });
-            }
-            templateContent = await templateResponse.text();
-        }
+        const templateContent = await resolveTemplateContent(templateUrl, env);
 
         // 生成配置
-        const config = await generateClashConfig(templateContent, nodes);
+        const config = await generateClashConfig(templateContent, nodes, env);
 
         return new Response(config, {
             headers: {
@@ -62,8 +47,31 @@ export async function handleClashRequest(request, env) {
     }
 }
 
-async function generateClashConfig(templateContent, nodes) {
+async function resolveTemplateContent(templateUrl, env) {
+    if (!templateUrl) {
+        return '';
+    }
+
+    if (templateUrl.startsWith('https://inner.template.secret/id-')) {
+        const templateId = templateUrl.replace('https://inner.template.secret/id-', '');
+        const templateData = await env.TEMPLATE_CONFIG.get(templateId);
+        if (!templateData) {
+            throw new Error('Template not found');
+        }
+        const templateInfo = JSON.parse(templateData);
+        return templateInfo.content || '';
+    }
+
+    const templateResponse = await fetch(templateUrl);
+    if (!templateResponse.ok) {
+        throw new Error('Failed to fetch template');
+    }
+    return templateResponse.text();
+}
+
+async function generateClashConfig(templateContent, nodes, env) {
     let config = BASE_CONFIG + '\n';
+    const ruleProviders = new Map();
     
     // 添加代理节点
     config += '\nproxies:\n';
@@ -201,7 +209,7 @@ async function generateClashConfig(templateContent, nodes) {
     });
 
     // 处理规则
-    config += '\nrules:\n';
+    let rulesConfig = '\nrules:\n';
     const ruleLines = templateContent.split('\n')
         .filter(line => line.startsWith('ruleset='))
         .map(line => line.trim());
@@ -217,12 +225,20 @@ async function generateClashConfig(templateContent, nodes) {
             const ruleContent = url.slice(2);
             
             if (ruleContent === 'MATCH' || ruleContent === 'FINAL') {
-                config += `  - MATCH,${group}\n`;
+                rulesConfig += `  - MATCH,${group}\n`;
             } else if (ruleContent.startsWith('GEOIP,')) {
-                config += `  - ${ruleContent},${group}\n`;
+                rulesConfig += `  - ${ruleContent},${group}\n`;
             } else {
-                config += `  - ${ruleContent},${group}\n`;
+                rulesConfig += `  - ${ruleContent},${group}\n`;
             }
+        } else if (url.startsWith('@')) {
+            const provider = await resolveClashRuleProvider(url.slice(1), env);
+            if (!provider) {
+                console.error(`Rule provider ${url} not found`);
+                continue;
+            }
+            ruleProviders.set(provider.id, provider);
+            rulesConfig += `  - RULE-SET,${provider.id},${group}\n`;
         } else {
             try {
                 // 获取规则列表内容
@@ -251,11 +267,11 @@ async function generateClashConfig(templateContent, nodes) {
                         
                         // 处理规则
                         if (ruleType === 'IP-CIDR' || ruleType === 'IP-CIDR6') {
-                            config += `  - ${ruleType},${ruleValue},${group},no-resolve\n`;
+                            rulesConfig += `  - ${ruleType},${ruleValue},${group},no-resolve\n`;
                         } else if (ruleType === 'FINAL') {
-                            config += `  - MATCH,${group}\n`;
+                            rulesConfig += `  - MATCH,${group}\n`;
                         } else {
-                            config += `  - ${ruleType},${ruleValue},${group}\n`;
+                            rulesConfig += `  - ${ruleType},${ruleValue},${group}\n`;
                         }
                     }
                 });
@@ -265,7 +281,66 @@ async function generateClashConfig(templateContent, nodes) {
         }
     }
 
+    if (ruleProviders.size > 0) {
+        config += '\nrule-providers:\n';
+        for (const provider of ruleProviders.values()) {
+            config += `  ${provider.id}:\n`;
+            config += '    type: http\n';
+            config += `    behavior: ${provider.behavior}\n`;
+            config += `    format: ${provider.format}\n`;
+            config += `    url: "${provider.url}"\n`;
+            config += `    path: ./ruleset/${provider.id}.${provider.format === 'mrs' ? 'mrs' : 'yaml'}\n`;
+            config += '    interval: 86400\n';
+        }
+    }
+
+    config += rulesConfig;
     return config;
+}
+
+async function resolveClashRuleProvider(id, env) {
+    const normalizedId = String(id || '').trim().replace(/^@/, '');
+    if (!normalizedId) return null;
+
+    const fromStore = await getStoredClashRuleProvider(normalizedId, env);
+    const preset = fromStore || RULE_PRESETS.find(rule => rule.id === normalizedId);
+    const clash = preset?.clash || {};
+    if (!clash.url) return null;
+
+    return {
+        id: normalizedId,
+        url: clash.url,
+        format: normalizeRuleProviderFormat(clash.format),
+        behavior: clash.behavior || inferRuleProviderBehavior(normalizedId, clash.url)
+    };
+}
+
+async function getStoredClashRuleProvider(id, env) {
+    if (!env?.RULE_CONFIG) return null;
+
+    try {
+        const raw = await env.RULE_CONFIG.get(id);
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        console.error(`Failed to load rule provider ${id}:`, error);
+        return null;
+    }
+}
+
+function normalizeRuleProviderFormat(format) {
+    return String(format || '').toLowerCase() === 'mrs' ? 'mrs' : 'yaml';
+}
+
+function inferRuleProviderBehavior(id, url) {
+    if (/(^|-)ip$|ip$|telegramip|privateip|cnip/i.test(id)) {
+        return 'ipcidr';
+    }
+
+    if (/applications|\.list($|\?)/i.test(`${id} ${url}`)) {
+        return 'classical';
+    }
+
+    return 'domain';
 }
 
 function convertNodeToClash(node) {

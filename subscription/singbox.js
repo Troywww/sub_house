@@ -25,6 +25,28 @@ const getTemplateUrl = (env) => {
     return env?.DEFAULT_TEMPLATE_URL || CONFIG.DEFAULT_TEMPLATE_URL;
 };
 
+async function resolveTemplateContent(templateUrl, env) {
+    if (!templateUrl) {
+        return '';
+    }
+
+    if (templateUrl.startsWith('https://inner.template.secret/id-')) {
+        const templateId = templateUrl.replace('https://inner.template.secret/id-', '');
+        const templateData = await env.TEMPLATE_CONFIG.get(templateId);
+        if (!templateData) {
+            throw new Error('Template not found');
+        }
+        const templateInfo = JSON.parse(templateData);
+        return templateInfo.content || '';
+    }
+
+    const templateResponse = await fetch(templateUrl);
+    if (!templateResponse.ok) {
+        throw new Error('Failed to fetch template');
+    }
+    return templateResponse.text();
+}
+
 export async function handleSingboxRequest(request, env) {
     try {
         // 从路径中获取集合ID
@@ -43,22 +65,7 @@ export async function handleSingboxRequest(request, env) {
         const templateUrl = url.searchParams.get('template') || getTemplateUrl(env);
         
         // 获取模板内容
-        let templateContent;
-        if (templateUrl.startsWith('https://inner.template.secret/id-')) {
-            const templateId = templateUrl.replace('https://inner.template.secret/id-', '');
-            const templateData = await env.TEMPLATE_CONFIG.get(templateId);
-            if (!templateData) {
-                return new Response('Template not found', { status: 404 });
-            }
-            const templateInfo = JSON.parse(templateData);
-            templateContent = templateInfo.content;
-        } else {
-            const templateResponse = await fetch(templateUrl);
-            if (!templateResponse.ok) {
-                return new Response('Failed to fetch template', { status: 500 });
-            }
-            templateContent = await templateResponse.text();
-        }
+        const templateContent = await resolveTemplateContent(templateUrl, env);
 
         // 检测用户平台
         const userAgent = request.headers.get('User-Agent') || '';

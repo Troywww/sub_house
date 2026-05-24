@@ -2259,7 +2259,7 @@ function generateUtilityScripts(env, CONFIG) {
                 btn.disabled = true;
                 btn.style.pointerEvents = 'none';
                 btn.style.opacity = '0.8';
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + (btn._origHtml.replace(/<i[^>]*><\/i>\s*/g, ''));
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + (btn._origHtml.replace(/<i[^>]*><\\/i>\\s*/g, ''));
             } else {
                 btn.disabled = false;
                 btn.style.pointerEvents = '';

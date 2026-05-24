@@ -67,6 +67,11 @@ function generateHead() {
                 border: 1px solid rgba(198, 198, 198, 0.4);
                 border-radius: 4px;
                 box-shadow: none;
+                transition: border-color 160ms ease, box-shadow 160ms ease;
+            }
+            .console-card:hover {
+                border-color: rgba(198, 198, 198, 0.6);
+                box-shadow: 0 1px 6px rgba(0,0,0,0.04);
             }
             .console-inset {
                 background: var(--surface-low);
@@ -320,7 +325,9 @@ function generateHead() {
                 padding: 10px 14px;
                 font-size: 13px;
                 box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
+                animation: toastIn 0.2s ease;
             }
+            @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         </style>
         <script>
             let adminDialogVisible = false;
@@ -475,10 +482,10 @@ function generateMainContent(CONFIG) {
                 <div class="space-y-0 -mt-px">
                     <section id="managementPage-overview" data-page-panel="overview" class="hidden"></section>
                     <section id="managementPage-nodes" data-page-panel="nodes" class="hidden">
-                        ${generateNodeManagerV2()}
+                        ${generateNodeManager()}
                     </section>
                     <section id="managementPage-collections" data-page-panel="collections" class="hidden">
-                        ${generateCollectionManagerV2(CONFIG)}
+                        ${generateCollectionManager(CONFIG)}
                     </section>
                     <section id="managementPage-templates" data-page-panel="templates" class="hidden">
                         ${generateTemplateManager()}
@@ -491,7 +498,7 @@ function generateMainContent(CONFIG) {
                     </section>
                 </div>
             </div>
-            <div id="subscriptionQrPopup" class="hidden fixed z-50 pointer-events-none">
+            <div id="subscriptionQrPopup" class="hidden fixed z-50" style="pointer-events:none;">
                 <div class="console-card p-3 shadow-2xl">
                     <p id="subscriptionQrTitle" class="console-label mb-2">&#35746;&#38405;&#20108;&#32500;&#30721;</p>
                     <div id="subscriptionQrCanvas" class="w-40 h-40 flex items-center justify-center"></div>
@@ -501,58 +508,6 @@ function generateMainContent(CONFIG) {
     `;
 }
 
-
-// 生成节点管理部分
-function generateNodeManager() {
-    return `
-        <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-all duration-300">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                <i class="fas fa-network-wired text-blue-500 mr-3"></i>节点管理
-            </h2>
-            <div class="space-y-6">
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-1 flex flex-col md:flex-row gap-4">
-                        <input type="text" id="nodeName" placeholder="节点名称"
-                            class="w-full md:w-1/3 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                        <input type="text" id="nodeUrl" placeholder="节点URL"
-                            class="w-full md:w-2/3 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                    </div>
-                    <button onclick="addNode()"
-                        class="whitespace-nowrap px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                        <i class="fas fa-plus mr-2"></i>添加节点
-                    </button>
-                </div>
-                <div id="nodeList" class="space-y-4"></div>
-            </div>
-        </div>
-    `;
-}
-
-// 生成集合管理部分
-function generateCollectionManager(CONFIG) {
-    return `
-        <div class="console-card p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">集合管理</h2>
-            </div>
-            <div class="space-y-4">
-                <div class="flex flex-col md:flex-row gap-4">
-                    <input type="text" id="collectionName" placeholder="集合名称"
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button onclick="addCollection()"
-                        class="whitespace-nowrap px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">
-                        创建集合
-                    </button>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="text-lg font-semibold text-gray-700">选择节点</h3>
-                    <div id="nodeSelection" class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg"></div>
-                </div>
-                <div id="collectionList" class="space-y-4"></div>
-            </div>
-        </div>
-    `;
-}
 
 // 生成脚本部分
 function generateTemplateManager() {
@@ -595,7 +550,7 @@ function generateTemplateManager() {
                             <input type="text" id="templateName" placeholder="例如：默认分流模板"
                                 class="console-input">
                         </div>
-                        <button onclick="saveTemplate()"
+                        <button onclick="saveTemplate(this)"
                             class="console-button console-button-dark whitespace-nowrap"
                             style="min-height:48px;">
                             保存模板
@@ -704,7 +659,7 @@ function generateRuleManager() {
                         class="console-button console-button-compact console-button-toolbar">
                         导入 DustinWin 规则集
                     </button>
-                    <button onclick="saveRule()"
+                    <button onclick="saveRule(this)"
                         class="console-button console-button-compact console-button-dark">
                         保存规则
                     </button>
@@ -771,47 +726,7 @@ function generateRuleManager() {
     `;
 }
 
-function generateSettingsManager() {
-    return `
-        <div class="console-card p-8">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">配置面板</h2>
-                <p class="text-sm text-gray-500 mt-1">管理后台管理员账号、密码，以及头部“其他链接”按钮使用的地址。</p>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">管理员账号</label>
-                        <input type="text" id="settingsAdminUsername" placeholder="例如：admin"
-                            class="console-input">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">管理员密码</label>
-                        <input type="password" id="settingsAdminPassword" placeholder="留空则保持当前密码"
-                            class="console-input">
-                    </div>
-                    <p id="settingsPasswordHint" class="text-sm text-gray-500">当前密码状态：未设置</p>
-                </div>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">其他链接</label>
-                        <input type="text" id="settingsOtherLinkUrl" placeholder="https://..."
-                            class="console-input">
-                    </div>
-                    <p class="text-sm text-gray-500">头部“其他链接”按钮会打开这里配置的地址。</p>
-                </div>
-            </div>
-            <div class="mt-6">
-                <button onclick="saveSettings()"
-                    class="console-button console-button-dark">
-                    保存配置
-                </button>
-            </div>
-        </div>
-    `;
-}
-
-function generateNodeManagerV2() {
+function generateNodeManager() {
     return `
         <div class="console-card rounded-t-none p-6 space-y-5">
             <div class="space-y-1">
@@ -824,7 +739,7 @@ function generateNodeManagerV2() {
                     <input type="text" id="nodeUrl" placeholder="&#33410;&#28857; URL" class="console-input console-mono lg:col-span-6">
                     <input type="text" id="nodeTags" placeholder="&#26631;&#31614;&#65292;&#29992;&#36887;&#21495;&#20998;&#38548;" class="console-input lg:col-span-3">
                 </div>
-                <button onclick="addNode()" class="console-button console-button-dark whitespace-nowrap">&#28155;&#21152;&#33410;&#28857;</button>
+                <button onclick="addNode(this)" class="console-button console-button-dark whitespace-nowrap">&#28155;&#21152;&#33410;&#28857;</button>
             </div>
             <div class="space-y-3">
                 <div class="flex flex-wrap items-center gap-2 min-w-0">
@@ -850,7 +765,7 @@ function generateNodeManagerV2() {
 }
 
 
-function generateCollectionManagerV2(CONFIG) {
+function generateCollectionManager(CONFIG) {
     return `
         <div class="console-card rounded-t-none p-5">
             <div class="space-y-1 mb-4">
@@ -864,7 +779,7 @@ function generateCollectionManagerV2(CONFIG) {
                             <div class="w-full md:w-72 xl:w-80">
                                 <input type="text" id="collectionName" placeholder="&#38598;&#21512;&#21517;&#31216;&#65292;&#20363;&#22914;&#65306;HK / &#26085;&#24120; / &#35270;&#39057;" class="console-input">
                             </div>
-                            <button onclick="addCollection()" class="console-button console-button-dark whitespace-nowrap">&#21019;&#24314;&#38598;&#21512;</button>
+                            <button onclick="addCollection(this)" class="console-button console-button-dark whitespace-nowrap">&#21019;&#24314;&#38598;&#21512;</button>
                         </div>
                     </div>
                     <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
@@ -915,7 +830,7 @@ function renderSettingsManager() {
                 </div>
             </div>
             <div class="mt-6">
-                <button onclick="saveSettings()" class="console-button console-button-dark">&#20445;&#23384;&#37197;&#32622;</button>
+                <button onclick="saveSettings(this)" class="console-button console-button-dark">&#20445;&#23384;&#37197;&#32622;</button>
             </div>
         </div>
     `;
@@ -1052,271 +967,12 @@ function generateScripts(env, CONFIG) {
 
             init();
 
-            ${generateNodeScriptsV2()}
+            ${generateNodeScripts()}
             ${generateCollectionScripts()}
             ${generateTemplateScripts()}
             ${generateRuleScripts()}
-            ${generateUtilityScriptsV2(env, CONFIG)}
+            ${generateUtilityScripts(env, CONFIG)}
         </script>
-    `;
-}
-
-// 节点脚本
-function generateNodeScripts() {
-    return `
-        async function loadNodes() {
-            try {
-                const response = await fetchWithAuth('/api/nodes');
-                if (response.ok) {
-                    const nodes = await response.json();
-                    renderNodes(nodes);
-                    updateNodeSelection(nodes);
-                }
-            } catch (e) {
-                console.error('Error loading nodes:', e);
-                if (!shouldSuppressBootstrapError(e)) {
-                    alert('加载节点失败');
-                }
-            }
-        }
-
-        function renderNodes(nodes) {
-            const nodeList = document.getElementById('nodeList');
-            nodeList.innerHTML = nodes.map(node => \`
-                <div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200">
-                    <div class="flex justify-between items-center">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-medium text-gray-800 flex items-center mb-1">
-                                <i class="fas fa-network-wired text-blue-500 mr-2"></i>
-                                \${node.name}
-                            </h3>
-                            <div class="text-sm text-gray-500 font-mono truncate">
-                                \${node.url}
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2 ml-4">
-                            <button onclick="editNode('\${node.id}')"
-                                class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors"
-                                title="编辑节点">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="copyNode('\${node.id}')"
-                                class="p-1.5 text-gray-400 hover:text-blue-500 transition-colors"
-                                title="复制链接">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <button onclick="deleteNode('\${node.id}')"
-                                class="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
-                                title="删除节点">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            \`).join('');
-
-            // 添加 Font Awesome 图标库
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
-                document.head.appendChild(link);
-            }
-        }
-
-        async function addNode() {
-            const name = document.getElementById('nodeName').value;
-            const url = document.getElementById('nodeUrl').value;
-            
-            if (!name || !url) {
-                alert('请填写完整信息');
-                return;
-            }
-            
-            try {
-                const response = await fetchWithAuth('/api/nodes', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, url })
-                });
-                
-                if (response.ok) {
-                    document.getElementById('nodeName').value = '';
-                    document.getElementById('nodeUrl').value = '';
-                    await loadNodes();
-                }
-            } catch (e) {
-                alert('添加节点失败');
-            }
-        }
-
-        async function editNode(id) {
-            try {
-                const response = await fetchWithAuth('/api/nodes');
-                const nodes = await response.json();
-                const node = nodes.find(n => n.id === id);
-                
-                if (node) {
-                    showEditDialog(node);
-                }
-            } catch (e) {
-                alert('编辑节点失败');
-            }
-        }
-
-        function showEditDialog(node) {
-            const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            dialog.innerHTML = \`
-                <div class="bg-white rounded-lg shadow-xl p-6 max-w-lg w-full mx-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">编辑节点</h3>
-                        <button onclick="this.closest('.fixed').remove()" 
-                            class="text-gray-400 hover:text-gray-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点名称</label>
-                            <input type="text" id="editNodeName" value="\${node.name}"
-                                class="console-input">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点URL</label>
-                            <input type="text" id="editNodeUrl" value="\${node.url}"
-                                class="console-input">
-                        </div>
-                    </div>
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="this.closest('.fixed').remove()"
-                            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">
-                            取消
-                        </button>
-                        <button onclick="updateNode('\${node.id}')"
-                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
-                            保存
-                        </button>
-                    </div>
-                </div>
-            \`;
-            document.body.appendChild(dialog);
-        }
-
-        async function updateNode(id) {
-            const name = document.getElementById('editNodeName').value;
-            const url = document.getElementById('editNodeUrl').value;
-            
-            if (!name || !url) {
-                alert('请填写完整信息');
-                return;
-            }
-            
-            try {
-                const response = await fetchWithAuth('/api/nodes', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, name, url })
-                });
-                
-                if (response.ok) {
-                    document.querySelector('.fixed').remove();
-                    await loadNodes();
-                }
-            } catch (e) {
-                alert('更新节点失败');
-            }
-        }
-
-        async function copyNode(id) {
-            try {
-                const response = await fetchWithAuth('/api/nodes');
-                const nodes = await response.json();
-                const node = nodes.find(n => n.id === id);
-                
-                if (node) {
-                    await navigator.clipboard.writeText(node.url);
-                    showToast('已复制到剪贴板');
-                }
-            } catch (e) {
-                alert('复制失败');
-            }
-        }
-
-        async function deleteNode(id) {
-            if (!confirm('确定要删除这个节点吗？')) return;
-            
-            try {
-                const response = await fetchWithAuth('/api/nodes', {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id })
-                });
-                
-                if (response.ok) {
-                    await loadNodes();
-                }
-            } catch (e) {
-                alert('删除节点失败');
-            }
-        }
-
-        // 更新节点选择区域
-        function updateNodeSelection(nodes) {
-            const nodeSelection = document.getElementById('nodeSelection');
-            nodeSelection.innerHTML = nodes.map(node => \`
-                <div class="flex items-center space-x-3 p-3 bg-white rounded border border-gray-200">
-                    <input type="checkbox" id="select_\${node.id}" value="\${node.id}"
-                        class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                    <label for="select_\${node.id}" class="flex-1 text-sm text-gray-700 cursor-pointer">
-                        \${node.name}
-                    </label>
-                </div>
-            \`).join('');
-
-            // 添加全选/取消全选按钮
-            const selectionControls = document.createElement('div');
-            selectionControls.className = 'col-span-1 md:col-span-2 xl:col-span-3 flex justify-end gap-2';
-            selectionControls.innerHTML = \`
-                <button onclick="selectAllNodes()"
-                    class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors duration-200">
-                    全选
-                </button>
-                <button onclick="deselectAllNodes()"
-                    class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors duration-200">
-                    取消全选
-                </button>
-            \`;
-            nodeSelection.insertBefore(selectionControls, nodeSelection.firstChild);
-        }
-
-        // 全选节点
-        function selectAllNodes() {
-            document.querySelectorAll('#nodeSelection input[type="checkbox"]')
-                .forEach(checkbox => checkbox.checked = true);
-        }
-
-        // 取消全选节点
-        function deselectAllNodes() {
-            document.querySelectorAll('#nodeSelection input[type="checkbox"]')
-                .forEach(checkbox => checkbox.checked = false);
-        }
-
-        // 获取选中的节点ID列表
-        function getSelectedNodeIds() {
-            return Array.from(document.querySelectorAll('#nodeSelection input:checked'))
-                .map(checkbox => checkbox.value);
-        }
-
-        // 设置节点选中状态
-        function setNodeSelection(nodeIds) {
-            document.querySelectorAll('#nodeSelection input[type="checkbox"]')
-                .forEach(checkbox => {
-                    checkbox.checked = nodeIds.includes(checkbox.value);
-                });
-        }
     `;
 }
 
@@ -1361,8 +1017,9 @@ function generateCollectionScripts() {
                 return;
             }
 
-            collectionList.innerHTML = filteredCollections.map(collection => \`
-                    <div class="console-card p-5">
+            const borderColors = ['#93c5fd', '#fcd34d', '#fca5a5', '#cbd5e1'];
+            collectionList.innerHTML = filteredCollections.map((collection, idx) => \`
+                    <div class="console-card p-5" style="border-left:3px solid \${borderColors[idx % borderColors.length]}">
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div class="min-w-0 flex-1">
@@ -1473,28 +1130,31 @@ function generateCollectionScripts() {
             }
         }
 
-        async function addCollection() {
+        async function addCollection(btn) {
+            if (btn) setButtonLoading(btn, true);
             const name = document.getElementById('collectionName').value;
             const nodeIds = Array.from(document.querySelectorAll('#nodeSelection input:checked'))
                 .map(checkbox => checkbox.value);
-            
+
             if (!name) {
-                alert('请输入集合名称');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请输入集合名称');
                 return;
             }
-            
+
             if (nodeIds.length === 0) {
-                alert('请选择至少一个节点');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请选择至少一个节点');
                 return;
             }
-            
+
             try {
                 const response = await fetchWithAuth('/api/collections', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, nodeIds })
                 });
-                
+
                 if (response.ok) {
                     document.getElementById('collectionName').value = '';
                     document.querySelectorAll('#nodeSelection input').forEach(
@@ -1503,7 +1163,9 @@ function generateCollectionScripts() {
                     await loadCollections();
                 }
             } catch (e) {
-                alert('创建集合失败');
+                alertModal('创建集合失败');
+            } finally {
+                if (btn) setButtonLoading(btn, false);
             }
         }
 
@@ -1523,7 +1185,7 @@ function generateCollectionScripts() {
                 }
             } catch (e) {
                 console.error('编辑集合失败:', e);
-                alert('编辑集合失败');
+                alertModal('编辑集合失败');
             }
         }
 
@@ -1657,7 +1319,7 @@ function generateCollectionScripts() {
                 }
             } catch (e) {
                 console.error('Update failed:', e);
-                alert('更新集合失败: ' + e.message);
+                alertModal('更新集合失败: ' + e.message);
             }
         }
 
@@ -1843,12 +1505,12 @@ function generateCollectionScripts() {
                 }
             } catch (e) {
                 console.error('Update failed:', e);
-                alert('更新集合失败: ' + e.message);
+                alertModal('更新集合失败: ' + e.message);
             }
         }
 
         async function deleteCollection(id) {
-            if (!confirm('确定要删除这个集合吗？')) return;
+            if (!await confirmModal('确定要删除这个集合吗？')) return;
             
             try {
                 const response = await fetchWithAuth('/api/collections', {
@@ -1861,7 +1523,7 @@ function generateCollectionScripts() {
                     await loadCollections();
                 }
             } catch (e) {
-                alert('删除集合失败');
+                alertModal('删除集合失败');
             }
         }
 
@@ -1872,7 +1534,7 @@ function generateCollectionScripts() {
                 await navigator.clipboard.writeText(shareUrl);
                 showToast('分享链接已复制到剪贴板');
             } catch (e) {
-                alert('复制分享链接失败');
+                alertModal('复制分享链接失败');
             }
         }
 
@@ -2116,22 +1778,25 @@ function generateTemplateScripts() {
                 fillTemplateForm(template);
             } catch (error) {
                 console.error('Edit template error:', error);
-                alert('加载模板失败');
+                alertModal('加载模板失败');
             }
         }
 
-        async function saveTemplate() {
+        async function saveTemplate(btn) {
+            if (btn) setButtonLoading(btn, true);
             const id = document.getElementById('templateId').value.trim();
             const name = document.getElementById('templateName').value.trim();
             const content = document.getElementById('templateContent').value;
 
             if (!name) {
-                alert('请输入模板名称');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请输入模板名称');
                 return;
             }
 
             if (!content.trim()) {
-                alert('请输入模板内容');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请输入模板内容');
                 return;
             }
 
@@ -2148,18 +1813,20 @@ function generateTemplateScripts() {
                 showToast('保存成功');
             } catch (error) {
                 console.error('Save template error:', error);
-                alert('保存失败：' + error.message);
+                alertModal('保存失败：' + error.message);
+            } finally {
+                if (btn) setButtonLoading(btn, false);
             }
         }
 
         async function deleteTemplate() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
-                alert('请先选择一个已保存的模板');
+                alertModal('请先选择一个已保存的模板');
                 return;
             }
 
-            if (!confirm('确定要删除当前模板吗？')) return;
+            if (!await confirmModal('确定要删除当前模板吗？')) return;
 
             try {
                 const response = await fetchWithAuth(\`${CONFIG.API.TEMPLATES}/\${encodeURIComponent(id)}\`, {
@@ -2178,7 +1845,7 @@ function generateTemplateScripts() {
                 showToast('删除成功');
             } catch (error) {
                 console.error('Delete template error:', error);
-                alert('删除失败：' + error.message);
+                alertModal('删除失败：' + error.message);
             }
         }
 
@@ -2189,14 +1856,14 @@ function generateTemplateScripts() {
                 await saveActiveTemplateUrl(template.internalUrl);
                 showToast('已切换当前模板');
             } catch (error) {
-                alert('切换当前模板失败：' + error.message);
+                alertModal('切换当前模板失败：' + error.message);
             }
         }
 
         async function useCurrentTemplate() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
-                alert('请先保存当前模板');
+                alertModal('请先保存当前模板');
                 return;
             }
             await activateTemplateById(id);
@@ -2211,7 +1878,7 @@ function generateTemplateScripts() {
         function copyCurrentTemplateUrl() {
             const id = document.getElementById('templateId').value.trim();
             if (!id) {
-                alert('请先选择一个模板');
+                alertModal('请先选择一个模板');
                 return;
             }
             copyTemplateUrl(id);
@@ -2222,7 +1889,7 @@ function generateTemplateScripts() {
             const selectedTemplate = id ? templates.find(item => item.id === id) : null;
             const targetUrl = activeTemplateUrl || selectedTemplate?.internalUrl || '';
             if (!targetUrl) {
-                alert('请先选择或启用一个模板');
+                alertModal('请先选择或启用一个模板');
                 return;
             }
             window.open(targetUrl, '_blank', 'noopener');
@@ -2232,13 +1899,13 @@ function generateTemplateScripts() {
             const selector = document.getElementById('templatePresetSelector');
             const presetId = selector ? selector.value : '';
             if (!presetId) {
-                alert('请先选择一个内置模板');
+                alertModal('请先选择一个内置模板');
                 return;
             }
 
             const preset = BUILT_IN_TEMPLATE_PRESETS.find(item => item.id === presetId);
             if (!preset) {
-                alert('未找到所选模板预置');
+                alertModal('未找到所选模板预置');
                 return;
             }
 
@@ -2353,7 +2020,7 @@ function generateRuleScripts() {
                 showToast('已导入 ' + data.imported + ' 条 DustinWin 规则集，跳过 ' + data.skipped + ' 条已存在规则');
             } catch (error) {
                 console.error('Import presets error:', error);
-                alert('导入 DustinWin 规则集失败：' + error.message);
+                alertModal('导入 DustinWin 规则集失败：' + error.message);
             }
         }
 
@@ -2365,11 +2032,12 @@ function generateRuleScripts() {
                 fillRuleForm(rule);
             } catch (error) {
                 console.error('Edit rule error:', error);
-                alert('加载规则失败');
+                alertModal('加载规则失败');
             }
         }
 
-        async function saveRule() {
+        async function saveRule(btn) {
+            if (btn) setButtonLoading(btn, true);
             const originalId = document.getElementById('ruleIdOriginal').value.trim();
             const id = document.getElementById('ruleId').value.trim();
             const name = document.getElementById('ruleName').value.trim();
@@ -2379,17 +2047,20 @@ function generateRuleScripts() {
             const singboxFormat = document.getElementById('ruleSingboxFormat').value.trim();
 
             if (!id) {
-                alert('请填写规则 ID');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请填写规则 ID');
                 return;
             }
 
             if (!name) {
-                alert('请填写显示名称');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请填写显示名称');
                 return;
             }
 
             if (!clashUrl && !singboxUrl) {
-                alert('Clash 和 Sing-box 至少填写一个规则地址');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('Clash 和 Sing-box 至少填写一个规则地址');
                 return;
             }
 
@@ -2414,18 +2085,20 @@ function generateRuleScripts() {
                 showToast('规则已保存');
             } catch (error) {
                 console.error('Save rule error:', error);
-                alert('保存失败：' + error.message);
+                alertModal('保存失败：' + error.message);
+            } finally {
+                if (btn) setButtonLoading(btn, false);
             }
         }
 
         async function deleteRule() {
             const id = document.getElementById('ruleIdOriginal').value.trim();
             if (!id) {
-                alert('请先选择要删除的规则');
+                alertModal('请先选择要删除的规则');
                 return;
             }
 
-            if (!confirm('确认删除这条规则吗？')) return;
+            if (!await confirmModal('确认删除这条规则吗？')) return;
 
             try {
                 const response = await fetchWithAuth('${CONFIG.API.RULES}/' + encodeURIComponent(id), {
@@ -2440,7 +2113,7 @@ function generateRuleScripts() {
                 showToast('规则已删除');
             } catch (error) {
                 console.error('Delete rule error:', error);
-                alert('删除失败：' + error.message);
+                alertModal('删除失败：' + error.message);
             }
         }
 
@@ -2452,7 +2125,7 @@ function generateRuleScripts() {
         function copyRuleReference() {
             const ref = getCurrentRuleReference();
             if (!ref) {
-                alert('请先填写规则 ID');
+                alertModal('请先填写规则 ID');
                 return;
             }
             copyToClipboard(ref, '规则引用已复制');
@@ -2461,12 +2134,12 @@ function generateRuleScripts() {
         function insertRuleReference() {
             const ref = getCurrentRuleReference();
             if (!ref) {
-                alert('请先填写规则 ID');
+                alertModal('请先填写规则 ID');
                 return;
             }
             const templateContent = document.getElementById('templateContent');
             if (!templateContent) {
-                alert('未找到模板编辑器');
+                alertModal('未找到模板编辑器');
                 return;
             }
             const displayName = document.getElementById('ruleName').value.trim() || ref.slice(1);
@@ -2481,7 +2154,7 @@ function generateRuleScripts() {
         function appendLineToTemplate(line, successMessage) {
             const templateContent = document.getElementById('templateContent');
             if (!templateContent) {
-                alert('未找到模板编辑器');
+                alertModal('未找到模板编辑器');
                 return false;
             }
             const prefix = templateContent.value && !templateContent.value.endsWith('\\n') ? '\\n' : '';
@@ -2495,12 +2168,12 @@ function generateRuleScripts() {
         function insertSelectedRuleIntoTemplate() {
             const selector = document.getElementById('templateRuleSelector');
             if (!selector || !selector.value) {
-                alert('请先选择一条规则');
+                alertModal('请先选择一条规则');
                 return;
             }
             const rule = rules.find(item => item.id === selector.value);
             if (!rule) {
-                alert('未找到选中的规则');
+                alertModal('未找到选中的规则');
                 return;
             }
             appendLineToTemplate('ruleset=' + rule.name + ',@' + rule.id, '规则引用已插入');
@@ -2517,7 +2190,7 @@ function generateRuleScripts() {
                 .map(item => item.startsWith('[]') ? item : '[]' + item);
 
             if (!name) {
-                alert('请填写分组名称');
+                alertModal('请填写分组名称');
                 return;
             }
 
@@ -2545,8 +2218,56 @@ function generateRuleScripts() {
     `;
 }
 
-function generateUtilityScriptsV2(env, CONFIG) {
+function generateUtilityScripts(env, CONFIG) {
     return `
+        function confirmModal(message) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 z-[100] bg-black bg-opacity-50 flex items-center justify-center p-4';
+                overlay.innerHTML = '<div class="console-card shadow-2xl p-6 max-w-sm w-full">'
+                    + '<div class="console-label mb-3">Confirm</div>'
+                    + '<p class="text-sm text-gray-700 leading-6">' + String(message).replace(/</g,'&lt;') + '</p>'
+                    + '<div class="flex justify-end gap-2 mt-6">'
+                    + '<button class="cancel-btn console-button console-button-compact console-button-toolbar">取消</button>'
+                    + '<button class="confirm-btn console-button console-button-compact console-button-dark">确定</button>'
+                    + '</div></div>';
+                overlay.querySelector('.confirm-btn').onclick = () => { overlay.remove(); resolve(true); };
+                overlay.querySelector('.cancel-btn').onclick = () => { overlay.remove(); resolve(false); };
+                overlay.onclick = (e) => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
+                document.body.appendChild(overlay);
+            });
+        }
+
+        function alertModal(message) {
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 z-[100] bg-black bg-opacity-50 flex items-center justify-center p-4';
+            overlay.innerHTML = '<div class="console-card shadow-2xl p-6 max-w-sm w-full">'
+                + '<div class="console-label mb-3">Notice</div>'
+                + '<p class="text-sm text-gray-700 leading-6">' + String(message).replace(/</g,'&lt;') + '</p>'
+                + '<div class="flex justify-end mt-6">'
+                + '<button class="ok-btn console-button console-button-compact console-button-dark">确定</button>'
+                + '</div></div>';
+            overlay.querySelector('.ok-btn').onclick = () => overlay.remove();
+            overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+            document.body.appendChild(overlay);
+        }
+
+        function setButtonLoading(btn, loading) {
+            if (!btn) return;
+            if (loading) {
+                btn._origHtml = btn.innerHTML;
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.8';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + (btn._origHtml.replace(/<i[^>]*><\/i>\s*/g, ''));
+            } else {
+                btn.disabled = false;
+                btn.style.pointerEvents = '';
+                btn.style.opacity = '';
+                if (btn._origHtml) btn.innerHTML = btn._origHtml;
+            }
+        }
+
         function showManagementPage(page) {
             currentManagementPage = !page || page === 'overview' ? 'collections' : page;
             document.querySelectorAll('[data-page-panel]').forEach((panel) => {
@@ -2614,7 +2335,8 @@ function generateUtilityScriptsV2(env, CONFIG) {
             }
         }
 
-        async function saveSettings() {
+        async function saveSettings(btn) {
+            if (btn) setButtonLoading(btn, true);
             const adminUsername = document.getElementById('settingsAdminUsername')?.value.trim() || '';
             const adminPassword = document.getElementById('settingsAdminPassword')?.value || '';
             const otherLinkUrl = document.getElementById('settingsOtherLinkUrl')?.value.trim() || '';
@@ -2642,7 +2364,9 @@ function generateUtilityScriptsV2(env, CONFIG) {
                 applySettingsToForm();
                 showToast('配置已保存');
             } catch (error) {
-                alert('保存配置失败：' + error.message);
+                alertModal('保存配置失败：' + error.message);
+            } finally {
+                if (btn) setButtonLoading(btn, false);
             }
         }
 
@@ -2738,7 +2462,7 @@ function generateUtilityScriptsV2(env, CONFIG) {
                 await navigator.clipboard.writeText(text);
                 showToast(message);
             } catch (e) {
-                alert('复制失败');
+                alertModal('复制失败');
             }
         }
 
@@ -2752,7 +2476,7 @@ function generateUtilityScriptsV2(env, CONFIG) {
     `;
 }
 
-function generateNodeScriptsV2() {
+function generateNodeScripts() {
     return `
         let nodeTagFilter = '';
         let nodeViewMode = 'all';
@@ -2811,7 +2535,7 @@ function generateNodeScriptsV2() {
             } catch (e) {
                 console.error('Error loading nodes:', e);
                 if (!shouldSuppressBootstrapError(e)) {
-                    alert('加载节点失败');
+                    alertModal('加载节点失败');
                 }
             }
         }
@@ -2911,13 +2635,15 @@ function generateNodeScriptsV2() {
             }
         }
 
-        async function addNode() {
+        async function addNode(btn) {
+            if (btn) setButtonLoading(btn, true);
             const name = document.getElementById('nodeName').value;
             const url = document.getElementById('nodeUrl').value;
             const tags = parseNodeTags(document.getElementById('nodeTags')?.value || '');
 
             if (!name || !url) {
-                alert('请填写完整信息');
+                if (btn) setButtonLoading(btn, false);
+                alertModal('请填写完整信息');
                 return;
             }
 
@@ -2936,7 +2662,9 @@ function generateNodeScriptsV2() {
                     await loadNodes();
                 }
             } catch (e) {
-                alert('添加节点失败');
+                alertModal('添加节点失败');
+            } finally {
+                if (btn) setButtonLoading(btn, false);
             }
         }
 
@@ -2993,7 +2721,7 @@ function generateNodeScriptsV2() {
             const tags = parseNodeTags(document.getElementById('editNodeTags')?.value || '');
 
             if (!name || !url) {
-                alert('请填写完整信息');
+                alertModal('请填写完整信息');
                 return;
             }
 
@@ -3009,7 +2737,7 @@ function generateNodeScriptsV2() {
                     await loadNodes();
                 }
             } catch (e) {
-                alert('更新节点失败');
+                alertModal('更新节点失败');
             }
         }
 
@@ -3022,7 +2750,7 @@ function generateNodeScriptsV2() {
         }
 
         async function deleteNode(id) {
-            if (!confirm('确定要删除这个节点吗？')) return;
+            if (!await confirmModal('确定要删除这个节点吗？')) return;
 
             try {
                 const response = await fetchWithAuth('/api/nodes', {
@@ -3035,7 +2763,7 @@ function generateNodeScriptsV2() {
                     await loadNodes();
                 }
             } catch (e) {
-                alert('删除节点失败');
+                alertModal('删除节点失败');
             }
         }
 
@@ -3085,61 +2813,3 @@ function generateNodeScriptsV2() {
     `;
 }
 
-function generateUtilityScripts(env, CONFIG) {
-    return `
-        function showManagementPage(page) {
-            currentManagementPage = !page || page === 'overview' ? 'collections' : page;
-            document.querySelectorAll('[data-page-panel]').forEach((panel) => {
-                panel.classList.toggle('hidden', panel.getAttribute('data-page-panel') !== currentManagementPage);
-            });
-            document.querySelectorAll('[data-page-tab]').forEach((button) => {
-                const tab = button.getAttribute('data-page-tab');
-                if (tab === 'overview') {
-                    button.className = 'hidden px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
-                    return;
-                }
-                const active = tab === currentManagementPage;
-                button.className = active
-                    ? 'console-tab active'
-                    : 'console-tab';
-            });
-        }
-
-        function openUserLogin() {
-            window.open('${CONFIG.API.USER.PAGE}', '_blank');
-        }
-
-        function openSubscriber() {
-            if (CONFIG.SUBSCRIBER_URL) {
-                window.open(CONFIG.SUBSCRIBER_URL, '_blank');
-            } else {
-                showToast('订阅器地址未配置');
-            }
-        }
-
-        function openQuickSubscriber() {
-            if (CONFIG.QUICK_SUB_URL) {
-                window.open(CONFIG.QUICK_SUB_URL, '_blank');
-            } else {
-                showToast('快速订阅器地址未配置');
-            }
-        }
-
-        async function copyToClipboard(text, message) {
-            try {
-                await navigator.clipboard.writeText(text);
-                showToast(message);
-            } catch (e) {
-                alert('复制失败');
-            }
-        }
-
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'console-toast fixed bottom-4 left-1/2 transform -translate-x-1/2';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
-        }
-    `;
-} 

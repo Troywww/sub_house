@@ -112,12 +112,12 @@ function generateVlessLink(node) {
         // Reality 特有参数
         if (settings.security === 'reality') {
             if (settings.pbk) params.set('pbk', settings.pbk);
-            if (settings.fp) params.set('fp', settings.fp);
             if (settings.sid) params.set('sid', settings.sid);
             if (settings.spx) params.set('spx', settings.spx);
         }
 
         // 通用参数
+        if (settings.fp) params.set('fp', settings.fp);
         if (settings.path) params.set('path', settings.path);
         if (settings.host) params.set('host', settings.host);
         if (settings.sni) params.set('sni', settings.sni);

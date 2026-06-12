@@ -426,6 +426,11 @@ function convertVless(node) {
         config.servername = node.settings.sni || node.settings.host;
     }
 
+    // 客户端指纹
+    if (node.settings.fp) {
+        config['client-fingerprint'] = node.settings.fp;
+    }
+
     // Reality 配置
     if (node.settings.security === 'reality') {
         config.flow = 'xtls-rprx-vision';

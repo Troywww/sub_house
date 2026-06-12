@@ -35,24 +35,49 @@ function generateHead() {
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <style>
             :root {
-                --surface: #f9f9f9;
-                --surface-low: #f3f3f3;
-                --surface-card: #ffffff;
-                --ink: #121212;
-                --muted: #666666;
-                --ghost: rgba(45, 45, 45, 0.16);
-                --emerald-text: #006d36;
-                --emerald-bg: rgba(0, 134, 68, 0.1);
-                --amber-text: #9a5a00;
-                --amber-bg: rgba(214, 124, 0, 0.12);
-                --ruby-text: #ba1a1a;
-                --ruby-bg: rgba(186, 26, 26, 0.12);
+                /* Base surfaces */
+                --surface: #f7f8fa;
+                --surface-elevated: #ffffff;
+                --surface-hover: #f1f2f4;
+                --border: rgba(0, 0, 0, 0.08);
+                --border-hover: rgba(0, 0, 0, 0.14);
+                --ink: #1a1a2e;
+                --muted: #6b7280;
+
+                /* Accent */
+                --accent: #2563eb;
+                --accent-soft: #eff6ff;
+                --accent-border: rgba(37, 99, 235, 0.2);
+
+                /* Semantic statuses */
+                --positive: #059669;
+                --positive-bg: #ecfdf5;
+                --warning: #d97706;
+                --warning-bg: #fffbeb;
+                --danger: #dc2626;
+                --danger-bg: #fef2f2;
+
+                /* Radius */
+                --radius: 8px;
+                --radius-sm: 6px;
+                --radius-lg: 12px;
+
+                /* Shadows */
+                --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+                --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+                --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+                --shadow-xl: 0 12px 40px rgba(0,0,0,0.1);
+
+                /* Transitions */
+                --ease: 180ms cubic-bezier(0.4, 0, 0.2, 1);
             }
             body {
                 background: var(--surface);
                 color: var(--ink);
                 font-family: 'Inter', system-ui, sans-serif;
             }
+
+            /* Utility */
             .console-shell { max-width: 1760px; margin: 0 auto; }
             .console-label {
                 font-family: 'JetBrains Mono', monospace;
@@ -62,22 +87,29 @@ function generateHead() {
                 text-transform: uppercase;
                 color: #6b7280;
             }
+            .console-label-accent { color: var(--accent); }
+            .console-mono { font-family: 'JetBrains Mono', monospace; }
+            .console-ghost-divider { height: 1px; background: rgba(0, 0, 0, 0.08); }
+
+            /* Cards */
             .console-card {
-                background: var(--surface-card);
-                border: 1px solid rgba(198, 198, 198, 0.4);
-                border-radius: 4px;
-                box-shadow: none;
-                transition: border-color 160ms ease, box-shadow 160ms ease;
+                background: var(--surface-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-md);
+                transition: box-shadow var(--ease), border-color var(--ease);
             }
             .console-card:hover {
-                border-color: rgba(198, 198, 198, 0.6);
-                box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+                border-color: var(--border-hover);
+                box-shadow: var(--shadow-lg);
             }
             .console-inset {
-                background: var(--surface-low);
-                border: 1px solid rgba(198, 198, 198, 0.32);
-                border-radius: 4px;
+                background: var(--surface-hover);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
             }
+
+            /* Buttons */
             .console-button {
                 display: inline-flex;
                 align-items: center;
@@ -85,22 +117,28 @@ function generateHead() {
                 gap: 10px;
                 min-height: 44px;
                 padding: 0 20px;
-                border-radius: 4px;
-                border: 1px solid rgba(198, 198, 198, 0.6);
-                background: #fff;
+                border-radius: var(--radius-sm);
+                border: 1px solid var(--border);
+                background: var(--surface-elevated);
                 color: var(--ink);
                 font-weight: 700;
                 white-space: nowrap;
-                transition: all 160ms ease;
+                box-shadow: var(--shadow-sm);
+                transition: all var(--ease);
             }
-            .console-button:hover { background: var(--surface-low); }
+            .console-button:hover { background: var(--surface-hover); border-color: var(--border-hover); }
             .console-button-dark {
-                border-color: rgba(104, 137, 186, 0.32);
-                background: linear-gradient(180deg, #edf4ff 0%, #dde9fb 100%);
-                color: #29486f;
+                background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+                color: #fff;
+                border-color: transparent;
+                box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
             }
-            .console-button-dark:hover { background: linear-gradient(180deg, #e5efff 0%, #d4e3fa 100%); }
-            .console-button-subtle { background: var(--surface-low); }
+            .console-button-dark:hover {
+                background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+                border-color: transparent;
+            }
+            .console-button-subtle { background: var(--surface-hover); border-color: transparent; }
+            .console-button-subtle:hover { background: #e5e7eb; }
             .console-button-compact {
                 min-height: 34px;
                 padding: 0 12px;
@@ -108,12 +146,13 @@ function generateHead() {
                 font-size: 12px;
             }
             .console-button-toolbar {
-                border-color: rgba(198, 198, 198, 0.45);
-                background: #fff;
+                border-color: var(--border);
+                background: var(--surface-elevated);
                 color: #374151;
                 font-weight: 600;
+                box-shadow: none;
             }
-            .console-button-toolbar:hover { background: #f7f7f7; }
+            .console-button-toolbar:hover { background: var(--surface-hover); }
             .console-toolbar-label {
                 display: inline-flex;
                 align-items: center;
@@ -133,14 +172,14 @@ function generateHead() {
                 min-height: 36px;
                 padding: 0;
                 gap: 0;
-                border-color: rgba(198, 198, 198, 0.45);
-                background: #fff;
+                border-color: var(--border);
+                background: var(--surface-elevated);
                 color: #4b5563;
                 box-shadow: none;
             }
             .console-icon-button:hover {
-                background: #f7f7f7;
-                color: #111827;
+                background: var(--surface-hover);
+                color: var(--ink);
             }
             .console-pill {
                 display: inline-flex;
@@ -152,7 +191,9 @@ function generateHead() {
                 font-weight: 700;
                 letter-spacing: 0.04em;
             }
-            .console-pill-ready { color: var(--emerald-text); background: var(--emerald-bg); }
+            .console-pill-ready { color: var(--positive); background: var(--positive-bg); }
+
+            /* Sidebar */
             .console-sidebar-item {
                 display: flex;
                 align-items: center;
@@ -160,27 +201,29 @@ function generateHead() {
                 width: 100%;
                 min-height: 58px;
                 padding: 0 18px;
-                border-radius: 4px;
+                border-radius: var(--radius-sm);
                 color: #4b5563;
                 font-weight: 700;
-                transition: all 160ms ease;
+                transition: all var(--ease);
                 text-align: left;
             }
-            .console-sidebar-item:hover { background: rgba(255, 255, 255, 0.72); color: #111827; }
+            .console-sidebar-item:hover { background: rgba(255, 255, 255, 0.72); color: var(--ink); }
             .console-sidebar-item.active {
                 background: linear-gradient(180deg, #323232 0%, #1a1a1a 100%);
                 color: #fff;
             }
+
+            /* Tabs */
             .console-topnav {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 4px;
                 align-items: center;
                 padding: 8px 10px 0;
-                background: var(--surface-card);
-                border: 1px solid rgba(198, 198, 198, 0.4);
+                background: var(--surface-elevated);
+                border: 1px solid var(--border);
                 border-bottom: none;
-                border-radius: 4px 4px 0 0;
+                border-radius: var(--radius) var(--radius) 0 0;
             }
             .console-tab {
                 display: inline-flex;
@@ -188,22 +231,22 @@ function generateHead() {
                 gap: 7px;
                 min-height: 34px;
                 padding: 0 12px;
-                border-radius: 4px 4px 0 0;
+                border-radius: var(--radius-sm) var(--radius-sm) 0 0;
                 border: 1px solid transparent;
                 border-bottom: none;
                 background: transparent;
                 color: #4b5563;
                 font-size: 15px;
                 font-weight: 700;
-                transition: all 160ms ease;
+                transition: all var(--ease);
             }
-            .console-tab:hover { background: var(--surface-low); color: #111827; }
+            .console-tab:hover { background: var(--surface-hover); color: var(--ink); }
             .console-tab.active {
-                background: #fff;
-                border-color: rgba(198, 198, 198, 0.45);
-                color: #111827;
+                background: var(--surface-elevated);
+                border-color: var(--border);
+                color: var(--ink);
                 position: relative;
-                box-shadow: 0 -1px 0 #fff inset;
+                box-shadow: var(--shadow-sm);
             }
             .console-tab.active::before {
                 content: '';
@@ -211,30 +254,64 @@ function generateHead() {
                 left: 0;
                 right: 0;
                 top: -1px;
-                height: 2px;
-                background: #111827;
+                height: 3px;
+                background: var(--accent);
+                border-radius: 2px 2px 0 0;
             }
+
+            /* Inputs */
             .console-input,
             .console-select,
             .console-textarea {
                 width: 100%;
                 min-height: 48px;
-                border-radius: 4px;
-                border: 1px solid rgba(198, 198, 198, 0.7);
-                background: #fff;
-                padding: 0 16px;
+                border-radius: var(--radius);
+                border: 1px solid var(--border-hover);
+                background: var(--surface-elevated);
+                padding: 0 14px;
                 color: var(--ink);
                 outline: none;
-                transition: border-color 160ms ease;
+                transition: border-color var(--ease), box-shadow var(--ease);
             }
-            .console-textarea { min-height: 144px; padding: 12px 16px; }
+            .console-textarea { min-height: 144px; padding: 12px 14px; }
             .console-input:focus,
             .console-select:focus,
-            .console-textarea:focus { border-color: #111827; box-shadow: none; }
-            .console-mono { font-family: 'JetBrains Mono', monospace; }
-            .console-status-expired { color: var(--ruby-text); background: var(--ruby-bg); }
-            .console-status-soon { color: var(--amber-text); background: var(--amber-bg); }
-            .console-status-active { color: var(--emerald-text); background: var(--emerald-bg); }
+            .console-textarea:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px var(--accent-border);
+            }
+            .console-input::placeholder { color: #9ca3af; }
+
+            /* Status badges */
+            .console-status-expired { color: var(--danger); background: var(--danger-bg); }
+            .console-status-soon { color: var(--warning); background: var(--warning-bg); }
+            .console-status-active { color: var(--positive); background: var(--positive-bg); }
+
+            /* Status dot indicator */
+            .console-status-dot {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 3px 10px 3px 8px;
+                border-radius: 999px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .console-status-dot::before {
+                content: '';
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+            .console-status-dot.active { color: var(--positive); background: var(--positive-bg); }
+            .console-status-dot.active::before { background: var(--positive); }
+            .console-status-dot.soon { color: var(--warning); background: var(--warning-bg); }
+            .console-status-dot.soon::before { background: var(--warning); }
+            .console-status-dot.expired { color: var(--danger); background: var(--danger-bg); }
+            .console-status-dot.expired::before { background: var(--danger); }
+
+            /* Subscription buttons */
             .console-subscription-btn {
                 display: inline-flex;
                 align-items: center;
@@ -242,40 +319,44 @@ function generateHead() {
                 gap: 8px;
                 min-height: 38px;
                 padding: 0 14px;
-                border-radius: 4px;
+                border-radius: var(--radius-sm);
                 font-size: 12px;
                 font-weight: 700;
                 letter-spacing: 0.02em;
                 white-space: nowrap;
-                transition: all 160ms ease;
+                transition: all var(--ease);
+                border: 1px solid transparent;
             }
-            .console-subscription-btn.primary {
-                min-width: 116px;
-            }
-            .console-subscription-btn.base { color: #29486f; background: #dbe7fb; }
-            .console-subscription-btn.singbox { color: #0f5132; background: #d1fae5; }
-            .console-subscription-btn.clash { color: #1d4ed8; background: #dbeafe; }
-            .console-subscription-btn.share { color: #6b7280; background: #f3f4f6; }
-            .console-subscription-btn:hover { filter: brightness(0.98); transform: translateY(-1px); }
+            .console-subscription-btn.primary { min-width: 116px; }
+            .console-subscription-btn.base { color: #1e40af; background: #dbeafe; border-color: rgba(37, 99, 235, 0.15); }
+            .console-subscription-btn.singbox { color: #065f46; background: #d1fae5; border-color: rgba(5, 150, 105, 0.15); }
+            .console-subscription-btn.clash { color: #1e40af; background: #dbeafe; border-color: rgba(37, 99, 235, 0.15); }
+            .console-subscription-btn.share { color: #6b7280; background: #f3f4f6; border-color: rgba(0, 0, 0, 0.06); }
+            .console-subscription-btn:hover { filter: brightness(0.97); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+            /* Node pick */
             .console-node-pick {
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 min-height: 56px;
                 padding: 10px 12px;
-                background: #fff;
-                border: 1px solid rgba(198, 198, 198, 0.4);
-                border-radius: 4px;
-                transition: border-color 160ms ease, background 160ms ease;
+                background: var(--surface-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                box-shadow: var(--shadow-sm);
+                transition: border-color var(--ease), background var(--ease), box-shadow var(--ease);
             }
             .console-node-pick:hover {
-                border-color: rgba(31, 41, 55, 0.24);
-                background: #fcfcfc;
+                border-color: var(--accent-border);
+                background: var(--accent-soft);
+                box-shadow: 0 0 0 1px var(--accent-border);
             }
             .console-node-pick input[type="checkbox"] {
-                width: 15px;
-                height: 15px;
+                width: 16px;
+                height: 16px;
                 margin: 0;
+                accent-color: var(--accent);
             }
             .console-node-pick-label {
                 min-width: 0;
@@ -297,7 +378,7 @@ function generateHead() {
             .console-node-pick-tag {
                 padding: 2px 8px;
                 border-radius: 999px;
-                background: #f3f4f6;
+                background: var(--surface-hover);
                 color: #6b7280;
                 font-size: 11px;
                 line-height: 1.2;
@@ -316,19 +397,60 @@ function generateHead() {
                 font-size: 12px;
                 font-weight: 600;
             }
-            .console-node-pick-tools button:hover { color: #111827; }
-            .console-ghost-divider { height: 1px; background: rgba(198, 198, 198, 0.45); }
+            .console-node-pick-tools button:hover { color: var(--ink); }
+
+            /* Modal */
+            .modal-overlay {
+                position: fixed;
+                inset: 0; z-index: 100;
+                background: rgba(0,0,0,0.45);
+                display: flex; align-items: center; justify-content: center;
+                padding: 16px;
+                animation: fadeIn 0.15s ease;
+                backdrop-filter: blur(4px);
+            }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .modal-box {
+                background: var(--surface-elevated);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-xl);
+                padding: 24px;
+                max-width: 400px;
+                width: 100%;
+            }
+
+            /* Toast */
             .console-toast {
                 background: rgba(17, 17, 17, 0.92);
                 color: #fff;
-                border-radius: 4px;
+                border-radius: var(--radius-sm);
                 padding: 10px 14px;
                 font-size: 13px;
-                box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
+                box-shadow: var(--shadow-lg);
                 animation: toastIn 0.2s ease;
             }
-            @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-        </style>
+            @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+            /* Loading spinner (inline, no FA dependency) */
+            .console-spinner {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid rgba(0,0,0,0.12);
+                border-top-color: var(--accent);
+                border-radius: 50%;
+                animation: spin 0.6s linear infinite;
+            }
+            @keyframes spin { to { transform: rotate(360deg); } }
+
+            /* Header glass */
+            .console-header {
+                background: rgba(255,255,255,0.85);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--border);
+            }
+        </style>        </style>
         <script>
             let adminDialogVisible = false;
             let adminNeedsSetup = false;
@@ -411,7 +533,7 @@ function generateHead() {
 // 生成页面头部
 function generateHeader(CONFIG, env) {
     return `
-        <header class="border-b border-gray-200 bg-white/90 backdrop-blur">
+        <header class="console-header sticky top-0 z-40">
             <div class="console-shell px-8 py-3 md:px-10 xl:px-12">
                 <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                     <div class="flex items-center gap-4">
@@ -750,7 +872,7 @@ function generateNodeManager() {
                     </div>
                     <div class="w-56 lg:w-64 xl:w-72 flex-shrink-0">
                         <input type="text" id="nodeTagFilter" placeholder="&#25628;&#32034;&#33410;&#28857;&#25110;&#26631;&#31614;"
-                            oninput="handleNodeFilterChange(this.value)"
+                            oninput="debouncedNodeFilter(this.value)"
                             class="console-input">
                     </div>
                 </div>
@@ -791,7 +913,7 @@ function generateCollectionManager(CONFIG) {
                     </div>
                     <div class="w-full md:w-72 xl:w-80">
                         <input type="text" id="collectionSearch" placeholder="搜索集合名称"
-                            oninput="handleCollectionSearchChange(this.value)"
+                            oninput="debouncedCollectionSearch(this.value)"
                             class="console-input">
                     </div>
                 </div>
@@ -965,6 +1087,15 @@ function generateScripts(env, CONFIG) {
                 }
             }
 
+            // Debounce utility — limits how often a function can fire
+            function debounce(fn, ms) {
+                let timer;
+                return function(...args) {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => fn.apply(this, args), ms);
+                };
+            }
+
             init();
 
             ${generateNodeScripts()}
@@ -997,6 +1128,9 @@ function generateCollectionScripts() {
             collectionSearchKeyword = String(value || '').trim().toLowerCase();
             renderCollectionsList();
         }
+        const debouncedCollectionSearch = debounce((value) => {
+            handleCollectionSearchChange(value);
+        }, 200);
 
         function renderCollectionsList() {
             const collectionList = document.getElementById('collectionList');
@@ -1072,21 +1206,19 @@ function generateCollectionScripts() {
                     </div>
                 \`).join('');
 
+            // Batch update with cached nodes (avoid N+1 API calls)
             filteredCollections.forEach(collection => {
-                updateCollectionNodes(collection);
+                updateCollectionNodes(collection, cachedNodes);
             });
         }
 
-        async function updateCollectionNodes(collection) {
+        async function updateCollectionNodes(collection, nodes) {
             try {
-                const [nodesResponse, tokenResponse] = await Promise.all([
-                    fetchWithAuth('/api/nodes'),
-                    fetchWithAuth(\`/api/collections/token/\${collection.id}\`)
-                ]);
-                
-                const nodes = await nodesResponse.json();
+                // Use passed nodes array instead of re-fetching (performance fix)
+                const allNodes = nodes || await (await fetchWithAuth('/api/nodes')).json();
+                const tokenResponse = await fetchWithAuth(\`/api/collections/token/\${collection.id}\`);
                 const token = await tokenResponse.json();
-                const collectionNodes = nodes.filter(node => collection.nodeIds.includes(node.id));
+                const collectionNodes = allNodes.filter(node => collection.nodeIds.includes(node.id));
                 
                 // 更新有效期显示
                 const expiryElement = document.getElementById(\`expiry_\${collection.id}\`);
@@ -2561,6 +2693,9 @@ function generateNodeScripts() {
             nodeTagFilter = value || '';
             renderNodes(cachedNodes);
         }
+        const debouncedNodeFilter = debounce((value) => {
+            handleNodeFilterChange(value);
+        }, 200);
 
         function clearNodeFilter() {
             nodeTagFilter = '';

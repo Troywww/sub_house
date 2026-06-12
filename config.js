@@ -143,37 +143,28 @@ dns:
   ipv6: false
   prefer-h3: false
   respect-rules: true
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  fake-ip-filter-mode: blacklist
+  enhanced-mode: redir-host
   nameserver:
+    - https://dns.alidns.com/dns-query
     - https://223.5.5.5/dns-query
-    - https://1.1.1.1/dns-query
   proxy-server-nameserver:
-    - https://1.1.1.1/dns-query
+    - https://dns.alidns.com/dns-query
+    - https://223.5.5.5/dns-query
   direct-nameserver:
     - 223.5.5.5
     - 119.29.29.29
   fallback:
     - https://8.8.8.8/dns-query
-    - https://1.0.0.1/dns-query
+    - https://1.1.1.1/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+      - 0.0.0.0/32
   default-nameserver:
     - 223.5.5.5
-    - 119.29.29.29
-  fake-ip-filter:
-    - '*.lan'
-    - localhost.ptlogin2.qq.com
-    - '+.srv.nintendo.net'
-    - '+.stun.playstation.net'
-    - '+.msftconnecttest.com'
-    - '+.msftncsi.com'
-    - '+.xboxlive.com'
-    - 'msftconnecttest.com'
-    - 'xbox.*.microsoft.com'
-    - '*.battlenet.com.cn'
-    - '*.battlenet.com'
-    - '*.blzstatic.cn'
-    - '*.battle.net'`,
+    - 119.29.29.29`,
 
     COOKIE: {
         SESSION_NAME: 'session',

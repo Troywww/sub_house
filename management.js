@@ -27,12 +27,19 @@ function generateHead() {
         <title>节点管理系统</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://unpkg.com/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet">
+        <!-- Non-blocking external CSS — renders immediately, swaps when loaded -->
+        <link rel="preconnect" href="https://unpkg.com">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+        <link rel="preconnect" href="https://cdn.jsdelivr.net">
+        <link href="https://unpkg.com/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link href="https://unpkg.com/tailwindcss@2/dist/tailwind.min.css" rel="stylesheet"></noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
+        <script defer src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <style>
             :root {
                 /* Base surfaces */
@@ -1080,8 +1087,10 @@ function generateScripts(env, CONFIG) {
                         showLoginDialog();
                         return;
                     }
-                    await Promise.all([loadNodes(), loadCollections(), loadTemplates(), loadRules(), loadSettings()]);
+                    // Show UI shell immediately, then load data progressively
                     showManagementPage(currentManagementPage);
+                    Promise.all([loadNodes(), loadCollections(), loadTemplates(), loadRules(), loadSettings()])
+                        .catch(function(e) { console.error('Failed to load data:', e); });
                 } catch (e) {
                     console.error('Failed to load data:', e);
                 }

@@ -2711,20 +2711,30 @@ function generateNodeScripts() {
             renderNodes(cachedNodes);
         }
 
-        // Protocol visual info for node cards
-        function getNodeProtocolInfo(url) {
-            if (!url) return { color: '#6b7280', icon: 'fas fa-plug', label: '未知', badgeColor: 'bg-gray-100 text-gray-600' };
-            var p = url.split('://')[0];
-            if (p === 'vmess') return { color: '#2563eb', icon: 'fas fa-shield-alt', label: 'VMess', badgeColor: 'bg-blue-100 text-blue-700' };
-            if (p === 'vless') return { color: '#7c3aed', icon: 'fas fa-bolt', label: 'VLESS', badgeColor: 'bg-purple-100 text-purple-700' };
-            if (p === 'trojan') return { color: '#dc2626', icon: 'fas fa-horse-head', label: 'Trojan', badgeColor: 'bg-red-100 text-red-700' };
-            if (p === 'ss') return { color: '#059669', icon: 'fas fa-key', label: 'Shadowsocks', badgeColor: 'bg-emerald-100 text-emerald-700' };
-            if (p === 'ssr') return { color: '#d97706', icon: 'fas fa-history', label: 'SSR', badgeColor: 'bg-amber-100 text-amber-700' };
-            if (p === 'hysteria' || p === 'hysteria2' || p === 'hy2') return { color: '#0891b2', icon: 'fas fa-wind', label: p === 'hysteria' ? 'Hysteria' : 'Hysteria2', badgeColor: 'bg-cyan-100 text-cyan-700' };
-            if (p === 'tuic') return { color: '#ec4899', icon: 'fas fa-fan', label: 'TUIC', badgeColor: 'bg-pink-100 text-pink-700' };
-            if (p === 'socks5' || p === 'socks') return { color: '#64748b', icon: 'fas fa-socks', label: 'SOCKS5', badgeColor: 'bg-slate-100 text-slate-700' };
-            if (p === 'http' || p === 'https') return { color: '#f97316', icon: 'fas fa-globe', label: 'HTTP', badgeColor: 'bg-orange-100 text-orange-700' };
-            return { color: '#6b7280', icon: 'fas fa-network-wired', label: p.toUpperCase(), badgeColor: 'bg-gray-100 text-gray-600' };
+        // Tag-to-color mapping
+        var _tagColors = {};
+        var _tagPalette = [
+            { border: '#2563eb', bg: 'bg-blue-100', text: 'text-blue-700' },
+            { border: '#7c3aed', bg: 'bg-purple-100', text: 'text-purple-700' },
+            { border: '#dc2626', bg: 'bg-red-100', text: 'text-red-700' },
+            { border: '#059669', bg: 'bg-emerald-100', text: 'text-emerald-700' },
+            { border: '#d97706', bg: 'bg-amber-100', text: 'text-amber-700' },
+            { border: '#0891b2', bg: 'bg-cyan-100', text: 'text-cyan-700' },
+            { border: '#ec4899', bg: 'bg-pink-100', text: 'text-pink-700' },
+            { border: '#f97316', bg: 'bg-orange-100', text: 'text-orange-700' },
+            { border: '#6366f1', bg: 'bg-indigo-100', text: 'text-indigo-700' },
+            { border: '#14b8a6', bg: 'bg-teal-100', text: 'text-teal-700' },
+            { border: '#84cc16', bg: 'bg-lime-100', text: 'text-lime-700' },
+            { border: '#a855f7', bg: 'bg-fuchsia-100', text: 'text-fuchsia-700' },
+        ];
+        var _tagColorIdx = 0;
+
+        function getTagColor(tag) {
+            if (!_tagColors[tag]) {
+                _tagColors[tag] = _tagPalette[_tagColorIdx % _tagPalette.length];
+                _tagColorIdx++;
+            }
+            return _tagColors[tag];
         }
 
         function getNodeServerInfo(url) {
@@ -2765,24 +2775,17 @@ function generateNodeScripts() {
                             : '')
                         + '<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">' + uniqueItems.map((node) => {
                             const tags = node.tags && node.tags.length
-                                ? node.tags.map((tag) => '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs">' + tag + '</span>').join('')
+                                ? node.tags.map(function(tag) { var tc = getTagColor(tag); return '<span class="px-2 py-1 rounded-full text-xs font-medium ' + tc.bg + ' ' + tc.text + '">' + tag + '</span>'; }).join('')
                                 : '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">未分组</span>';
 
-                            // Parse protocol from URL for visual distinction
-                            const protoInfo = getNodeProtocolInfo(node.url);
-                            const leftColor = protoInfo.color;
-                            const leftIcon = protoInfo.icon;
-                            const protoLabel = protoInfo.label;
-                            const protoBadge = protoInfo.badgeColor;
-                            const serverInfo = getNodeServerInfo(node.url);
+                            // First tag determines left border color
+                            var tagColor = (node.tags && node.tags.length) ? getTagColor(node.tags[0]).border : '#d1d5db';
+                            var serverInfo = getNodeServerInfo(node.url);
 
-                            return '<div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200" style="border-left: 4px solid ' + leftColor + ';">'
+                            return '<div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200" style="border-left: 4px solid ' + tagColor + ';">'
                                 + '<div class="flex justify-between items-start gap-4">'
                                 + '<div class="flex-1 min-w-0">'
-                                + '<div class="flex items-center gap-2 mb-1.5">'
-                                + '<i class="' + leftIcon + ' mr-1" style="color:' + leftColor + '"></i>'
-                                + '<span class="text-xs font-bold px-2 py-0.5 rounded-full ' + protoBadge + '">' + protoLabel + '</span>'
-                                + '</div>'
+
                                 + '<h3 class="font-semibold text-gray-900 text-[15px] leading-tight">' + node.name + '</h3>'
                                 + (serverInfo ? '<div class="text-xs text-gray-400 font-mono mt-0.5 truncate">' + serverInfo + '</div>' : '')
                                 + '<div class="flex flex-wrap gap-2 mt-3">' + tags + '</div>'

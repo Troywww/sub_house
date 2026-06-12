@@ -2711,7 +2711,32 @@ function generateNodeScripts() {
             renderNodes(cachedNodes);
         }
 
-        function renderNodes(nodes) {
+        // Protocol visual info for node cards
+        function getNodeProtocolInfo(url) {
+            if (!url) return { color: '#6b7280', icon: 'fas fa-plug', label: '未知', badgeColor: 'bg-gray-100 text-gray-600' };
+            var p = url.split('://')[0];
+            if (p === 'vmess') return { color: '#2563eb', icon: 'fas fa-shield-alt', label: 'VMess', badgeColor: 'bg-blue-100 text-blue-700' };
+            if (p === 'vless') return { color: '#7c3aed', icon: 'fas fa-bolt', label: 'VLESS', badgeColor: 'bg-purple-100 text-purple-700' };
+            if (p === 'trojan') return { color: '#dc2626', icon: 'fas fa-horse-head', label: 'Trojan', badgeColor: 'bg-red-100 text-red-700' };
+            if (p === 'ss') return { color: '#059669', icon: 'fas fa-key', label: 'Shadowsocks', badgeColor: 'bg-emerald-100 text-emerald-700' };
+            if (p === 'ssr') return { color: '#d97706', icon: 'fas fa-history', label: 'SSR', badgeColor: 'bg-amber-100 text-amber-700' };
+            if (p === 'hysteria' || p === 'hysteria2' || p === 'hy2') return { color: '#0891b2', icon: 'fas fa-wind', label: p === 'hysteria' ? 'Hysteria' : 'Hysteria2', badgeColor: 'bg-cyan-100 text-cyan-700' };
+            if (p === 'tuic') return { color: '#ec4899', icon: 'fas fa-fan', label: 'TUIC', badgeColor: 'bg-pink-100 text-pink-700' };
+            if (p === 'socks5' || p === 'socks') return { color: '#64748b', icon: 'fas fa-socks', label: 'SOCKS5', badgeColor: 'bg-slate-100 text-slate-700' };
+            if (p === 'http' || p === 'https') return { color: '#f97316', icon: 'fas fa-globe', label: 'HTTP', badgeColor: 'bg-orange-100 text-orange-700' };
+            return { color: '#6b7280', icon: 'fas fa-network-wired', label: p.toUpperCase(), badgeColor: 'bg-gray-100 text-gray-600' };
+        }
+
+        function getNodeServerInfo(url) {
+            if (!url) return '';
+            try {
+                var u = new URL(url);
+                if (u.hostname) return u.hostname + (u.port ? ':' + u.port : '');
+            } catch(e) {}
+            return '';
+        }
+
+                function renderNodes(nodes) {
             const nodeList = document.getElementById('nodeList');
             if (!nodeList) return;
 
@@ -2742,14 +2767,27 @@ function generateNodeScripts() {
                             const tags = node.tags && node.tags.length
                                 ? node.tags.map((tag) => '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs">' + tag + '</span>').join('')
                                 : '<span class="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">未分组</span>';
-                            return '<div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200">'
+
+                            // Parse protocol from URL for visual distinction
+                            const protoInfo = getNodeProtocolInfo(node.url);
+                            const leftColor = protoInfo.color;
+                            const leftIcon = protoInfo.icon;
+                            const protoLabel = protoInfo.label;
+                            const protoBadge = protoInfo.badgeColor;
+                            const serverInfo = getNodeServerInfo(node.url);
+
+                            return '<div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200" style="border-left: 4px solid ' + leftColor + ';">'
                                 + '<div class="flex justify-between items-start gap-4">'
                                 + '<div class="flex-1 min-w-0">'
-                                + '<h3 class="font-medium text-gray-800 flex items-center mb-1"><i class="fas fa-network-wired text-gray-500 mr-2"></i>' + node.name + '</h3>'
-                                + '<div class="text-sm text-gray-500 font-mono truncate">' + node.url + '</div>'
+                                + '<div class="flex items-center gap-2 mb-1.5">'
+                                + '<i class="' + leftIcon + ' mr-1" style="color:' + leftColor + '"></i>'
+                                + '<span class="text-xs font-bold px-2 py-0.5 rounded-full ' + protoBadge + '">' + protoLabel + '</span>'
+                                + '</div>'
+                                + '<h3 class="font-semibold text-gray-900 text-[15px] leading-tight">' + node.name + '</h3>'
+                                + (serverInfo ? '<div class="text-xs text-gray-400 font-mono mt-0.5 truncate">' + serverInfo + '</div>' : '')
                                 + '<div class="flex flex-wrap gap-2 mt-3">' + tags + '</div>'
                                 + '</div>'
-                                + '<div class="flex items-center space-x-2 ml-4">'
+                                + '<div class="flex items-center space-x-2 ml-4 shrink-0">'
                                 + '<button onclick="editNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-gray-700 transition-colors" title="编辑节点"><i class="fas fa-edit"></i></button>'
                                 + '<button onclick="copyNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-gray-700 transition-colors" title="复制链接"><i class="fas fa-copy"></i></button>'
                                 + '<button onclick="deleteNode(\\'' + node.id + '\\')" class="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="删除节点"><i class="fas fa-trash-alt"></i></button>'

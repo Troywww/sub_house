@@ -1127,7 +1127,10 @@ function generateCollectionScripts() {
                 const response = await fetchWithAuth('/api/collections');
                 cachedCollections = await response.json();
                 console.log('Loaded collections:', cachedCollections);
-                renderCollectionsList();
+                // Wait for nodes to be loaded too before rendering collection node lists
+                if (cachedNodes && cachedNodes.length > 0) {
+                    renderCollectionsList();
+                }
             } catch (e) {
                 console.error('Error loading collections:', e);
             }
@@ -2672,6 +2675,10 @@ function generateNodeScripts() {
                     cachedNodes = (await response.json()).map(normalizeNodeRecord);
                     renderNodes(cachedNodes);
                     updateNodeSelection(cachedNodes);
+                    // Re-render collections now that nodes are available
+                    if (cachedCollections && cachedCollections.length > 0) {
+                        renderCollectionsList();
+                    }
                 }
             } catch (e) {
                 console.error('Error loading nodes:', e);

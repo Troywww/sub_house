@@ -43,24 +43,48 @@ function generateLoginPage() {
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
             <style>
-                :root { --surface:#f9f9f9; --surface-low:#f3f3f3; --surface-card:#fff; --ink:#121212; --ruby-text:#ba1a1a; --ruby-bg:rgba(186,26,26,.12); }
-                body { background:#f9f9f9; color:var(--ink); font-family:'Inter',system-ui,sans-serif; }
-                .user-shell{max-width:1560px;margin:0 auto}.user-label{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}.user-card{background:var(--surface-card);border:1px solid rgba(198,198,198,.4);border-radius:4px}.user-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:42px;padding:0 16px;border-radius:4px;border:1px solid rgba(198,198,198,.6);background:#fff;color:var(--ink);font-weight:700;transition:all .16s ease}.user-button:hover{background:var(--surface-low)}.user-button-dark{border-color:rgba(104,137,186,.32);background:linear-gradient(180deg,#edf4ff 0%,#dde9fb 100%);color:#29486f}.user-button-dark:hover{background:linear-gradient(180deg,#e5efff 0%,#d4e3fa 100%)}.user-input{width:100%;min-height:46px;border-radius:4px;border:1px solid rgba(198,198,198,.7);background:#fff;padding:0 16px;color:var(--ink);outline:none}.user-input:focus{border-color:#111827;box-shadow:none}.user-error{color:var(--ruby-text);background:var(--ruby-bg);border-radius:4px}
+                :root {
+                    --surface: #f7f8fa;
+                    --surface-elevated: #ffffff;
+                    --surface-hover: #f1f2f4;
+                    --border: rgba(0, 0, 0, 0.08);
+                    --border-hover: rgba(0, 0, 0, 0.14);
+                    --ink: #1a1a2e;
+                    --accent: #2563eb;
+                    --accent-soft: #eff6ff;
+                    --accent-border: rgba(37, 99, 235, 0.2);
+                    --muted: #6b7280;
+                    --radius: 8px;
+                    --radius-sm: 6px;
+                    --radius-lg: 12px;
+                    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+                    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+                    --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+                    --shadow-xl: 0 12px 40px rgba(0,0,0,0.1);
+                    --ease: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                body { background: var(--surface); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+                .user-shell{max-width:1560px;margin:0 auto}
+                .user-label{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}
+                .user-card{background:var(--surface-elevated);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md)}
+                .user-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 20px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-elevated);color:var(--ink);font-weight:700;box-shadow:var(--shadow-sm);transition:all var(--ease)}
+                .user-button:hover{background:var(--surface-hover);border-color:var(--border-hover)}
+                .user-button-dark{background:linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%);color:#fff;border-color:transparent;box-shadow:0 1px 3px rgba(37,99,235,.3)}
+                .user-button-dark:hover{background:linear-gradient(180deg,#3b82f6 0%,#2563eb 100%)}
+                .user-input{width:100%;min-height:48px;border-radius:var(--radius);border:1px solid var(--border-hover);background:var(--surface-elevated);padding:0 14px;color:var(--ink);outline:none;transition:border-color var(--ease),box-shadow var(--ease)}
+                .user-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-border)}
+                .user-input::placeholder{color:#9ca3af}
+                .user-error{color:#dc2626;background:#fef2f2;border:1px solid rgba(220,38,38,.15);border-radius:var(--radius)}
+                .user-toast{background:rgba(17,17,17,.92);color:#fff;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;box-shadow:var(--shadow-lg)}
             </style>
         </head>
         <body data-page="login">
-            <div class="user-shell min-h-screen px-8 py-8 md:px-10 xl:px-12">
+            <div class="user-shell min-h-screen px-6 py-5 md:px-8 xl:px-10">
                 <header class="mb-6 border-b border-gray-200 pb-4">
-                    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                        <div class="flex items-center gap-4">
-                            <div class="flex h-10 w-10 items-center justify-center rounded bg-black text-white"><i class="fas fa-terminal text-xl"></i></div>
-                            <div>
-                                <div class="user-label mb-1">Subscriber Console</div>
-                                <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl">&#35746;&#38405;&#20013;&#24515;</h1>
-                                <p class="mt-1 text-sm text-gray-500">&#30331;&#24405;&#21518;&#21487;&#26597;&#30475;&#24182;&#22797;&#21046;&#24744;&#30340;&#35746;&#38405;&#38142;&#25509;</p>
-                            </div>
-                        </div>
-                        <div class="user-label">Cloudflare Worker / User Access</div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-white"><i class="fas fa-cube text-base"></i></div>
+                        <h1 class="text-lg font-extrabold tracking-tight text-gray-900">Sub House</h1>
+                        <span class="user-label ml-3 hidden sm:inline">Subscriber Access</span>
                     </div>
                 </header>
                 <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,540px)_minmax(320px,420px)] xl:items-start xl:justify-center">
@@ -126,26 +150,53 @@ function generateSecretPage(env, userData, activeTemplateUrl = '') {
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
                 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
                 <style>
-                    :root { --surface:#f9f9f9; --surface-card:#fff; --ink:#121212; }
+                    :root {
+                        --surface: #f7f8fa;
+                        --surface-elevated: #ffffff;
+                        --surface-hover: #f1f2f4;
+                        --border: rgba(0, 0, 0, 0.08);
+                        --border-hover: rgba(0, 0, 0, 0.14);
+                        --ink: #1a1a2e;
+                        --accent: #2563eb;
+                        --accent-soft: #eff6ff;
+                        --accent-border: rgba(37, 99, 235, 0.2);
+                        --muted: #6b7280;
+                        --radius: 8px;
+                        --radius-sm: 6px;
+                        --radius-lg: 12px;
+                        --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+                        --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+                        --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+                        --shadow-xl: 0 12px 40px rgba(0,0,0,0.1);
+                        --ease: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+                    }
                     body { background: var(--surface); color: var(--ink); font-family:'Inter',system-ui,sans-serif; }
-                    .user-shell{max-width:1680px;margin:0 auto}.user-label{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}.user-card{background:var(--surface-card);border:1px solid rgba(198,198,198,.4);border-radius:4px}.user-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border-radius:4px;font-size:12px;font-weight:700;transition:all .16s ease}.user-button:hover{filter:brightness(.98);transform:translateY(-1px)}.user-button-base{background:#dbe7fb;color:#29486f}.user-button-singbox{background:#d1fae5;color:#0f5132}.user-button-clash{background:#dbeafe;color:#1d4ed8}.user-button-subtle{background:#f3f4f6;color:#374151}.user-toast{background:rgba(17,17,17,.92);color:#fff;border-radius:4px;padding:10px 14px;font-size:13px;box-shadow:0 4px 32px rgba(0,0,0,.08)}
+                    .user-shell{max-width:1680px;margin:0 auto}
+                    .user-label{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}
+                    .user-card{background:var(--surface-elevated);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md)}
+                    .user-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;transition:all var(--ease);border:1px solid transparent}
+                    .user-button:hover{filter:brightness(.97);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+                    .user-button-base{color:#1e40af;background:#dbeafe;border-color:rgba(37,99,235,.15)}
+                    .user-button-singbox{color:#065f46;background:#d1fae5;border-color:rgba(5,150,105,.15)}
+                    .user-button-clash{color:#7c2d12;background:#fed7aa;border-color:rgba(234,88,12,.15)}
+                    .user-button-subtle{background:#f3f4f6;color:#374151;border-color:rgba(0,0,0,.06)}
+                    .user-toast{background:rgba(17,17,17,.92);color:#fff;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;box-shadow:var(--shadow-lg)}
                 </style>
             </head>
             <body data-page="secret">
-                <div class="user-shell px-8 py-8 md:px-10 xl:px-12">
+                <div class="user-shell px-6 py-5 md:px-8 xl:px-10">
                     <header class="mb-6 border-b border-gray-200 pb-4">
-                        <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="flex h-10 w-10 items-center justify-center rounded bg-black text-white"><i class="fas fa-terminal text-xl"></i></div>
-                                <div><div class="user-label mb-1">Subscriber Console</div><h1 class="text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl">&#35746;&#38405;&#20013;&#24515;</h1><p class="mt-1 text-sm text-gray-500">&#31649;&#29702;&#24744;&#30340;&#35746;&#38405;&#38142;&#25509;&#19982;&#23458;&#25143;&#31471;&#36755;&#20986;</p></div>
+                        <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-white"><i class="fas fa-cube text-base"></i></div>
+                                <h1 class="text-lg font-extrabold tracking-tight text-gray-900">Sub House</h1>
+                                <span class="user-label ml-3 hidden sm:inline">Subscriber Access</span>
                             </div>
-                            <div class="flex flex-col items-start gap-3 xl:items-end">
-                                <div class="flex flex-wrap items-center gap-3">
-                                    <div class="user-card px-4 py-2 text-sm text-gray-600"><i class="fas fa-user mr-2"></i>${userData.username}</div>
-                                    <div class="user-card px-4 py-2 text-sm text-gray-600"><span class="mr-2 text-gray-400">Collection</span><span class="font-mono text-xs text-gray-500">${userData.collectionId}</span></div>
-                                    ${userData.expiry ? `<div class="user-card px-4 py-2 text-sm text-gray-600"><span class="mr-2 text-gray-400">Expiry</span><span class="font-mono text-xs text-gray-500">${new Date(userData.expiry).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span></div>` : ''}
-                                </div>
-                                <button id="logoutBtn" class="user-button user-button-subtle"><i class="fas fa-sign-out-alt"></i><span>&#30331;&#20986;</span></button>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <div class="user-card px-3 py-1.5 text-sm text-gray-600"><i class="fas fa-user mr-1.5 text-gray-400"></i>${userData.username}</div>
+                                <div class="user-card px-3 py-1.5 text-sm text-gray-600"><span class="text-gray-400 mr-1.5">Collection</span><span class="font-mono text-xs text-gray-500">${userData.collectionId}</span></div>
+                                ${userData.expiry ? `<div class="user-card px-3 py-1.5 text-sm text-gray-600"><span class="text-gray-400 mr-1.5">Expiry</span><span class="font-mono text-xs text-gray-500">${new Date(userData.expiry).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span></div>` : ''}
+                                <button id="logoutBtn" class="user-button user-button-subtle" style="min-height:36px;padding:0 12px;"><i class="fas fa-sign-out-alt"></i><span>&#30331;&#20986;</span></button>
                             </div>
                         </div>
                     </header>

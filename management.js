@@ -318,7 +318,7 @@ function generateHead() {
             .console-status-dot.expired { color: var(--danger); background: var(--danger-bg); }
             .console-status-dot.expired::before { background: var(--danger); }
 
-            /* Subscription buttons */
+/* Subscription buttons */
             .console-subscription-btn {
                 display: inline-flex;
                 align-items: center;
@@ -337,9 +337,9 @@ function generateHead() {
             .console-subscription-btn.primary { min-width: 116px; }
             .console-subscription-btn.base { color: #1e40af; background: #dbeafe; border-color: rgba(37, 99, 235, 0.15); }
             .console-subscription-btn.singbox { color: #065f46; background: #d1fae5; border-color: rgba(5, 150, 105, 0.15); }
-            .console-subscription-btn.clash { color: #1e40af; background: #dbeafe; border-color: rgba(37, 99, 235, 0.15); }
+            .console-subscription-btn.clash { color: #7c2d12; background: #fed7aa; border-color: rgba(234, 88, 12, 0.15); }
             .console-subscription-btn.share { color: #6b7280; background: #f3f4f6; border-color: rgba(0, 0, 0, 0.06); }
-            .console-subscription-btn:hover { filter: brightness(0.97); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+            .console-subscription-btn:hover { filter: brightness(0.97); transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
             /* Node pick */
             .console-node-pick {
@@ -457,7 +457,143 @@ function generateHead() {
                 -webkit-backdrop-filter: blur(12px);
                 border-bottom: 1px solid var(--border);
             }
-        </style>        </style>
+
+            /* Page title — top of each tab */
+            .console-page-title {
+                font-size: 22px;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                color: var(--ink);
+                line-height: 1.2;
+            }
+            .console-page-desc {
+                font-size: 13px;
+                color: #6b7280;
+                line-height: 1.5;
+                margin-top: 4px;
+            }
+
+            /* Stat chips */
+            .console-stat-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 5px 12px;
+                border-radius: 999px;
+                background: var(--surface-hover);
+                border: 1px solid var(--border);
+                font-size: 12px;
+                font-weight: 600;
+                color: #4b5563;
+                white-space: nowrap;
+            }
+            .console-stat-chip .console-stat-num {
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 700;
+                color: var(--ink);
+            }
+            .console-stat-chip.is-active {
+                background: var(--positive-bg);
+                border-color: rgba(5, 150, 105, 0.2);
+                color: var(--positive);
+            }
+            .console-stat-chip.is-active .console-stat-num { color: var(--positive); }
+
+            /* Empty state */
+            .console-empty {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 48px 24px;
+                text-align: center;
+            }
+            .console-empty-icon {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: var(--surface-hover);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #9ca3af;
+                font-size: 22px;
+                margin-bottom: 16px;
+            }
+            .console-empty-title {
+                font-size: 15px;
+                font-weight: 700;
+                color: #374151;
+                margin-bottom: 4px;
+            }
+            .console-empty-desc {
+                font-size: 13px;
+                color: #9ca3af;
+                line-height: 1.5;
+                max-width: 360px;
+            }
+
+            /* Collapsible section */
+            .console-collapse-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 12px 16px;
+                background: var(--surface-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                font-weight: 700;
+                color: var(--ink);
+                transition: background var(--ease);
+                cursor: pointer;
+            }
+            .console-collapse-toggle:hover { background: var(--surface-hover); }
+            .console-collapse-toggle .console-collapse-arrow {
+                transition: transform var(--ease);
+                color: #9ca3af;
+            }
+            .console-collapse-toggle.is-open .console-collapse-arrow { transform: rotate(180deg); }
+            .console-collapse-body {
+                margin-top: 12px;
+                display: none;
+            }
+            .console-collapse-body.is-open { display: block; }
+
+            /* Collection card badge */
+            .console-node-count-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 2px 10px;
+                border-radius: 999px;
+                background: var(--surface-hover);
+                border: 1px solid var(--border);
+                font-size: 11px;
+                font-weight: 700;
+                color: #6b7280;
+                font-family: 'JetBrains Mono', monospace;
+            }
+
+            /* Tag pill (collection card node list) */
+            .console-node-tag-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 3px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 500;
+                background: var(--surface-hover);
+                color: #4b5563;
+            }
+            .console-node-tag-chip .console-node-tag-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+        </style>
         <script>
             let adminDialogVisible = false;
             let adminNeedsSetup = false;
@@ -541,31 +677,23 @@ function generateHead() {
 function generateHeader(CONFIG, env) {
     return `
         <header class="console-header sticky top-0 z-40">
-            <div class="console-shell px-8 py-3 md:px-10 xl:px-12">
-                <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="flex h-10 w-10 items-center justify-center rounded bg-black text-white">
-                            <i class="fas fa-terminal text-xl"></i>
+            <div class="console-shell px-6 py-2.5 md:px-8 xl:px-10">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-white">
+                            <i class="fas fa-cube text-base"></i>
                         </div>
-                        <div>
-                            <div class="console-label mb-1">Editorial Console</div>
-                            <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 md:text-3xl">&#33410;&#28857;&#31649;&#29702;&#31995;&#32479;</h1>
-                            <p class="mt-1 text-sm text-gray-500">Cloudflare Worker &#33410;&#28857;&#19982;&#35746;&#38405;&#31649;&#29702;&#24037;&#20316;&#21488;</p>
-                        </div>
+                        <h1 class="text-lg font-extrabold tracking-tight text-gray-900">Sub House</h1>
                     </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="console-toolbar-label" style="opacity:.7;">Cloudflare Worker</span>
+                    <div class="flex items-center gap-2">
                         <button type="button" onclick="openUserLogin()" class="console-button console-button-compact console-button-toolbar">
-                            <i class="fas fa-user"></i>
-                            <span>&#29992;&#25143;&#20837;&#21475;</span>
+                            <i class="fas fa-user"></i><span class="hidden sm:inline">&#29992;&#25143;&#20837;&#21475;</span>
                         </button>
                         <button type="button" onclick="logoutAdmin()" class="console-button console-button-compact console-button-toolbar">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>&#36864;&#20986;&#30331;&#24405;</span>
+                            <i class="fas fa-sign-out-alt"></i><span class="hidden sm:inline">&#36864;&#20986;</span>
                         </button>
                         <button type="button" onclick="openOtherLink()" class="console-button console-button-compact console-button-dark">
-                            <i class="fas fa-link"></i>
-                            <span>&#20854;&#20182;&#38142;&#25509;</span>
+                            <i class="fas fa-link"></i><span class="hidden sm:inline">&#20854;&#20182;&#38142;&#25509;</span>
                         </button>
                     </div>
                 </div>
@@ -578,20 +706,19 @@ function generateHeader(CONFIG, env) {
 // 生成主要内容
 function generateMainContent(CONFIG) {
     return `
-        <main class="console-shell px-8 py-6 md:px-10 xl:px-12">
+        <main class="console-shell px-6 py-5 md:px-8 xl:px-10">
             <div id="adminGateHint">
-                <div class="console-card p-10 text-center">
-                    <div class="console-label mb-4">Admin Gate</div>
-                    <h2 class="text-4xl font-extrabold tracking-tight text-gray-900">&#31649;&#29702;&#21518;&#21488;</h2>
-                    <p class="mx-auto mt-4 max-w-2xl text-base text-gray-500">&#30331;&#24405;&#21518;&#21363;&#21487;&#31649;&#29702;&#33410;&#28857;&#12289;&#38598;&#21512;&#12289;&#27169;&#26495;&#12289;&#35268;&#21017;&#30446;&#24405;&#19982;&#21518;&#21488;&#35774;&#32622;&#12290;</p>
-                    <button onclick="showLoginDialog()" class="console-button console-button-dark mt-8">&#31435;&#21363;&#30331;&#24405;</button>
+                <div class="console-card p-12 text-center">
+                    <div class="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-gray-900 text-white mb-5">
+                        <i class="fas fa-cube text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Sub House</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-gray-500">&#30331;&#24405;&#21518;&#21363;&#21487;&#31649;&#29702;&#33410;&#28857;&#12289;&#38598;&#21512;&#12289;&#27169;&#26495;&#12289;&#35268;&#21017;&#30446;&#24405;&#19982;&#21518;&#21488;&#35774;&#32622;&#12290;</p>
+                    <button onclick="showLoginDialog()" class="console-button console-button-dark mt-6">&#31435;&#21363;&#30331;&#24405;</button>
                 </div>
             </div>
-            <div id="managementShell" class="hidden space-y-0">
+            <div id="managementShell" class="hidden">
                 <nav class="console-topnav">
-                    <button type="button" data-page-tab="overview" onclick="showManagementPage('overview')" class="hidden console-tab">
-                        <i class="fas fa-grip"></i><span>&#27010;&#35272;</span>
-                    </button>
                     <button type="button" data-page-tab="collections" onclick="showManagementPage('collections')" class="console-tab">
                         <i class="fas fa-database"></i><span>&#38598;&#21512;&#31649;&#29702;</span>
                     </button>
@@ -605,16 +732,15 @@ function generateMainContent(CONFIG) {
                         <i class="fas fa-code-branch"></i><span>&#35268;&#21017;&#30446;&#24405;</span>
                     </button>
                     <button type="button" data-page-tab="settings" onclick="showManagementPage('settings')" class="console-tab">
-                        <i class="fas fa-sliders-h"></i><span>&#37197;&#32622;&#38754;&#26495;</span>
+                        <i class="fas fa-sliders-h"></i><span>&#37197;&#32622;</span>
                     </button>
                 </nav>
-                <div class="space-y-0 -mt-px">
-                    <section id="managementPage-overview" data-page-panel="overview" class="hidden"></section>
-                    <section id="managementPage-nodes" data-page-panel="nodes" class="hidden">
-                        ${generateNodeManager()}
-                    </section>
+                <div class="-mt-px">
                     <section id="managementPage-collections" data-page-panel="collections" class="hidden">
                         ${generateCollectionManager(CONFIG)}
+                    </section>
+                    <section id="managementPage-nodes" data-page-panel="nodes" class="hidden">
+                        ${generateNodeManager()}
                     </section>
                     <section id="managementPage-templates" data-page-panel="templates" class="hidden">
                         ${generateTemplateManager()}
@@ -641,34 +767,36 @@ function generateMainContent(CONFIG) {
 // 生成脚本部分
 function generateTemplateManager() {
     return `
-        <div class="console-card rounded-t-none p-5">
-            <div class="flex flex-col gap-3 mb-4 xl:flex-row xl:items-center xl:justify-between">
+        <div class="console-card rounded-t-none p-6 space-y-5">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <div class="console-label mb-2">Template Workspace</div>
-                    <p class="text-sm text-gray-500">维护 Clash / Sing-box 模板，插入规则引用，并设置当前启用模板。</p>
+                    <div class="console-page-title">&#27169;&#26495;&#31649;&#29702;</div>
+                    <div class="console-page-desc">&#32500;&#25252; Clash / Sing-box &#27169;&#26495;&#65292;&#25554;&#20837;&#35268;&#21017;&#24341;&#29992;&#65292;&#35774;&#32622;&#24403;&#21069;&#21551;&#29992;&#27169;&#26495;&#12290;</div>
                 </div>
-                <div class="flex flex-wrap items-center gap-2 xl:flex-nowrap">
-                    <button onclick="newTemplate()"
-                        class="console-button console-button-compact console-button-toolbar">
-                        新建模板
-                    </button>
-                    <select id="templatePresetSelector"
-                        class="console-select console-mono min-w-[14rem] md:w-80 px-4"
-                        style="height:34px; min-height:34px; line-height:34px; padding-top:0; padding-bottom:0;">
-                        <option value="">选择内置模板预置</option>
-                        ${TEMPLATE_PRESETS.map(preset => `<option value="${preset.id}">${preset.name}</option>`).join('')}
-                    </select>
-                    <button onclick="loadBuiltInTemplatePreset()"
-                        class="console-button console-button-compact console-button-toolbar">
-                        载入内置模板
-                    </button>
+                <div class="flex flex-wrap gap-2">
+                    <span id="templateStatTotal" class="console-stat-chip"><i class="fas fa-file-alt text-gray-400"></i>&#27169;&#26495;<span class="console-stat-num">0</span></span>
+                    <span id="templateStatActive" class="console-stat-chip"><i class="fas fa-circle-check text-gray-400"></i><span class="console-stat-num">&#26410;&#21551;&#29992;</span></span>
                 </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="newTemplate()" class="console-button console-button-compact console-button-toolbar">
+                    <i class="fas fa-plus"></i>&#26032;&#24314;&#27169;&#26495;
+                </button>
+                <select id="templatePresetSelector"
+                    class="console-select console-mono flex-1 min-w-[14rem]"
+                    style="height:34px; min-height:34px; line-height:34px; padding-top:0; padding-bottom:0;">
+                    <option value="">&#36873;&#25321;&#20869;&#32622;&#27169;&#26495;&#39044;&#32622;</option>
+                    ${TEMPLATE_PRESETS.map(preset => `<option value="${preset.id}">${preset.name}</option>`).join('')}
+                </select>
+                <button onclick="loadBuiltInTemplatePreset()" class="console-button console-button-compact console-button-toolbar">
+                    <i class="fas fa-download"></i>&#36733;&#20837;
+                </button>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="lg:col-span-1">
                     <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-700">已保存模板</h3>
-                        <span id="activeTemplateBadge" class="user-label rounded-full bg-gray-100 px-2 py-1 text-gray-600">未启用</span>
+                        <h3 class="text-sm font-bold text-gray-700">&#24050;&#20445;&#23384;&#27169;&#26495;</h3>
+                        <span id="activeTemplateBadge" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">&#26410;&#21551;&#29992;</span>
                     </div>
                     <div id="templateList" class="space-y-3 max-h-[32rem] overflow-y-auto pr-1"></div>
                 </div>
@@ -676,93 +804,91 @@ function generateTemplateManager() {
                     <input type="hidden" id="templateId">
                     <div class="flex flex-col gap-3 xl:flex-row xl:items-end">
                         <div class="flex-1">
-                            <input type="text" id="templateName" placeholder="例如：默认分流模板"
-                                class="console-input">
+                            <input type="text" id="templateName" placeholder="&#20363;&#22914;&#65306;&#40664;&#35748;&#20998;&#27969;&#27169;&#26495;" class="console-input">
                         </div>
-                        <button onclick="saveTemplate(this)"
-                            class="console-button console-button-dark whitespace-nowrap"
-                            style="min-height:48px;">
-                            保存模板
+                        <button onclick="saveTemplate(this)" class="console-button console-button-dark whitespace-nowrap" style="min-height:48px;">
+                            <i class="fas fa-save"></i>&#20445;&#23384;&#27169;&#26495;
                         </button>
                     </div>
-                    <div class="flex flex-wrap gap-2 text-sm">
-                        <button onclick="useCurrentTemplate()"
-                            class="console-button console-button-compact console-button-toolbar">
-                            设为当前模板
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="useCurrentTemplate()" class="console-button console-button-compact console-button-toolbar">
+                            <i class="fas fa-circle-check"></i>&#35774;&#20026;&#24403;&#21069;&#27169;&#26495;
                         </button>
-                        <button onclick="viewCurrentTemplateConfig()"
-                            class="console-button console-button-compact console-button-toolbar">
-                            查看当前默认订阅配置
+                        <button onclick="viewCurrentTemplateConfig()" class="console-button console-button-compact console-button-toolbar">
+                            <i class="fas fa-eye"></i>&#26597;&#30475;&#35746;&#38405;&#37197;&#32622;
                         </button>
-                        <button onclick="deleteTemplate()"
-                            class="console-button console-button-compact console-button-toolbar">
-                            删除模板
+                        <button onclick="deleteTemplate()" class="console-button console-button-compact console-button-toolbar" style="color:var(--danger);">
+                            <i class="fas fa-trash"></i>&#21024;&#38500;
                         </button>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">模板内容</label>
-                        <textarea id="templateContent" rows="18"
-                            class="console-textarea console-mono text-sm"
-                            placeholder="ruleset=默认规则,[]MATCH&#10;custom_proxy_group=节点选择\`select\`[]DIRECT"></textarea>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#27169;&#26495;&#20869;&#23481;</label>
+                        <textarea id="templateContent" rows="16" class="console-textarea console-mono text-sm"
+                            placeholder="ruleset=&#40664;&#35748;&#35268;&#21017;,[]MATCH&#10;custom_proxy_group=&#33410;&#28857;&#36873;&#25321;\`select\`[]DIRECT"></textarea>
                     </div>
-                    <div class="console-inset p-4 space-y-3">
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <select id="templateRuleSelector"
-                                class="console-input flex-1">
-                                <option value="">从规则目录选择一个规则并插入模板</option>
-                            </select>
-                            <button onclick="insertSelectedRuleIntoTemplate()"
-                                class="console-button console-button-compact console-button-dark">
-                                插入选中规则
-                            </button>
-                        </div>
-                        <p class="text-sm text-gray-500">会自动插入形如 <code class="bg-white px-1 py-0.5 rounded">ruleset=显示名,@rule_id</code> 的规则引用。</p>
-                    </div>
-                    <div class="console-inset p-4 space-y-3">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                            <input type="text" id="groupNameInput" placeholder="分组名称"
-                                class="console-input">
-                            <select id="groupTypeInput"
-                                class="console-select">
-                                <option value="select">select</option>
-                                <option value="url-test">url-test</option>
-                            </select>
-                            <input type="text" id="groupFilterInput" placeholder="过滤器，例如 港|HK"
-                                class="console-input">
-                            <input type="text" id="groupRefsInput" placeholder="引用目标，逗号分隔"
-                                class="console-input">
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="insertGroupLine()"
-                                class="console-button console-button-compact console-button-dark">
-                                插入分组
-                            </button>
-                            <button onclick="insertDefaultSelectGroup()"
-                                class="console-button console-button-compact console-button-toolbar">
-                                插入默认分组
-                            </button>
-                        </div>
-                        <p class="text-sm text-gray-500">会自动生成 <code class="bg-white px-1 py-0.5 rounded">custom_proxy_group=...</code> 并插入到模板文本中。</p>
-                    </div>
-                    <div class="console-inset p-4 text-sm text-gray-600 space-y-1">
-                        <p>模板语法示例：</p>
-                        <p><code class="bg-white px-1 py-0.5 rounded">ruleset=规则名,@rule_id</code></p>
-                        <p><code class="bg-white px-1 py-0.5 rounded">custom_proxy_group=分组名\`select/url-test\`过滤器\`[]DIRECT</code></p>
-                    </div>
-                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-semibold text-gray-800">已解析规则</h3>
-                                <span id="templateRuleCount" class="user-label rounded-full bg-white px-2 py-1 text-gray-600">0</span>
+                    <button type="button" onclick="toggleCollapse('templateInsertBody', this)" class="console-collapse-toggle">
+                        <span class="flex items-center gap-2"><i class="fas fa-plus-circle text-gray-400"></i>&#25554;&#20837;&#35268;&#21017; / &#20998;&#32452;</span>
+                        <i class="fas fa-chevron-down console-collapse-arrow"></i>
+                    </button>
+                    <div id="templateInsertBody" class="console-collapse-body">
+                        <div class="console-inset p-4 space-y-4">
+                            <div class="space-y-3">
+                                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">&#25554;&#20837;&#35268;&#21017;</div>
+                                <div class="flex flex-col md:flex-row gap-3">
+                                    <select id="templateRuleSelector" class="console-input flex-1">
+                                        <option value="">&#20174;&#35268;&#21017;&#30446;&#24405;&#36873;&#25321;&#19968;&#20010;&#35268;&#21017;</option>
+                                    </select>
+                                    <button onclick="insertSelectedRuleIntoTemplate()" class="console-button console-button-compact console-button-dark whitespace-nowrap">
+                                        <i class="fas fa-arrow-down"></i>&#25554;&#20837;
+                                    </button>
+                                </div>
                             </div>
-                            <div id="templateParsedRules" class="space-y-2 max-h-64 overflow-y-auto"></div>
-                        </div>
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-semibold text-gray-800">已解析分组</h3>
-                                <span id="templateGroupCount" class="user-label rounded-full bg-white px-2 py-1 text-gray-600">0</span>
+                            <div class="space-y-3 pt-2 border-t border-gray-100">
+                                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">&#25554;&#20837;&#20998;&#32452;</div>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                    <input type="text" id="groupNameInput" placeholder="&#20998;&#32452;&#21517;&#31216;" class="console-input">
+                                    <select id="groupTypeInput" class="console-select">
+                                        <option value="select">select</option>
+                                        <option value="url-test">url-test</option>
+                                    </select>
+                                    <input type="text" id="groupFilterInput" placeholder="&#36807;&#28388;&#22120;&#65292;&#20363;&#22914; &#28207;|HK" class="console-input">
+                                    <input type="text" id="groupRefsInput" placeholder="&#24341;&#29992;&#30446;&#26631;&#65292;&#36887;&#21495;&#20998;&#38548;" class="console-input">
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="insertGroupLine()" class="console-button console-button-compact console-button-dark">
+                                        <i class="fas fa-plus"></i>&#25554;&#20837;&#20998;&#32452;
+                                    </button>
+                                    <button onclick="insertDefaultSelectGroup()" class="console-button console-button-compact console-button-toolbar">
+                                        &#25554;&#20837;&#40664;&#35748;&#20998;&#32452;
+                                    </button>
+                                </div>
                             </div>
-                            <div id="templateParsedGroups" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                            <div class="text-xs text-gray-400 space-y-1 pt-2 border-t border-gray-100">
+                                <p>&#27169;&#26495;&#35821;&#27861;&#65306;<code class="bg-white px-1.5 py-0.5 rounded">ruleset=&#35268;&#21017;&#21517;,@rule_id</code></p>
+                                <p><code class="bg-white px-1.5 py-0.5 rounded">custom_proxy_group=&#20998;&#32452;&#21517;\`select/url-test\`&#36807;&#28388;&#22120;\`[]DIRECT</code></p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="toggleCollapse('templateParsedBody', this)" class="console-collapse-toggle">
+                        <span class="flex items-center gap-2"><i class="fas fa-list text-gray-400"></i>&#24050;&#35299;&#26512;&#32467;&#26500;</span>
+                        <i class="fas fa-chevron-down console-collapse-arrow"></i>
+                    </button>
+                    <div id="templateParsedBody" class="console-collapse-body">
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                            <div class="console-inset p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-bold text-gray-700">&#24050;&#35299;&#26512;&#35268;&#21017;</h3>
+                                    <span id="templateRuleCount" class="console-stat-chip" style="padding:2px 8px;"><span class="console-stat-num">0</span></span>
+                                </div>
+                                <div id="templateParsedRules" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                            </div>
+                            <div class="console-inset p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-bold text-gray-700">&#24050;&#35299;&#26512;&#20998;&#32452;</h3>
+                                    <span id="templateGroupCount" class="console-stat-chip" style="padding:2px 8px;"><span class="console-stat-num">0</span></span>
+                                </div>
+                                <div id="templateParsedGroups" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -773,81 +899,70 @@ function generateTemplateManager() {
 
 function generateRuleManager() {
     return `
-        <div class="console-card rounded-t-none p-5">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+        <div class="console-card rounded-t-none p-6 space-y-5">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <div class="console-label mb-2">Rule Workspace</div>
-                    <p class="text-sm text-gray-500">定义规则 ID、显示名称，以及 Clash / Mihomo 与 Sing-box 的远程规则地址。</p>
+                    <div class="console-page-title">&#35268;&#21017;&#30446;&#24405;</div>
+                    <div class="console-page-desc">&#23450;&#20041;&#35268;&#21017; ID&#12289;&#21517;&#31216;&#65292;&#20197; Clash / Sing-box &#30340;&#36828;&#31243;&#35268;&#21017;&#22320;&#22336;&#12290;</div>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="newRule()"
-                        class="console-button console-button-compact console-button-toolbar">
-                        新建规则
-                    </button>
-                    <button onclick="importRulePresets()"
-                        class="console-button console-button-compact console-button-toolbar">
-                        导入 DustinWin 规则集
-                    </button>
-                    <button onclick="saveRule(this)"
-                        class="console-button console-button-compact console-button-dark">
-                        保存规则
-                    </button>
+                    <span id="ruleStatTotal" class="console-stat-chip"><i class="fas fa-code-branch text-gray-400"></i>&#35268;&#21017;<span class="console-stat-num">0</span></span>
                 </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="newRule()" class="console-button console-button-compact console-button-toolbar">
+                    <i class="fas fa-plus"></i>&#26032;&#24314;&#35268;&#21017;
+                </button>
+                <button onclick="importRulePresets()" class="console-button console-button-compact console-button-toolbar">
+                    <i class="fas fa-download"></i>&#23548;&#20837; DustinWin
+                </button>
+                <button onclick="saveRule(this)" class="console-button console-button-compact console-button-dark">
+                    <i class="fas fa-save"></i>&#20445;&#23384;&#35268;&#21017;
+                </button>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="lg:col-span-1">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">已保存规则</h3>
+                    <h3 class="text-sm font-bold text-gray-700 mb-3">&#24050;&#20445;&#23384;&#35268;&#21017;</h3>
                     <div id="ruleList" class="space-y-3 max-h-[28rem] overflow-y-auto pr-1"></div>
                 </div>
                 <div class="lg:col-span-2 space-y-4">
                     <input type="hidden" id="ruleIdOriginal">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">规则 ID</label>
-                            <input type="text" id="ruleId" placeholder="例如：applications"
-                                class="console-input">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#35268;&#21017; ID</label>
+                            <input type="text" id="ruleId" placeholder="&#20363;&#22914;&#65306;applications" class="console-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">显示名称</label>
-                            <input type="text" id="ruleName" placeholder="例如：常见应用"
-                                class="console-input">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#26174;&#31034;&#21517;&#31216;</label>
+                            <input type="text" id="ruleName" placeholder="&#20363;&#22914;&#65306;&#24120;&#35265;&#24212;&#29992;" class="console-input">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="console-inset p-4 space-y-3">
-                            <h3 class="font-semibold text-gray-800">Clash / Mihomo</h3>
-                            <input type="text" id="ruleClashUrl" placeholder="https://..."
-                                class="console-input">
-                            <input type="text" id="ruleClashFormat" placeholder="可选，例如 text / yaml"
-                                class="console-input">
+                            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Clash / Mihomo</div>
+                            <input type="text" id="ruleClashUrl" placeholder="https://..." class="console-input">
+                            <input type="text" id="ruleClashFormat" placeholder="&#21487;&#36873;&#65292;&#20363;&#22914; text / yaml" class="console-input">
                         </div>
                         <div class="console-inset p-4 space-y-3">
-                            <h3 class="font-semibold text-gray-800">Sing-box</h3>
-                            <input type="text" id="ruleSingboxUrl" placeholder="https://..."
-                                class="console-input">
-                            <input type="text" id="ruleSingboxFormat" placeholder="可选，例如 source / binary / srs"
-                                class="console-input">
+                            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sing-box</div>
+                            <input type="text" id="ruleSingboxUrl" placeholder="https://..." class="console-input">
+                            <input type="text" id="ruleSingboxFormat" placeholder="&#21487;&#36873;&#65292;&#20363;&#22914; source / binary / srs" class="console-input">
                         </div>
                     </div>
-                    <div class="flex flex-wrap gap-2 text-sm">
-                        <button onclick="insertRuleReference()"
-                            class="console-button console-button-compact console-button-toolbar">
-                            插入到当前模板
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="insertRuleReference()" class="console-button console-button-compact console-button-toolbar">
+                            <i class="fas fa-arrow-right"></i>&#25554;&#20837;&#21040;&#24403;&#21069;&#27169;&#26495;
                         </button>
-                        <button onclick="copyRuleReference()"
-                            class="console-button console-button-compact console-button-toolbar">
-                            复制 @rule_id
+                        <button onclick="copyRuleReference()" class="console-button console-button-compact console-button-toolbar">
+                            <i class="fas fa-copy"></i>&#22797;&#21046; @rule_id
                         </button>
-                        <button onclick="deleteRule()"
-                            class="console-button console-button-compact console-button-toolbar">
-                            删除当前规则
+                        <button onclick="deleteRule()" class="console-button console-button-compact console-button-toolbar" style="color:var(--danger);">
+                            <i class="fas fa-trash"></i>&#21024;&#38500;
                         </button>
                     </div>
-                    <div class="console-inset p-4 text-sm text-gray-600 space-y-1">
-                        <p>模板中可以直接这样引用：</p>
-                        <p><code class="bg-white px-1 py-0.5 rounded">ruleset=DIRECT,@applications</code></p>
-                        <p>生成 Clash 时会读取该规则的 <code>clash.url</code>，生成 Sing-box 时会读取 <code>singbox.url</code>。</p>
-                        <p>“导入 DustinWin 规则集”会补齐 mrs / srs 新式规则集，适合 mihomo / sing-box 原生远程规则模式。</p>
+                    <div class="console-inset p-4 text-sm text-gray-500 space-y-1">
+                        <p>&#27169;&#26495;&#20013;&#21487;&#20197;&#36825;&#26679;&#24341;&#29992;&#65306;<code class="bg-white px-1.5 py-0.5 rounded">ruleset=DIRECT,@applications</code></p>
+                        <p>&#29983;&#25104; Clash &#26102;&#35835;&#21462; <code>clash.url</code>&#65292;&#29983;&#25104; Sing-box &#26102;&#35835;&#21462; <code>singbox.url</code>&#12290;</p>
                     </div>
                 </div>
             </div>
@@ -858,9 +973,15 @@ function generateRuleManager() {
 function generateNodeManager() {
     return `
         <div class="console-card rounded-t-none p-6 space-y-5">
-            <div class="space-y-1">
-                <div class="console-label">Node Console</div>
-                <p class="text-sm leading-6 text-gray-500">&#32500;&#25252;&#33410;&#28857;&#22320;&#22336;&#12289;&#26631;&#31614;&#19982;&#23637;&#31034;&#26041;&#24335;&#65292;&#25903;&#25345;&#24179;&#38138;&#21644;&#25353;&#26631;&#31614;&#20998;&#32452;&#26597;&#30475;&#12290;</p>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <div class="console-page-title">&#33410;&#28857;&#31649;&#29702;</div>
+                    <div class="console-page-desc">&#32500;&#25252;&#33410;&#28857;&#22320;&#22336;&#12289;&#26631;&#31614;&#19982;&#23637;&#31034;&#26041;&#24335;&#12290;</div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span id="nodeStatTotal" class="console-stat-chip"><i class="fas fa-network-wired text-gray-400"></i>&#33410;&#28857;<span class="console-stat-num">0</span></span>
+                    <span id="nodeStatTags" class="console-stat-chip"><i class="fas fa-tags text-gray-400"></i>&#26631;&#31614;<span class="console-stat-num">0</span></span>
+                </div>
             </div>
             <div class="flex flex-col lg:flex-row lg:items-end gap-4">
                 <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -870,23 +991,22 @@ function generateNodeManager() {
                 </div>
                 <button onclick="addNode(this)" class="console-button console-button-dark whitespace-nowrap">&#28155;&#21152;&#33410;&#28857;</button>
             </div>
-            <div class="space-y-3">
-                <div class="flex flex-wrap items-center gap-2 min-w-0">
-                    <div class="inline-flex overflow-hidden rounded flex-shrink-0" style="border:1px solid rgba(198,198,198,0.6);">
-                        <button type="button" onclick="clearNodeFilter()" class="console-button console-button-compact console-button-toolbar whitespace-nowrap flex-shrink-0 rounded-none border-0">&#28165;&#31354;&#31579;&#36873;</button>
-                        <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="px-3 py-2 text-sm whitespace-nowrap border-l" style="border-color:rgba(198,198,198,0.6);">&#24179;&#38138;&#26174;&#31034;</button>
-                        <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="px-3 py-2 text-sm whitespace-nowrap border-l" style="border-color:rgba(198,198,198,0.6);">&#26631;&#31614;&#20998;&#32452;</button>
-                    </div>
-                    <div class="w-56 lg:w-64 xl:w-72 flex-shrink-0">
-                        <input type="text" id="nodeTagFilter" placeholder="&#25628;&#32034;&#33410;&#28857;&#25110;&#26631;&#31614;"
-                            oninput="debouncedNodeFilter(this.value)"
-                            class="console-input">
-                    </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="relative flex-1 min-w-[200px] max-w-xs">
+                    <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm"></i>
+                    <input type="text" id="nodeTagFilter" placeholder="&#25628;&#32034;&#33410;&#28857;&#25110;&#26631;&#31614;"
+                        oninput="debouncedNodeFilter(this.value)"
+                        class="console-input" style="padding-left:38px; min-height:40px;">
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <div class="text-sm font-medium text-gray-500 whitespace-nowrap">&#26631;&#31614;&#31579;&#36873;</div>
-                    <div id="nodeTagSummary" class="flex flex-wrap gap-2"></div>
+                <div class="inline-flex overflow-hidden rounded-md flex-shrink-0" style="border:1px solid var(--border);">
+                    <button type="button" id="nodeViewMode-all" onclick="setNodeViewMode('all')" class="console-button console-button-compact rounded-none border-0" style="min-height:40px;">&#24179;&#38138;</button>
+                    <button type="button" id="nodeViewMode-grouped" onclick="setNodeViewMode('grouped')" class="console-button console-button-compact rounded-none border-0" style="min-height:40px; border-left:1px solid var(--border);">&#26631;&#31614;&#20998;&#32452;</button>
                 </div>
+                <button type="button" onclick="clearNodeFilter()" class="console-button console-button-compact console-button-toolbar" style="min-height:40px;">&#28165;&#31354;&#31579;&#36873;</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap">&#26631;&#31614;&#31579;&#36873;</span>
+                <div id="nodeTagSummary" class="flex flex-wrap gap-2"></div>
             </div>
             <div id="nodeList" class="space-y-4"></div>
         </div>
@@ -896,32 +1016,48 @@ function generateNodeManager() {
 
 function generateCollectionManager(CONFIG) {
     return `
-        <div class="console-card rounded-t-none p-5">
-            <div class="space-y-1 mb-4">
-                <div class="console-label">Collection Console</div>
-                <p class="text-sm text-gray-500">&#21019;&#24314;&#38598;&#21512;&#24182;&#32465;&#23450;&#33410;&#28857;&#65292;&#21516;&#26102;&#31649;&#29702;&#24050;&#26377;&#38598;&#21512;&#30340;&#35746;&#38405;&#19982;&#32534;&#36753;&#25805;&#20316;&#12290;</p>
+        <div class="console-card rounded-t-none p-6 space-y-5">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <div class="console-page-title">&#38598;&#21512;&#31649;&#29702;</div>
+                    <div class="console-page-desc">&#21019;&#24314;&#38598;&#21512;&#12289;&#32465;&#23450;&#33410;&#28857;&#65292;&#31649;&#29702;&#35746;&#38405;&#19982;&#32534;&#36753;&#12290;</div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span id="collectionStatTotal" class="console-stat-chip"><i class="fas fa-layer-group text-gray-400"></i>&#38598;&#21512;<span class="console-stat-num">0</span></span>
+                    <span id="collectionStatNodes" class="console-stat-chip"><i class="fas fa-network-wired text-gray-400"></i>&#33410;&#28857;<span class="console-stat-num">0</span></span>
+                </div>
             </div>
             <div class="space-y-4">
-                <div class="console-inset p-4 space-y-3">
-                    <div class="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
-                        <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
-                            <div class="w-full md:w-72 xl:w-80">
-                                <input type="text" id="collectionName" placeholder="&#38598;&#21512;&#21517;&#31216;&#65292;&#20363;&#22914;&#65306;HK / &#26085;&#24120; / &#35270;&#39057;" class="console-input">
+                <div>
+                    <button type="button" onclick="toggleCollapse('collectionCreateBody', this)" class="console-collapse-toggle is-open">
+                        <span class="flex items-center gap-2"><i class="fas fa-plus-circle text-gray-400"></i>&#21019;&#24314;&#26032;&#38598;&#21512;</span>
+                        <i class="fas fa-chevron-down console-collapse-arrow"></i>
+                    </button>
+                    <div id="collectionCreateBody" class="console-collapse-body is-open">
+                        <div class="console-inset p-4 space-y-3">
+                            <div class="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                                <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
+                                    <div class="w-full md:w-72 xl:w-80">
+                                        <input type="text" id="collectionName" placeholder="&#38598;&#21512;&#21517;&#31216;&#65292;&#20363;&#22914;&#65306;HK / &#26085;&#24120; / &#35270;&#39057;" class="console-input">
+                                    </div>
+                                    <button onclick="addCollection(this)" class="console-button console-button-dark whitespace-nowrap">&#21019;&#24314;&#38598;&#21512;</button>
+                                </div>
                             </div>
-                            <button onclick="addCollection(this)" class="console-button console-button-dark whitespace-nowrap">&#21019;&#24314;&#38598;&#21512;</button>
+                            <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
                         </div>
                     </div>
-                    <div id="nodeSelection" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
                 </div>
                 <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                    <div class="space-y-1">
-                        <div class="text-sm font-semibold text-gray-800">集合搜索</div>
-                        <p class="text-sm text-gray-500">按集合名称即时筛选当前集合列表。</p>
+                    <div class="flex items-center gap-2">
+                        <span id="collectionListLabel" class="text-sm font-bold text-gray-800">&#24050;&#21019;&#24314;&#38598;&#21512;</span>
                     </div>
                     <div class="w-full md:w-72 xl:w-80">
-                        <input type="text" id="collectionSearch" placeholder="搜索集合名称"
-                            oninput="debouncedCollectionSearch(this.value)"
-                            class="console-input">
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm"></i>
+                            <input type="text" id="collectionSearch" placeholder="&#25628;&#32034;&#38598;&#21512;&#21517;&#31216;"
+                                oninput="debouncedCollectionSearch(this.value)"
+                                class="console-input" style="padding-left:38px; min-height:40px;">
+                        </div>
                     </div>
                 </div>
                 <div id="collectionList" class="grid grid-cols-1 gap-4 xl:grid-cols-2"></div>
@@ -933,33 +1069,33 @@ function generateCollectionManager(CONFIG) {
 
 function renderSettingsManager() {
     return `
-        <div class="console-card rounded-t-none p-6">
-            <div class="mb-5">
-                <div class="console-label mb-2">Settings Console</div>
-                <p class="text-sm text-gray-500">&#31649;&#29702;&#21518;&#21488;&#36134;&#21495;&#12289;&#23494;&#30721;&#65292;&#20197;&#21450;&#39030;&#37096;&#8220;&#20854;&#20182;&#38142;&#25509;&#8221;&#25353;&#38062;&#20351;&#29992;&#30340;&#22320;&#22336;&#12290;</p>
+        <div class="console-card rounded-t-none p-6 space-y-5">
+            <div>
+                <div class="console-page-title">&#37197;&#32622;</div>
+                <div class="console-page-desc">&#31649;&#29702;&#21518;&#21488;&#36134;&#21495;&#12289;&#23494;&#30721;&#65292;&#20197;&#21450;&#39030;&#37096;&#8220;&#20854;&#20182;&#38142;&#25509;&#8221;&#25353;&#38062;&#20351;&#29992;&#30340;&#22320;&#22336;&#12290;</div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">&#31649;&#29702;&#21592;&#36134;&#21495;</label>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#31649;&#29702;&#21592;&#36134;&#21495;</label>
                         <input type="text" id="settingsAdminUsername" placeholder="&#20363;&#22914;&#65306;admin" class="console-input">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">&#31649;&#29702;&#21592;&#23494;&#30721;</label>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#31649;&#29702;&#21592;&#23494;&#30721;</label>
                         <input type="password" id="settingsAdminPassword" placeholder="&#30041;&#31354;&#21017;&#20445;&#25345;&#24403;&#21069;&#23494;&#30721;" class="console-input">
                     </div>
                     <p id="settingsPasswordHint" class="text-sm text-gray-500">&#24403;&#21069;&#23494;&#30721;&#29366;&#24577;&#65306;&#26410;&#35774;&#32622;</p>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">&#20854;&#20182;&#38142;&#25509;</label>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#20854;&#20182;&#38142;&#25509;</label>
                         <input type="text" id="settingsOtherLinkUrl" placeholder="https://..." class="console-input console-mono">
                     </div>
                     <p class="text-sm text-gray-500">&#39030;&#37096;&#8220;&#20854;&#20182;&#38142;&#25509;&#8221;&#25353;&#38062;&#20250;&#25171;&#24320;&#36825;&#37324;&#37197;&#32622;&#30340;&#22320;&#22336;&#12290;</p>
                 </div>
             </div>
-            <div class="mt-6">
-                <button onclick="saveSettings(this)" class="console-button console-button-dark">&#20445;&#23384;&#37197;&#32622;</button>
+            <div>
+                <button onclick="saveSettings(this)" class="console-button console-button-dark"><i class="fas fa-save"></i>&#20445;&#23384;&#37197;&#32622;</button>
             </div>
         </div>
     `;
@@ -1126,7 +1262,17 @@ function generateCollectionScripts() {
             try {
                 const response = await fetchWithAuth('/api/collections');
                 cachedCollections = await response.json();
-                console.log('Loaded collections:', cachedCollections);
+                // Update stat chips
+                const statTotal = document.getElementById('collectionStatTotal');
+                if (statTotal) {
+                    const numEl = statTotal.querySelector('.console-stat-num');
+                    if (numEl) numEl.textContent = String(cachedCollections.length);
+                }
+                const statNodes = document.getElementById('collectionStatNodes');
+                if (statNodes) {
+                    const numEl = statNodes.querySelector('.console-stat-num');
+                    if (numEl) numEl.textContent = String(cachedNodes ? cachedNodes.length : 0);
+                }
                 // Wait for nodes to be loaded too before rendering collection node lists
                 if (cachedNodes && cachedNodes.length > 0) {
                     renderCollectionsList();
@@ -1152,29 +1298,38 @@ function generateCollectionScripts() {
                 ? cachedCollections.filter(collection => String(collection.name || '').toLowerCase().includes(collectionSearchKeyword))
                 : cachedCollections;
 
+            // Update list label count
+            const labelEl = document.getElementById('collectionListLabel');
+            if (labelEl) {
+                labelEl.textContent = filteredCollections.length === cachedCollections.length
+                    ? '\u5df2\u521b\u5efa\u96c6\u5408\uff08' + cachedCollections.length + '\uff09'
+                    : '\u641c\u7d22\u7ed3\u679c\uff08' + filteredCollections.length + '\uff09';
+            }
+
             if (filteredCollections.length === 0) {
                 collectionList.innerHTML = \`
-                    <div class="console-card p-5 xl:col-span-2">
-                        <div class="text-sm text-gray-500">
-                            \${collectionSearchKeyword ? '没有匹配的集合，请尝试其他关键词。' : '暂无集合，请先创建一个集合。'}
-                        </div>
+                    <div class="xl:col-span-2 console-card console-empty">
+                        <div class="console-empty-icon"><i class="fas fa-$\{collectionSearchKeyword ? 'search' : 'layer-group'}"></i></div>
+                        <div class="console-empty-title">$\{collectionSearchKeyword ? '\u672a\u627e\u5230\u5339\u914d\u7684\u96c6\u5408' : '\u8fd8\u6ca1\u6709\u96c6\u5408'}</div>
+                        <div class="console-empty-desc">$\{collectionSearchKeyword ? '\u8bf7\u5c1d\u8bd5\u5176\u4ed6\u5173\u952e\u8bcd\u3002' : '\u5c55\u5f00\u201c\u521b\u5efa\u65b0\u96c6\u5408\u201d\uff0c\u9009\u62e9\u8282\u70b9\u540e\u5373\u53ef\u751f\u6210\u8ba2\u9605\u3002'}</div>
                     </div>
                 \`;
                 return;
             }
 
-            const borderColors = ['#93c5fd', '#fcd34d', '#fca5a5', '#cbd5e1'];
-            collectionList.innerHTML = filteredCollections.map((collection, idx) => \`
-                    <div class="console-card p-5" style="border-left:3px solid \${borderColors[idx % borderColors.length]}">
+            const borderColorVar = 'var(--accent)';
+            collectionList.innerHTML = filteredCollections.map((collection) => \`
+                    <div class="console-card p-5" style="border-left:3px solid \${borderColorVar}">
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div class="min-w-0 flex-1">
                                     <div class="flex flex-wrap items-center gap-3">
-                                        <h3 class="text-xl font-extrabold tracking-tight text-gray-900 flex items-center">
-                                            <i class="fas fa-layer-group mr-3 text-gray-700"></i>
+                                        <h3 class="text-lg font-extrabold tracking-tight text-gray-900 flex items-center">
+                                            <i class="fas fa-layer-group mr-2 text-gray-400"></i>
                                             \${collection.name}
                                         </h3>
-                                        <span id="expiry_\${collection.id}" class="text-sm text-gray-500"></span>
+                                        <span class="console-node-count-badge"><i class="fas fa-network-wired"></i><span id="nodeCount_\${collection.id}">\${collection.nodeIds ? collection.nodeIds.length : 0}</span></span>
+                                        <span id="expiry_\${collection.id}"></span>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -1239,35 +1394,44 @@ function generateCollectionScripts() {
                     const isExpired = expDate < new Date();
                     const isNearExpiry = !isExpired && (expDate - new Date() < 7 * 24 * 60 * 60 * 1000);
                     
+                    if (isExpired) {
+                        expiryElement.innerHTML = \`
+                            <span class="console-status-dot expired">
+                                &#24050;&#36807;&#26399; &#183; \${expDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+                            </span>
+                        \`;
+                    } else if (isNearExpiry) {
+                        expiryElement.innerHTML = \`
+                            <span class="console-status-dot soon">
+                                &#21363;&#23558;&#21040;&#26399; &#183; \${expDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+                            </span>
+                        \`;
+                    } else {
+                        expiryElement.innerHTML = \`
+                            <span class="console-status-dot active">
+                                &#26377;&#25928; &#183; \${expDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric' })}
+                            </span>
+                        \`;
+                    }
+                } else if (expiryElement) {
                     expiryElement.innerHTML = \`
-                        <span class="text-gray-500">
-                            (到期：\${expDate.toLocaleDateString('zh-CN', {
-                                year: 'numeric',
-                                month: 'numeric',
-                                day: 'numeric'
-                            })})
-                        </span>
-                        \${isExpired ? \`
-                            <span class="ml-1 px-1.5 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">
-                                已过期
-                            </span>
-                        \` : isNearExpiry ? \`
-                            <span class="ml-1 px-1.5 py-0.5 bg-yellow-100 text-yellow-600 text-xs rounded-full">
-                                即将到期
-                            </span>
-                        \` : ''}
+                        <span class="console-status-dot active">&#38271;&#26399;</span>
                     \`;
                 }
                 
-                // 更新节点列表，使用更简洁的样式
+                // 更新节点列表
                 const nodeList = document.getElementById(\`nodeList_\${collection.id}\`);
                 if (nodeList) {
-                    nodeList.innerHTML = collectionNodes.map(node => \`
-                        <span class="inline-flex items-center px-2.5 py-1 bg-gray-50 text-gray-700 text-xs rounded-md">
-                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span>
-                            \${node.name}
-                        </span>
-                    \`).join('');
+                    if (collectionNodes.length === 0) {
+                        nodeList.innerHTML = '<span class="text-xs text-gray-400">&#35813;&#38598;&#21512;&#26242;&#26080;&#33410;&#28857;</span>';
+                    } else {
+                        nodeList.innerHTML = collectionNodes.map(node => \`
+                            <span class="console-node-tag-chip">
+                                <span class="console-node-tag-dot bg-gray-400"></span>
+                                \${node.name}
+                            </span>
+                        \`).join('');
+                    }
                 }
             } catch (e) {
                 console.error('Error updating collection nodes:', e);
@@ -1330,140 +1494,6 @@ function generateCollectionScripts() {
             } catch (e) {
                 console.error('编辑集合失败:', e);
                 alertModal('编辑集合失败');
-            }
-        }
-
-        async function showCollectionEditDialog(collection, nodes) {
-            // 获取前用户令牌信息
-            const response = await fetchWithAuth(\`/api/collections/token/\${collection.id}\`);
-            let userToken = {};
-            if (response.ok) {
-                userToken = await response.json();
-            }
-
-            // 格式化日期为 YYYY-MM-DD 格式
-            const formatDateForInput = (dateString) => {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                return date.toISOString().split('T')[0];
-            };
-
-            const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
-            dialog.innerHTML = \`
-                <div class="bg-white rounded-lg p-6 w-full max-w-2xl space-y-4">
-                    <h2 class="text-xl font-bold text-gray-900">编辑集合</h2>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">集合名称</label>
-                        <input type="text" id="collectionName" value="\${collection.name}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">访问用户名</label>
-                            <input type="text" id="collectionUsername" value="\${userToken.username || ''}"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <p class="mt-1 text-sm text-gray-500">留空将自动生成用户名</p>
-                            \${userToken.username ? \`
-                                <p class="mt-1 text-sm text-blue-600">当前用户名: \${userToken.username}</p>
-                            \` : ''}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">访问密码</label>
-                            <input type="password" id="collectionPassword" value=""
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <p class="mt-1 text-sm text-gray-500">Leave blank to keep the current password. Fill this field only when you want to reset it.</p>
-                            \${userToken.hasPassword ? \`
-                                <p class="mt-1 text-sm text-blue-600">Password is set for this collection.</p>
-                            \` : \`
-                                <p class="mt-1 text-sm text-gray-500">No password is currently set for this collection.</p>
-                            \`}
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">有效期</label>
-                        <input type="date" id="collectionExpiry" 
-                            value="\${formatDateForInput(userToken.expiry)}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <p class="mt-1 text-sm text-gray-500">可选，设置订阅的有效期</p>
-                        \${userToken.expiry ? \`
-                            <p class="mt-1 text-sm text-blue-600">
-                                当前有效期: \${new Date(userToken.expiry).toLocaleDateString()}
-                            </p>
-                        \` : ''}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">选择节点</label>
-                        <div class="max-h-60 overflow-y-auto bg-gray-50 p-4 rounded-md space-y-2">
-                            \${nodes.map(node => \`
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" value="\${node.id}" 
-                                        \${collection.nodeIds?.includes(node.id) ? 'checked' : ''}>
-                                    <span>\${node.name}</span>
-                                </label>
-                            \`).join('')}
-                        </div>
-                    </div>
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <button onclick="this.closest('.fixed').remove()"
-                            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200">
-                            取消
-                        </button>
-                        <button onclick="updateCollection('\${collection.id}')"
-                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
-                            保存
-                        </button>
-                    </div>
-                </div>
-            \`;
-            document.body.appendChild(dialog);
-        }
-
-        async function updateCollection(id) {
-            // 获取编辑对话框中的所有输入值
-            const dialog = document.querySelector('.fixed');
-            if (!dialog) {
-                console.error('Dialog not found');
-                return;
-            }
-
-            const nameInput = dialog.querySelector('#collectionName');
-            if (!nameInput) {
-                console.error('Name input not found');
-                return;
-            }
-
-            const name = nameInput.value;
-            const username = dialog.querySelector('#collectionUsername').value;
-            const password = dialog.querySelector('#collectionPassword').value;
-            const expiry = dialog.querySelector('#collectionExpiry').value;
-            const nodeIds = Array.from(dialog.querySelectorAll('input[type="checkbox"]:checked'))
-                .map(checkbox => checkbox.value);
-            
-            try {
-                const response = await fetchWithAuth('/api/collections', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        id, 
-                        nodeIds, 
-                        username, 
-                        password,
-                        expiry: expiry || null,
-                        name
-                    })
-                });
-                
-                if (response.ok) {
-                    dialog.remove();
-                    await loadCollections();
-                } else {
-                    const error = await response.json();
-                    throw new Error(error.error || '更新失败');
-                }
-            } catch (e) {
-                console.error('Update failed:', e);
-                alertModal('更新集合失败: ' + e.message);
             }
         }
 
@@ -1885,16 +1915,32 @@ function generateTemplateScripts() {
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
                             <div class="font-semibold text-gray-800 truncate">\${template.name}</div>
-                            <div class="text-xs text-gray-500 mt-1">更新时间：\${template.updatedAt ? new Date(template.updatedAt).toLocaleString() : '未知'}</div>
+                            <div class="text-xs text-gray-500 mt-1">\${template.updatedAt ? new Date(template.updatedAt).toLocaleString() : '\u672a\u77e5'}</div>
                         </div>
-                        <button onclick="editTemplate('\${template.id}')" class="console-button console-icon-button" title="编辑模板"><i class="fas fa-pen"></i></button>
+                        <button onclick="editTemplate('\${template.id}')" class="console-button console-icon-button" title="\u7f16\u8f91\u6a21\u677f"><i class="fas fa-pen"></i></button>
                     </div>
                     <div class="flex flex-wrap gap-2 mt-3 text-xs">
-                        <button onclick="activateTemplateById('\${template.id}')" class="console-button console-button-compact console-button-toolbar">启用</button>
-                        <button onclick="copyTemplateUrl('\${template.id}')" class="console-button console-button-compact console-button-toolbar">复制地址</button>
+                        <button onclick="activateTemplateById('\${template.id}')" class="console-button console-button-compact console-button-toolbar">\u542f\u7528</button>
+                        <button onclick="copyTemplateUrl('\${template.id}')" class="console-button console-button-compact console-button-toolbar">\u590d\u5236\u5730\u5740</button>
                     </div>
                 </div>
             \`).join('');
+
+            // Update template stat chips
+            const tplStatTotal = document.getElementById('templateStatTotal');
+            if (tplStatTotal) {
+                const numEl = tplStatTotal.querySelector('.console-stat-num');
+                if (numEl) numEl.textContent = String(templates.length);
+            }
+            const tplStatActive = document.getElementById('templateStatActive');
+            if (tplStatActive) {
+                const active = templates.find(t => t.internalUrl === activeTemplateUrl);
+                const numEl = tplStatActive.querySelector('.console-stat-num');
+                if (numEl) numEl.textContent = active ? active.name : '\u672a\u542f\u7528';
+                if (tplStatActive) {
+                    tplStatActive.classList.toggle('is-active', !!active);
+                }
+            }
 
             updateActiveTemplateBadge();
         }
@@ -2113,6 +2159,13 @@ function generateRuleScripts() {
             if (selector) {
                 selector.innerHTML = '<option value="">选择规则后插入模板</option>' +
                     rules.map(rule => '<option value="' + escapeHtml(rule.id || '') + '">' + escapeHtml(rule.name || '') + ' (@' + escapeHtml(rule.id || '') + ')</option>').join('');
+            }
+
+            // Update rule stat chip
+            const ruleStatTotal = document.getElementById('ruleStatTotal');
+            if (ruleStatTotal) {
+                const numEl = ruleStatTotal.querySelector('.console-stat-num');
+                if (numEl) numEl.textContent = String(rules.length);
             }
 
             container.innerHTML = rules.map(rule => {
@@ -2419,10 +2472,6 @@ function generateUtilityScripts(env, CONFIG) {
             });
             document.querySelectorAll('[data-page-tab]').forEach((button) => {
                 const tab = button.getAttribute('data-page-tab');
-                if (tab === 'overview') {
-                    button.className = 'hidden px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
-                    return;
-                }
                 const active = tab === currentManagementPage;
                 button.className = active
                     ? 'console-tab active'
@@ -2615,7 +2664,14 @@ function generateUtilityScripts(env, CONFIG) {
             toast.className = 'console-toast fixed bottom-4 left-1/2 transform -translate-x-1/2';
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function toggleCollapse(bodyId, toggleBtn) {
+            const body = document.getElementById(bodyId);
+            if (!body) return;
+            const isOpen = body.classList.toggle('is-open');
+            if (toggleBtn) toggleBtn.classList.toggle('is-open', isOpen);
         }
     `;
 }
@@ -2694,13 +2750,14 @@ function generateNodeScripts() {
             const groupedBtn = document.getElementById('nodeViewMode-grouped');
             if (allBtn) {
                 allBtn.className = nodeViewMode === 'all'
-                    ? 'px-3 py-2 text-sm bg-black text-white'
-                    : 'px-3 py-2 text-sm bg-white text-gray-700 hover:bg-gray-50';
+                    ? 'console-button console-button-compact console-button-dark rounded-none border-0'
+                    : 'console-button console-button-compact console-button-toolbar rounded-none border-0';
             }
             if (groupedBtn) {
                 groupedBtn.className = nodeViewMode === 'grouped'
-                    ? 'px-3 py-2 text-sm bg-black text-white'
-                    : 'px-3 py-2 text-sm bg-white text-gray-700 hover:bg-gray-50';
+                    ? 'console-button console-button-compact console-button-dark rounded-none border-0'
+                    : 'console-button console-button-compact console-button-toolbar rounded-none border-0';
+                if (groupedBtn.style) groupedBtn.style.borderLeft = '1px solid var(--border)';
             }
             renderNodes(cachedNodes);
         }
@@ -2769,6 +2826,22 @@ function generateNodeScripts() {
             const filteredNodes = getFilteredNodesForDisplay(nodes, nodeTagFilter);
             renderTagSummary('nodeTagSummary', nodes, 'applyNodeTagFilter');
 
+            // Update stat chips
+            const nodeStatTotal = document.getElementById('nodeStatTotal');
+            if (nodeStatTotal) {
+                const numEl = nodeStatTotal.querySelector('.console-stat-num');
+                if (numEl) numEl.textContent = String(nodes.length);
+            }
+            const nodeStatTags = document.getElementById('nodeStatTags');
+            if (nodeStatTags) {
+                const tagSet = new Set();
+                nodes.forEach((node) => {
+                    (node.tags || []).forEach((tag) => tagSet.add(tag));
+                });
+                const numEl = nodeStatTags.querySelector('.console-stat-num');
+                if (numEl) numEl.textContent = String(tagSet.size);
+            }
+
             const grouped = new Map();
             if (nodeViewMode === 'grouped') {
                 filteredNodes.forEach((node) => {
@@ -2787,7 +2860,7 @@ function generateNodeScripts() {
                     const uniqueItems = Array.from(new Map(items.map(item => [item.id, item])).values());
                     return '<div class="space-y-3">'
                         + (nodeViewMode === 'grouped'
-                            ? '<div class="flex items-center justify-between"><h3 class="text-sm font-semibold text-gray-700">' + groupName + '</h3><span class="text-xs text-gray-400">' + uniqueItems.length + ' 个节点</span></div>'
+                            ? '<div class="flex items-center justify-between"><h3 class="text-sm font-bold text-gray-700">' + groupName + '</h3><span class="text-xs text-gray-400">' + uniqueItems.length + ' \u4e2a\u8282\u70b9</span></div>'
                             : '')
                         + '<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">' + uniqueItems.map((node) => {
                             const tags = node.tags && node.tags.length
@@ -2817,7 +2890,7 @@ function generateNodeScripts() {
                         + '</div>'
                         + '</div>'; 
                 }).join('')
-                : '<div class="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400">没有匹配的节点</div>';
+                : '<div class="console-empty bg-gray-50 border border-dashed border-gray-200 rounded-lg"><div class="console-empty-icon"><i class="fas fa-' + (nodeTagFilter ? 'search' : 'network-wired') + '"></i></div><div class="console-empty-title">' + (nodeTagFilter ? '\u6ca1\u6709\u5339\u914d\u7684\u8282\u70b9' : '\u8fd8\u6ca1\u6709\u8282\u70b9') + '</div><div class="console-empty-desc">' + (nodeTagFilter ? '\u5c1d\u8bd5\u5176\u4ed6\u5173\u952e\u8bcd\u6216\u6e05\u7a7a\u7b5b\u9009\u3002' : '\u5728\u4e0a\u65b9\u586b\u5199\u8282\u70b9\u540d\u79f0\u3001URL \u548c\u6807\u7b7e\uff0c\u7136\u540e\u70b9\u51fb\u201c\u6dfb\u52a0\u8282\u70b9\u201d\u3002') + '</div></div>';
 
             if (!document.querySelector('link[href*="font-awesome"]')) {
                 const link = document.createElement('link');
@@ -2869,38 +2942,36 @@ function generateNodeScripts() {
 
         function showEditDialog(node) {
             const dialog = document.createElement('div');
+            dialog.id = 'nodeEditDialog';
             dialog.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4';
             dialog.innerHTML = \`
                 <div class="console-card shadow-2xl p-6 max-w-lg w-full">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <div class="console-label mb-2">Node Editor</div>
-                            <h3 class="text-xl font-extrabold tracking-tight text-gray-900">编辑节点</h3>
+                            <div class="console-page-title" style="font-size:20px;">&#32534;&#36753;&#33410;&#28857;</div>
                         </div>
                         <button onclick="this.closest('.fixed').remove()" class="console-button console-icon-button">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
+                            <i class="fas fa-times text-xl"></i>
                         </button>
                     </div>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点名称</label>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#33410;&#28857;&#21517;&#31216;</label>
                             <input type="text" id="editNodeName" value="\${node.name}" class="console-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点URL</label>
-                            <input type="text" id="editNodeUrl" value="\${node.url}" class="console-input">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#33410;&#28857; URL</label>
+                            <input type="text" id="editNodeUrl" value="\${node.url}" class="console-input console-mono">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">节点标签</label>
-                            <input type="text" id="editNodeTags" value="\${(node.tags || []).join(', ')}" class="console-input" placeholder="例如：HK, Premium, Test">
-                            <p class="mt-1 text-sm text-gray-500">多个标签请用英文逗号分隔。</p>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">&#33410;&#28857;&#26631;&#31614;</label>
+                            <input type="text" id="editNodeTags" value="\${(node.tags || []).join(', ')}" class="console-input" placeholder="&#20363;&#22914;&#65306;HK, Premium, Test">
+                            <p class="mt-1 text-sm text-gray-500">&#22810;&#20010;&#26631;&#31614;&#35831;&#29992;&#33521;&#25991;&#36887;&#21495;&#20998;&#38548;&#12290;</p>
                         </div>
                     </div>
                     <div class="flex justify-end gap-2 mt-6">
-                        <button onclick="this.closest('.fixed').remove()" class="console-button console-button-compact console-button-toolbar">取消</button>
-                        <button onclick="updateNode('\${node.id}')" class="console-button console-button-compact console-button-dark">保存</button>
+                        <button onclick="this.closest('.fixed').remove()" class="console-button console-button-compact console-button-toolbar">&#21462;&#28040;</button>
+                        <button onclick="updateNode('\${node.id}')" class="console-button console-button-compact console-button-dark"><i class="fas fa-save"></i>&#20445;&#23384;</button>
                     </div>
                 </div>
             \`;
@@ -2913,7 +2984,7 @@ function generateNodeScripts() {
             const tags = parseNodeTags(document.getElementById('editNodeTags')?.value || '');
 
             if (!name || !url) {
-                alertModal('请填写完整信息');
+                alertModal('&#35831;&#22635;&#20889;&#23436;&#25972;&#20449;&#24687;');
                 return;
             }
 
@@ -2925,11 +2996,12 @@ function generateNodeScripts() {
                 });
 
                 if (response.ok) {
-                    document.querySelector('.fixed').remove();
+                    const dialog = document.getElementById('nodeEditDialog');
+                    if (dialog) dialog.remove();
                     await loadNodes();
                 }
             } catch (e) {
-                alertModal('更新节点失败');
+                alertModal('&#26356;&#26032;&#33410;&#28857;&#22833;&#36133;');
             }
         }
 

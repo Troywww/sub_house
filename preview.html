@@ -304,29 +304,24 @@
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
         }
-    </style></style>
+    </style>
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
 <header class="console-header sticky top-0 z-40">
-    <div class="console-shell px-8 py-3 md:px-10 xl:px-12">
-        <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-            <div class="flex items-center gap-4">
-                <div class="flex h-10 w-10 items-center justify-center rounded bg-black text-white">
-                    <i class="fas fa-terminal text-xl"></i>
+    <div class="console-shell px-6 py-2.5 md:px-8 xl:px-10">
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-white">
+                    <i class="fas fa-cube text-base"></i>
                 </div>
-                <div>
-                    <div class="console-label mb-1">Editorial Console</div>
-                    <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 md:text-3xl">节点管理系统</h1>
-                    <p class="mt-1 text-sm text-gray-500">Cloudflare Worker 节点与订阅管理工作台</p>
-                </div>
+                <h1 class="text-lg font-extrabold tracking-tight text-gray-900">Sub House</h1>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="console-toolbar-label" style="opacity:.7;">Cloudflare Worker</span>
-                <button class="console-button console-button-compact console-button-toolbar"><i class="fas fa-user"></i><span>用户入口</span></button>
-                <button class="console-button console-button-compact console-button-toolbar"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></button>
-                <button class="console-button console-button-compact console-button-dark"><i class="fas fa-link"></i><span>其他链接</span></button>
+            <div class="flex items-center gap-2">
+                <button class="console-button console-button-compact console-button-toolbar"><i class="fas fa-user"></i><span class="hidden sm:inline">用户入口</span></button>
+                <button class="console-button console-button-compact console-button-toolbar"><i class="fas fa-sign-out-alt"></i><span class="hidden sm:inline">退出</span></button>
+                <button class="console-button console-button-compact console-button-dark"><i class="fas fa-link"></i><span class="hidden sm:inline">其他链接</span></button>
             </div>
         </div>
     </div>
